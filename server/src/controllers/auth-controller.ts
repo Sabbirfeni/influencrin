@@ -8,7 +8,6 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const { fullname, email, password } = req.body;
-
   if (!fullname || !email || !password) {
     res
       .status(400)
@@ -75,7 +74,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const token = jwt.sign(
       { id: userData.id, email: userData.email },
       JWT_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "1h" }
     );
 
     res
