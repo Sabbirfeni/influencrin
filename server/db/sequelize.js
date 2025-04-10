@@ -7,7 +7,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialectOptions: {
     ssl: {
       require: false,
-      rejectUnauthorized: false, // for development only
+      rejectUnauthorized: false, // for development only. change it to 'true' for production.
     },
   },
 });

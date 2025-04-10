@@ -1,12 +1,11 @@
-import User from "./user.js";
-import Influencer from "./influencer.js";
-import InfluencerPlatform from "./influencerPlatform.js";
-import Review from "./review.js";
-import SocialMediaPlatform from "./socialMediaPlatform.js";
+import User from "./user-model.js";
+import Influencer from "./influencer-model.js";
+import InfluencerPlatform from "./influencer-platform-model.js";
+import Review from "./review-model.js";
+import SocialMediaPlatform from "./social-media-platform-model.js";
 
 // Import and run associations
-import { associateModels } from "./associateModels.js";
-
+import { associateModels } from "./associate-models.js";
 associateModels();
 
 const models = {

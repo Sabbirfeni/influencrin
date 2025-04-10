@@ -1,8 +1,8 @@
 // models/Review.js
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize.js";
-import User from "./user.js";
-import Influencer from "./influencer.js";
+import User from "./user-model.js";
+import Influencer from "./influencer-model.js";
 
 const Review = sequelize.define(
   "Review",

@@ -1,8 +1,7 @@
-// models/associateModels.js
-import Influencer from "./influencer.js";
-import InfluencerPlatform from "./influencerPlatform.js";
-import Review from "./review.js";
-import User from "./user.js";
+import User from "./user-model.js";
+import Influencer from "./influencer-model.js";
+import InfluencerPlatform from "./influencer-platform-model.js";
+import Review from "./review-model.js";
 
 export function associateModels() {
   // Influencer and InfluencerPlatform relationship

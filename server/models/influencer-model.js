@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize.js";
-import User from "./user.js";
+import User from "./user-model.js";
 
 const Influencer = sequelize.define(
   "Influencer",
@@ -23,6 +23,11 @@ const Influencer = sequelize.define(
     fullname: {
       type: DataTypes.STRING(255),
       allowNull: false,
+    },
+    handle: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
     },
     profile_image: {
       type: DataTypes.STRING(255),
@@ -49,5 +54,15 @@ const Influencer = sequelize.define(
     timestamps: true,
   }
 );
+
+Influencer.addHook("beforeCreate", async (influencer) => {
+  // Check if the handle already exists in the database
+  const existingHandle = await Influencer.findOne({
+    where: { handle: influencer.handle },
+  });
+  if (existingHandle) {
+    throw new Error("This handle is already taken.");
+  }
+});
 
 export default Influencer;

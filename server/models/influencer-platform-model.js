@@ -1,7 +1,7 @@
 // models/InfluencerPlatform.js
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize.js";
-import Influencer from "./influencer.js";
+import Influencer from "./influencer-model.js";
 
 const InfluencerPlatform = sequelize.define(
   "InfluencerPlatform",
