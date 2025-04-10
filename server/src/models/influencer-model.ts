@@ -1,8 +1,15 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../db/sequelize.js";
-import User from "./user-model.js";
+import { DataTypes, Model, Optional } from "sequelize";
+import { sequelize } from "../db/sequelize";
+import User from "./user-model";
+import {
+  InfluencerAttributes,
+  InfluencerCreationAttributes,
+} from "../types/influencer";
 
-const Influencer = sequelize.define(
+// Define the Influencer model
+const Influencer = sequelize.define<
+  Model<InfluencerAttributes, InfluencerCreationAttributes>
+>(
   "Influencer",
   {
     id: {
@@ -45,24 +52,25 @@ const Influencer = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    social_media_links: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
   },
   {
     timestamps: true,
   }
 );
 
-Influencer.addHook("beforeCreate", async (influencer) => {
-  // Check if the handle already exists in the database
-  const existingHandle = await Influencer.findOne({
-    where: { handle: influencer.handle },
-  });
-  if (existingHandle) {
-    throw new Error("This handle is already taken.");
+// Hook to check for duplicate handle
+Influencer.addHook(
+  "beforeCreate",
+  async (
+    influencer: Model<InfluencerAttributes, InfluencerCreationAttributes>
+  ) => {
+    // Check if the handle already exists in the database
+    const handle = (influencer.get("handle") as string) || "";
+    const existingHandle = await Influencer.findOne({ where: { handle } });
+    if (existingHandle) {
+      throw new Error("This handle is already taken.");
+    }
   }
-});
+);
 
 export default Influencer;

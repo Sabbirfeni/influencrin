@@ -1,12 +1,21 @@
-import User from "./user-model.js";
-import Influencer from "./influencer-model.js";
-import InfluencerPlatform from "./influencer-platform-model.js";
-import Review from "./review-model.js";
+import User from "./user-model";
+import Influencer from "./influencer-model";
+import InfluencerPlatform from "./influencer-social-platform-model";
+import Review from "./review-model";
+import SocialMediaPlatform from "./social-media-platform-model";
 
 export function associateModels() {
   // Influencer and InfluencerPlatform relationship
   Influencer.hasMany(InfluencerPlatform, { foreignKey: "influencer_id" });
   InfluencerPlatform.belongsTo(Influencer, { foreignKey: "influencer_id" });
+
+  // In social-media-platform-model.ts
+  SocialMediaPlatform.hasMany(InfluencerPlatform, {
+    foreignKey: "platform_id",
+  });
+  InfluencerPlatform.belongsTo(SocialMediaPlatform, {
+    foreignKey: "platform_id",
+  });
 
   // Review associations with User and Influencer
   Review.belongsTo(User, { foreignKey: "user_id" });

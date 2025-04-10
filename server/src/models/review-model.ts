@@ -1,10 +1,13 @@
-// models/Review.js
-import { DataTypes } from "sequelize";
-import { sequelize } from "../db/sequelize.js";
-import User from "./user-model.js";
-import Influencer from "./influencer-model.js";
+// models/Review.ts
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../db/sequelize";
+import User from "./user-model";
+import Influencer from "./influencer-model";
+import { ReviewAttributes, ReviewCreationAttributes } from "../types/review";
 
-const Review = sequelize.define(
+const Review = sequelize.define<
+  Model<ReviewAttributes, ReviewCreationAttributes>
+>(
   "Review",
   {
     id: {
@@ -42,7 +45,7 @@ const Review = sequelize.define(
     },
     comment: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: false,
     },
   },
   {

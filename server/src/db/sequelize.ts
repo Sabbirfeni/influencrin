@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.DATABASE_URL!, {
   dialect: "postgres",
   dialectOptions: {
     ssl: {
@@ -20,8 +20,8 @@ const syncDatabase = async () => {
       .catch((err) => console.error("Unable to connect:", err));
 
     await sequelize.sync({
-      alter: true,
-      // force: true,
+      // alter: true,
+      force: true,
       logging: false,
     });
 
