@@ -1,30 +1,34 @@
 import User from "./user-model";
 import Influencer from "./influencer-model";
-import InfluencerPlatform from "./influencer-social-platform-model";
+
 import Review from "./review-model";
 import SocialMediaPlatform from "./social-media-platform-model";
 import InfluencerCategory from "./influencer-category-model";
+import InfluencerSocialPlatform from "./influencer-social-platform-model";
 
 export function associateModels() {
   // Influencer and InfluencerPlatform relationship
-  Influencer.hasMany(InfluencerPlatform, { foreignKey: "influencer_id" });
-  InfluencerPlatform.belongsTo(Influencer, { foreignKey: "influencer_id" });
-
-  // In social-media-platform-model.ts
-  SocialMediaPlatform.hasMany(InfluencerPlatform, {
-    foreignKey: "platform_id",
-  });
-  InfluencerPlatform.belongsTo(SocialMediaPlatform, {
-    foreignKey: "platform_id",
+  Influencer.hasMany(InfluencerSocialPlatform, { foreignKey: "influencer_id" });
+  InfluencerSocialPlatform.belongsTo(Influencer, {
+    foreignKey: "influencer_id",
   });
 
-  // Review associations with User and Influencer
+  // InfluencerSocialPlatform and SocialMediaPlatform relationship
+  SocialMediaPlatform.hasMany(InfluencerSocialPlatform, {
+    foreignKey: "platform_id",
+  });
+  InfluencerSocialPlatform.belongsTo(SocialMediaPlatform, {
+    foreignKey: "platform_id",
+  });
+
+  // Influencer and InfluencerCategory relationship
+  Influencer.hasMany(InfluencerCategory, { foreignKey: "influencer_id" });
+  InfluencerCategory.belongsTo(Influencer, { foreignKey: "influencer_id" });
+
+  // User and Review relationship
   Review.belongsTo(User, { foreignKey: "user_id" });
   Review.belongsTo(Influencer, { foreignKey: "influencer_id" });
 
-  // If you want to add the reverse associations as well
   User.hasMany(Review, { foreignKey: "user_id" });
   Influencer.hasMany(Review, { foreignKey: "influencer_id" });
-
-  Influencer.hasMany(InfluencerCategory, { foreignKey: "influencer_id" });
 }

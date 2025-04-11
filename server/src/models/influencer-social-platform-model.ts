@@ -29,8 +29,8 @@ const InfluencerSocialPlatform = sequelize.define<
         model: Influencer,
         key: "id",
       },
-      onDelete: "CASCADE",
       onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     platform_id: {
       type: DataTypes.UUID,
@@ -39,7 +39,6 @@ const InfluencerSocialPlatform = sequelize.define<
         model: SocialMediaPlatform,
         key: "id",
       },
-      onDelete: "CASCADE",
       onUpdate: "CASCADE",
     },
     platform_profile_link: {

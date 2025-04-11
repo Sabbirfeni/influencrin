@@ -9,6 +9,11 @@ import { InfluencerCreationAttributes } from "../types/influencer";
 
 const createInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
+  let socialPlatforms: {
+    platform_id: string;
+    follower_count: number;
+    platform_profile_link: string;
+  }[] = [];
 
   try {
     const user_id = req.body?.user?.id;
@@ -18,24 +23,27 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       profile_image,
       bio,
       location,
-      socialPlatforms,
-      categories, // 👈 get categories from body
+      socialPlatforms: platformsFromBody,
+      categories,
     } = req.body as InfluencerCreationAttributes & {
       socialPlatforms: {
         platform_id: string;
         follower_count: number;
         platform_profile_link: string;
       }[];
-      categories: string[]; // 👈 assume array of category names
+      categories: string[];
     };
+
+    // assign so it's available in catch block
+    socialPlatforms = platformsFromBody;
 
     if (
       !fullname ||
       !handle ||
       !profile_image ||
       !location ||
-      !Array.isArray(socialPlatforms) ||
-      socialPlatforms.length === 0 ||
+      !Array.isArray(platformsFromBody) ||
+      platformsFromBody.length === 0 ||
       !Array.isArray(categories) ||
       categories.length === 0
     ) {
@@ -43,7 +51,6 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // create influencer
     const influencer = await Influencer.create(
       {
         user_id,
@@ -58,14 +65,12 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
     const influencerId = influencer.get("id") as string;
 
-    // create social platforms for influencer with influencer's id
-    const socialEntries = socialPlatforms.map((platform) => ({
+    const socialEntries = platformsFromBody.map((platform) => ({
       ...platform,
       influencer_id: influencerId,
     }));
     await InfluencerSocialPlatform.bulkCreate(socialEntries, { transaction });
 
-    // Add influencer categories with influencer's id
     const categoryEntries = categories.map((name) => ({
       influencer_id: influencerId,
       category_name: name,
@@ -76,17 +81,29 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({
       message: "Influencer created successfully.",
-      data: influencer,
+      influencer,
     });
   } catch (error: any) {
     await transaction.rollback();
 
     if (error instanceof ValidationError) {
-      res.status(400).json({
-        message: error.errors[0].message,
-        path: error.errors[0].path,
-      });
-      return;
+      const uniqueError = error.errors.find(
+        (err) =>
+          err.type === "unique violation" &&
+          err.path === "platform_profile_link"
+      );
+
+      if (uniqueError) {
+        const offendingLink = socialPlatforms.find(
+          (platform) => platform.platform_profile_link === uniqueError.value
+        );
+
+        res.status(400).json({
+          message: uniqueError.message,
+          platform_profile_link: uniqueError.value,
+        });
+        return;
+      }
     }
 
     res.status(500).json({
@@ -122,7 +139,7 @@ const getAllInfluencers = async (
 
     res.status(200).json({
       message: "Influencers fetched successfully.",
-      data: influencers,
+      influencers,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -168,7 +185,9 @@ const getInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(200).json({ data: influencer });
+    res
+      .status(200)
+      .json({ message: "Influencers fetched successfully.", influencer });
   } catch (error: any) {
     res.status(500).json({
       message: error.message || "Internal server error.",
@@ -204,7 +223,10 @@ const getInfluencersByUser = async (
       order: [["createdAt", "DESC"]],
     });
 
-    res.status(200).json({ data: influencers });
+    res.status(200).json({
+      message: "Influencers fetched successfully.",
+      influencers,
+    });
   } catch (error: any) {
     res.status(500).json({
       message: error.message || "Internal server error.",

@@ -19,5 +19,10 @@ influencerRoutes.put(
   authenticate,
   InfluencerManagementController.updateInfluencer
 );
+influencerRoutes.delete(
+  "/:handle",
+  authenticate,
+  InfluencerManagementController.deleteInfluencer
+);
 
 export default influencerRoutes;
