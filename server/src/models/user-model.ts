@@ -20,7 +20,15 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
     email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      unique: {
+        name: "unique_email",
+        msg: "This email is already taken.",
+      },
+      validate: {
+        isEmail: {
+          msg: "Please enter a valid email address.",
+        },
+      },
     },
     password_hash: {
       type: DataTypes.STRING(255),
@@ -32,26 +40,16 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
   }
 );
 
-// Hook to hash password before creating a user
+// Hook to hash password before creating a user (no need to check email manually anymore)
 User.addHook(
   "beforeCreate",
   async (user: Model<UserAttributes, UserCreationAttributes>) => {
-    // Safely access the email and password properties by explicitly casting the values to strings
-    const email = user.get("email") as string; // Casting as string
-    const passwordHash = user.get("password_hash") as string; // Casting as string
+    const passwordHash = user.get("password_hash") as string;
 
-    // Check if the email already exists in the database
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      throw new Error("This email is already taken.");
-    }
-
-    // Hash the password before saving it
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(passwordHash, salt);
 
-    // Set the hashed password
-    user.set("password_hash", hashedPassword); // Set the resolved hashed password
+    user.set("password_hash", hashedPassword);
   }
 );
 

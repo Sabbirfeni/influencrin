@@ -3,6 +3,7 @@ import Influencer from "./influencer-model";
 import InfluencerPlatform from "./influencer-social-platform-model";
 import Review from "./review-model";
 import SocialMediaPlatform from "./social-media-platform-model";
+import InfluencerCategory from "./influencer-category-model";
 
 export function associateModels() {
   // Influencer and InfluencerPlatform relationship
@@ -24,4 +25,6 @@ export function associateModels() {
   // If you want to add the reverse associations as well
   User.hasMany(Review, { foreignKey: "user_id" });
   Influencer.hasMany(Review, { foreignKey: "influencer_id" });
+
+  Influencer.hasMany(InfluencerCategory, { foreignKey: "influencer_id" });
 }

@@ -6,7 +6,6 @@ export interface InfluencerAttributes {
   profile_image: string;
   bio?: string;
   location: string;
-  category: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

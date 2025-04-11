@@ -18,10 +18,11 @@ const syncDatabase = async () => {
       .authenticate()
       .then(() => console.log("Database connected successfully!"))
       .catch((err) => console.error("Unable to connect:", err));
+    // await sequelize.drop(); // drops all tables managed by Sequelize
 
     await sequelize.sync({
-      // alter: true,
-      force: true,
+      alter: true,
+      // force: true,
       logging: false,
     });
 

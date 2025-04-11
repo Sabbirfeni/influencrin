@@ -14,8 +14,12 @@ app.use(
   })
 );
 app.use(cookieParser());
-
 app.use(express.json());
+
+// Sync database tables
+import "./models";
+import { syncDatabase } from "./db/sequelize";
+syncDatabase(); // Only run this once during app startup
 
 // Routes
 app.use("/api", routes);
@@ -23,8 +27,3 @@ app.use("/api", routes);
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
-// Sync database tables
-// import "./models";
-// import { syncDatabase } from "./db/sequelize";
-// syncDatabase(); // Only run this once during app startup

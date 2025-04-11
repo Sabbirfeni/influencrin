@@ -1,4 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import User from "./user-model";
 import {
@@ -34,7 +34,10 @@ const Influencer = sequelize.define<
     handle: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      unique: {
+        name: "unique_handle",
+        msg: "This handle is already taken.",
+      },
     },
     profile_image: {
       type: DataTypes.STRING(255),
@@ -48,28 +51,9 @@ const Influencer = sequelize.define<
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    category: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
   },
   {
     timestamps: true,
-  }
-);
-
-// Hook to check for duplicate handle
-Influencer.addHook(
-  "beforeCreate",
-  async (
-    influencer: Model<InfluencerAttributes, InfluencerCreationAttributes>
-  ) => {
-    // Check if the handle already exists in the database
-    const handle = (influencer.get("handle") as string) || "";
-    const existingHandle = await Influencer.findOne({ where: { handle } });
-    if (existingHandle) {
-      throw new Error("This handle is already taken.");
-    }
   }
 );
 

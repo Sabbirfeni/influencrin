@@ -42,17 +42,17 @@ const InfluencerSocialPlatform = sequelize.define<
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     },
-    platform_name: {
-      type: DataTypes.STRING(50),
+    platform_profile_link: {
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        name: "unique_platform_profile_link",
+        msg: "This influencer profile link is already taken.",
+      },
     },
     follower_count: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
-    profile_link: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
   },
   {

@@ -6,12 +6,15 @@ import User from "../models/user-model";
 import { UserAttributes } from "../types/user";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
+import { ValidationError } from "sequelize";
+
 const register = async (req: Request, res: Response): Promise<void> => {
   const { fullname, email, password } = req.body;
+
   if (!fullname || !email || !password) {
-    res
-      .status(400)
-      .json({ error: "Fullname, email, and password are required." });
+    res.status(400).json({
+      message: "Fullname, email, and password are required.",
+    });
     return;
   }
 
@@ -25,21 +28,26 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
     const userData = newUser.get() as UserAttributes;
 
-    // Send a success response
     res.status(201).json({
-      message: "Registration successfully",
+      message: "Registration successful",
       user: {
         id: userData.id,
         fullname: userData.fullname,
         email: userData.email,
       },
     });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Server error during registration" });
+  } catch (error: any) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({
+        message: error.errors[0].message,
+        path: error.errors[0].path,
+      });
+      return;
     }
+
+    res.status(500).json({
+      message: error.message || "Server error during registration.",
+    });
   }
 };
 
@@ -97,7 +105,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(500).json({ error: "Unknown error during login" });
+      res.status(500).json({ error: "Server error during login." });
     }
   }
 };

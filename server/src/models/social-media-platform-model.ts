@@ -21,6 +21,10 @@ const SocialMediaPlatform = sequelize.define<
       allowNull: false,
       unique: true,
     },
+    platform_icon_url: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
   },
   {
     timestamps: false, // Disable automatic timestamps
