@@ -23,7 +23,7 @@ app.use(express.json());
 const startServer = async () => {
   try {
     await connectToDatabase();
-    await syncDatabase(); // only alter: true or force: true in dev
+    // await syncDatabase(); // only alter: true or force: true in dev
 
     app.use("/api", routes);
 
