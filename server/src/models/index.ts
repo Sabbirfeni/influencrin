@@ -7,7 +7,6 @@ import InfluencerCategory from "./influencer-category-model";
 
 // Import and run associations
 import { associateModels } from "./associate-models";
-
 associateModels();
 
 const models = {

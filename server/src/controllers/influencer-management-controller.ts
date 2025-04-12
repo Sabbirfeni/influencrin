@@ -1,26 +1,29 @@
 import { Request, Response } from "express";
-import { ValidationError } from "sequelize";
+import { Op, ValidationError } from "sequelize";
 import Influencer from "../models/influencer-model";
 import { sequelize } from "../db/sequelize";
 
 const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { handle } = req.params;
+    const { influencer_id } = req.params;
     const userId = req.body?.user?.id;
 
-    if (!handle) {
+    if (!influencer_id) {
       res.status(400).json({ message: "Handle is required." });
       return;
     }
 
     // Find influencer by handle and user_id
     const influencer = await Influencer.findOne({
-      where: { handle, user_id: userId },
+      where: {
+        id: influencer_id,
+        user_id: userId,
+      },
     });
 
     if (!influencer) {
       res.status(404).json({
-        message: `Influencer not found for handle '${handle}' or unauthorized.`,
+        message: `Influencer not found or unauthorized.`,
       });
       return;
     }
@@ -61,22 +64,22 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
 const deleteInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
   try {
-    const { handle } = req.params;
+    const { influencer_id } = req.params;
     const user_id = req.body?.user?.id;
 
-    if (!handle) {
+    if (!influencer_id) {
       res.status(400).json({ message: "Handle is required." });
       return;
     }
 
     const influencer = await Influencer.findOne({
-      where: { handle, user_id },
+      where: { id: influencer_id, user_id },
       transaction,
     });
 
     if (!influencer) {
       res.status(404).json({
-        message: `Influencer not found for handle '${handle}' or unauthorized.`,
+        message: `Influencer not found or unauthorized.`,
       });
       return;
     }
@@ -90,7 +93,7 @@ const deleteInfluencer = async (req: Request, res: Response): Promise<void> => {
     await transaction.commit();
 
     res.status(200).json({
-      message: `Influencer '${handle}' and related data deleted successfully.`,
+      message: `Influencer and related data deleted successfully.`,
     });
   } catch (error: any) {
     await transaction.rollback();

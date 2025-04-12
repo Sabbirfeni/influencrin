@@ -25,9 +25,14 @@ const SocialMediaPlatform = sequelize.define<
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    domain_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+    },
   },
   {
-    timestamps: false, // Disable automatic timestamps
+    timestamps: false,
   }
 );
 

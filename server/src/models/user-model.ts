@@ -40,7 +40,7 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
   }
 );
 
-// Hook to hash password before creating a user (no need to check email manually anymore)
+// Hook to hash password before creating a user
 User.addHook(
   "beforeCreate",
   async (user: Model<UserAttributes, UserCreationAttributes>) => {

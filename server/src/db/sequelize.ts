@@ -12,24 +12,32 @@ const sequelize = new Sequelize(process.env.DATABASE_URL!, {
   },
 });
 
-const syncDatabase = async () => {
-  try {
-    await sequelize
-      .authenticate()
-      .then(() => console.log("Database connected successfully!"))
-      .catch((err) => console.error("Unable to connect:", err));
-    // await sequelize.drop(); // drops all tables managed by Sequelize
-
-    await sequelize.sync({
-      alter: true,
-      // force: true,
-      logging: false,
+// Database connection and synchronization with separate then blocks and error handling
+const syncDatabase = (): void => {
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log("Database connected successfully!");
+    })
+    .catch((error) => {
+      console.error("Unable to connect to the database:", error);
+      throw new Error("Database connection failed!");
+    })
+    .then(() => {
+      // Sync the database models, automatically adjusting them as needed
+      return sequelize.sync({
+        alter: true, // Updates the schema (without dropping tables)
+        // force: true, // To drop all tables and recreate them (only in development)
+        logging: false,
+      });
+    })
+    .then(() => {
+      console.log("Database synced successfully!");
+    })
+    .catch((error) => {
+      console.error("Error during database synchronization:", error);
+      throw new Error("Database sync failed!");
     });
-
-    console.log("Database synced");
-  } catch (error) {
-    console.error("Sync error", error);
-  }
 };
 
 export { sequelize, syncDatabase };

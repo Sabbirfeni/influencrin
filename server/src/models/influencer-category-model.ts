@@ -6,6 +6,7 @@ import {
   InfluencerCategoryCreationAttributes,
 } from "../types/influencer-category";
 
+// This represents a category or niche that an influencer belongs to (e.g., Fashion, Tech, Fitness)
 const InfluencerCategory = sequelize.define<
   Model<InfluencerCategoryAttributes, InfluencerCategoryCreationAttributes>
 >(
@@ -16,16 +17,19 @@ const InfluencerCategory = sequelize.define<
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+
+    // Foreign key - Links this category to a specific influencer
     influencer_id: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: Influencer,
+        model: Influencer, // References the Influencer model
         key: "id",
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      onDelete: "CASCADE", // Delete this category entry if the associated influencer is deleted
+      onUpdate: "CASCADE", // Update if the influencer ID changes
     },
+
     category_name: {
       type: DataTypes.STRING(100),
       allowNull: false,

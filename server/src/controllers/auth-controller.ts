@@ -94,7 +94,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       })
       .status(200)
       .json({
-        message: "Login successful",
+        message: "Welcome, you're logged in",
         user: {
           id: userData.id,
           fullname: userData.fullname,

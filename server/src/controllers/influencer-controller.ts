@@ -25,7 +25,12 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       location,
       socialPlatforms: platformsFromBody,
       categories,
-    } = req.body as InfluencerCreationAttributes & {
+    } = req.body as {
+      fullname: string;
+      handle: string;
+      profile_image: string;
+      bio?: string;
+      location: string;
       socialPlatforms: {
         platform_id: string;
         follower_count: number;
@@ -51,6 +56,57 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Check for duplicate platform_ids in the payload
+    const seenPlatformIds = new Set<string>();
+    const duplicatePlatform = platformsFromBody.find((platform) => {
+      if (seenPlatformIds.has(platform.platform_id)) {
+        return true;
+      }
+      seenPlatformIds.add(platform.platform_id);
+      return false;
+    });
+    if (duplicatePlatform) {
+      res.status(400).json({
+        message: "Can't add same platform multiple times.",
+      });
+      return;
+    }
+
+    // Check for duplicate categories in the payload (case-insensitive)
+    const seenCategories = new Set<string>();
+    const duplicateCategory = categories.find((category) => {
+      const lower = category.trim().toLowerCase();
+      if (seenCategories.has(lower)) return true;
+      seenCategories.add(lower);
+      return false;
+    });
+    if (duplicateCategory) {
+      res.status(400).json({
+        message: "Can't add the same category multiple times.",
+        field: "categories",
+        duplicate: duplicateCategory,
+      });
+      return;
+    }
+
+    // Check for handle uniqueness (case-insensitive)
+    const existingInfluencer = await Influencer.findOne({
+      where: {
+        handle: {
+          [Op.iLike]: handle,
+        },
+      },
+    });
+
+    if (existingInfluencer) {
+      res.status(400).json({
+        message: "The handle is already taken.",
+        field: "handle",
+      });
+      return;
+    }
+
+    // Create influencer
     const influencer = await Influencer.create(
       {
         user_id,
@@ -65,16 +121,20 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
     const influencerId = influencer.get("id") as string;
 
+    // Prepare and create social platforms
     const socialEntries = platformsFromBody.map((platform) => ({
       ...platform,
       influencer_id: influencerId,
     }));
+
     await InfluencerSocialPlatform.bulkCreate(socialEntries, { transaction });
 
+    // Prepare and create categories
     const categoryEntries = categories.map((name) => ({
       influencer_id: influencerId,
       category_name: name,
     }));
+
     await InfluencerCategory.bulkCreate(categoryEntries, { transaction });
 
     await transaction.commit();
@@ -94,12 +154,9 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       );
 
       if (uniqueError) {
-        const offendingLink = socialPlatforms.find(
-          (platform) => platform.platform_profile_link === uniqueError.value
-        );
-
         res.status(400).json({
           message: uniqueError.message,
+          field: "platform_profile_link",
           platform_profile_link: uniqueError.value,
         });
         return;
@@ -150,7 +207,6 @@ const getAllInfluencers = async (
 
 const getInfluencer = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.params);
     const { handle } = req.params;
 
     if (!handle) {
@@ -159,7 +215,11 @@ const getInfluencer = async (req: Request, res: Response): Promise<void> => {
     }
 
     const influencer = await Influencer.findOne({
-      where: { handle },
+      where: {
+        handle: {
+          [Op.iLike]: handle, // case-insensitive match
+        },
+      },
       include: [
         {
           model: InfluencerSocialPlatform,

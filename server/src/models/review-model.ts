@@ -1,4 +1,4 @@
-// models/Review.ts
+// Import necessary Sequelize modules and models
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import User from "./user-model";
@@ -15,6 +15,8 @@ const Review = sequelize.define<
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+
+    // Foreign key - References the user who wrote the review
     user_id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -22,9 +24,11 @@ const Review = sequelize.define<
         model: User,
         key: "id",
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      onDelete: "CASCADE", // Delete review if user is deleted
+      onUpdate: "CASCADE", // Update user_id if user's id changes
     },
+
+    // Foreign key - References the influencer being reviewed
     influencer_id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -32,8 +36,8 @@ const Review = sequelize.define<
         model: Influencer,
         key: "id",
       },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      onDelete: "CASCADE", // Delete review if influencer is deleted
+      onUpdate: "CASCADE", // Update influencer_id if influencer's id changes
     },
     rating: {
       type: DataTypes.INTEGER,
