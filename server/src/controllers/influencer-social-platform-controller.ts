@@ -192,4 +192,68 @@ const updateInfluencerSocialPlatform = async (
   }
 };
 
-export { createInfluencerSocialPlatform, updateInfluencerSocialPlatform };
+const deleteInfluencerSocialPlatform = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const { influencer_id } = req.params;
+    const { platform_id } = req.body;
+    const user_id = req.body?.user?.id;
+
+    if (!influencer_id || !platform_id) {
+      res
+        .status(400)
+        .json({ message: "Influencer ID and platform ID are required." });
+      return;
+    }
+
+    // Check if influencer exists and belongs to the authenticated user
+    const influencer = await Influencer.findOne({
+      where: { id: influencer_id, user_id },
+      transaction,
+    });
+
+    if (!influencer) {
+      res
+        .status(404)
+        .json({ message: "Influencer not found or unauthorized." });
+      return;
+    }
+
+    // Check if the platform exists for this influencer
+    const existingPlatform = await InfluencerSocialPlatform.findOne({
+      where: {
+        influencer_id,
+        platform_id,
+      },
+      transaction,
+    });
+
+    if (!existingPlatform) {
+      res
+        .status(404)
+        .json({ message: "Platform not linked to this influencer." });
+      return;
+    }
+
+    // Delete the platform
+    await existingPlatform.destroy({ transaction });
+    await transaction.commit();
+
+    res.status(200).json({
+      message: "Social platform deleted.",
+    });
+  } catch (error: any) {
+    await transaction.rollback();
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export {
+  createInfluencerSocialPlatform,
+  updateInfluencerSocialPlatform,
+  deleteInfluencerSocialPlatform,
+};

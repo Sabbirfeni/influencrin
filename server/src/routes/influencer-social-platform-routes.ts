@@ -17,4 +17,10 @@ influencerSocialPlatformRoutes.put(
   InfluencerSocialPlatformController.updateInfluencerSocialPlatform
 );
 
+influencerSocialPlatformRoutes.delete(
+  "/:influencer_id",
+  authenticate,
+  InfluencerSocialPlatformController.deleteInfluencerSocialPlatform
+);
+
 export default influencerSocialPlatformRoutes;

@@ -1,7 +1,10 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import routes from "./routes";
+import "./models"; // Make sure models are initialized
+
+import { connectToDatabase, syncDatabase } from "./db/sequelize";
 
 const app = express();
 const port = 3000;
@@ -16,14 +19,21 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// Sync database tables
-import "./models";
-import { syncDatabase } from "./db/sequelize";
-syncDatabase(); // Only run this once during app startup
+// Start server only after DB is ready
+const startServer = async () => {
+  try {
+    await connectToDatabase();
+    await syncDatabase(); // only alter: true or force: true in dev
 
-// Routes
-app.use("/api", routes);
+    app.use("/api", routes);
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+    app.listen(port, () => {
+      console.log(`✅ Server is running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

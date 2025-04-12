@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const sequelize = new Sequelize(process.env.DATABASE_URL!, {
@@ -12,32 +13,25 @@ const sequelize = new Sequelize(process.env.DATABASE_URL!, {
   },
 });
 
-// Database connection and synchronization with separate then blocks and error handling
-const syncDatabase = (): void => {
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.log("Database connected successfully!");
-    })
-    .catch((error) => {
-      console.error("Unable to connect to the database:", error);
-      throw new Error("Database connection failed!");
-    })
-    .then(() => {
-      // Sync the database models, automatically adjusting them as needed
-      return sequelize.sync({
-        alter: true, // Updates the schema (without dropping tables)
-        // force: true, // To drop all tables and recreate them (only in development)
-        logging: false,
-      });
-    })
-    .then(() => {
-      console.log("Database synced successfully!");
-    })
-    .catch((error) => {
-      console.error("Error during database synchronization:", error);
-      throw new Error("Database sync failed!");
-    });
+export const connectToDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Connected to the database.");
+  } catch (error) {
+    console.error("❌ Unable to connect to the database:", error);
+    throw new Error("Database connection failed!");
+  }
+};
+
+const syncDatabase = async () => {
+  try {
+    await sequelize.sync({ alter: true, logging: false }); // or force: true in dev
+    console.log("✅ Database synced.");
+  } catch (error) {
+    // await transaction.rollback(); // <- you NEED this or Postgres locks
+    console.error("❌ Error during database synchronization:", error);
+    throw new Error("Database sync failed!");
+  }
 };
 
 export { sequelize, syncDatabase };
