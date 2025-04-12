@@ -37,24 +37,25 @@ const getAllInfluencerCategories = async (
   }
 };
 
-const createCategoriesForInfluencer = async (
+const createCategoryForInfluencer = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { influencer_id } = req.params;
     const userId = req.body?.user?.id;
-    const { categories } = req.body;
+    const { category } = req.body;
 
     if (!influencer_id) {
-      res.status(400).json({ message: "Influence ID is required." });
+      res.status(400).json({ message: "Influencer ID is required." });
       return;
     }
 
-    if (!categories || categories.length === 0) {
-      res.status(400).json({ message: "Categories are required" });
+    if (!category || typeof category !== "string") {
+      res.status(400).json({ message: "A valid category is required." });
       return;
     }
+
     // Step 1: Check if influencer exists and belongs to the user
     const influencer = await Influencer.findOne({
       where: { id: influencer_id, user_id: userId },
@@ -62,27 +63,79 @@ const createCategoriesForInfluencer = async (
 
     if (!influencer) {
       res.status(404).json({
-        message: "Influencer not found or unauthorize",
+        message: "Influencer not found or unauthorized.",
       });
       return;
     }
 
-    // Creating categories for the influencer
-    const createdCategories = await InfluencerCategory.bulkCreate(
-      categories.map((category: string) => ({
-        influencer_id,
-        category_name: category,
-      }))
-    );
+    // Step 2: Create the category for the influencer
+    const createdCategory = await InfluencerCategory.create({
+      influencer_id,
+      category_name: category,
+    });
 
     res.status(201).json({
-      message: "Categories created successfully",
-      categories: createdCategories,
+      message: "Category created successfully.",
+      category: createdCategory,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
-export { getAllInfluencerCategories, createCategoriesForInfluencer };
+const deleteCategoryForInfluencer = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { influencer_id } = req.params;
+    const userId = req.body?.user?.id;
+    const { category_id } = req.body;
+
+    if (!influencer_id || !category_id) {
+      res
+        .status(400)
+        .json({ message: "Influencer ID and category ID are required." });
+      return;
+    }
+
+    // Check if the influencer belongs to the authenticated user
+    const influencer = await Influencer.findOne({
+      where: { id: influencer_id, user_id: userId },
+    });
+
+    if (!influencer) {
+      res
+        .status(404)
+        .json({ message: "Influencer not found or unauthorized." });
+      return;
+    }
+
+    // Delete the specific category
+    const deleted = await InfluencerCategory.destroy({
+      where: {
+        id: category_id,
+        influencer_id,
+      },
+    });
+
+    if (deleted === 0) {
+      res
+        .status(404)
+        .json({ message: "Category not found for this influencer." });
+      return;
+    }
+
+    res.status(200).json({ message: "Category deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export {
+  getAllInfluencerCategories,
+  createCategoryForInfluencer,
+  deleteCategoryForInfluencer,
+};

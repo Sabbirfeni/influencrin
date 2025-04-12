@@ -15,7 +15,13 @@ influencerCategoryRoutes.get(
 influencerCategoryRoutes.post(
   "/:influencer_id",
   authenticate,
-  InfluencerCategoryController.createCategoriesForInfluencer
+  InfluencerCategoryController.createCategoryForInfluencer
+);
+
+influencerCategoryRoutes.delete(
+  "/:influencer_id",
+  authenticate,
+  InfluencerCategoryController.deleteCategoryForInfluencer
 );
 
 export default influencerCategoryRoutes;
