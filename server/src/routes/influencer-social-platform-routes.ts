@@ -5,6 +5,11 @@ import authenticate from "../middleware/authenticate";
 
 const influencerSocialPlatformRoutes = express.Router();
 
+influencerSocialPlatformRoutes.get(
+  "/",
+  InfluencerSocialPlatformController.getAllSocialMediaPlatforms
+);
+
 influencerSocialPlatformRoutes.post(
   "/:influencer_id",
   authenticate,

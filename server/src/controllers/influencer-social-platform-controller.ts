@@ -3,6 +3,25 @@ import { sequelize } from "../db/sequelize";
 import Influencer from "../models/influencer-model";
 import InfluencerSocialPlatform from "../models/influencer-social-platform-model";
 import { ValidationError } from "sequelize";
+import SocialMediaPlatform from "../models/social-media-platform-model";
+
+export const getAllSocialMediaPlatforms = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const platforms = await SocialMediaPlatform.findAll();
+
+    res.status(200).json({
+      message: "Social platforms fetched successfully.",
+      socialMediaPlatforms: platforms,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+};
 
 const createInfluencerSocialPlatform = async (
   req: Request,
