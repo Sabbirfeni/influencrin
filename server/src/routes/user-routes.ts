@@ -12,5 +12,10 @@ const userRoutes = express.Router();
  * @body    None
  */
 userRoutes.get("/me", authenticate, userController.getMe);
+userRoutes.get(
+  "/:user_id/reviews",
+  authenticate,
+  userController.getReviewsByUser
+);
 
 export default userRoutes;
