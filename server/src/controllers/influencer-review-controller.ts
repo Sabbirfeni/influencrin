@@ -1,6 +1,47 @@
 import { Request, Response } from "express";
 import Influencer from "../models/influencer-model";
 import InfluencerReview from "../models/influencer-review-model";
+import User from "../models/user-model";
+
+const getReviewsForInfluencer = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { influencer_id } = req.params;
+
+    if (!influencer_id) {
+      res.status(400).json({ message: "Influencer ID is required." });
+      return;
+    }
+
+    const influencer = await Influencer.findByPk(influencer_id);
+
+    if (!influencer) {
+      res.status(404).json({ message: "Influencer not found." });
+      return;
+    }
+
+    const reviews = await InfluencerReview.findAll({
+      where: { influencer_id },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "fullname", "profile_image"], // include basic user info
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      message: "Reviews fetched successfully.",
+      reviews,
+    });
+  } catch (error) {
+    console.error("Error fetching influencer reviews:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
 
 const createReviewForInfluencer = async (
   req: Request,
@@ -117,4 +158,8 @@ const updateInfluencerReview = async (
   }
 };
 
-export { createReviewForInfluencer, updateInfluencerReview };
+export {
+  getReviewsForInfluencer,
+  createReviewForInfluencer,
+  updateInfluencerReview,
+};

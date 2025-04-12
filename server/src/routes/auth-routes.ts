@@ -9,7 +9,11 @@ const authRoutes = express.Router();
  * @route   POST /api/auth/register
  * @desc    Register a new user
  * @access  Public
- * @body    { fullname: string, email: string, password: string }
+ * @requiredBody {
+ *   fullname: string,
+ *   email: string,
+ *   password: string
+ * }
  */
 authRoutes.post("/register", authController.register);
 
@@ -17,14 +21,18 @@ authRoutes.post("/register", authController.register);
  * @route   POST /api/auth/login
  * @desc    Log in an existing user
  * @access  Public
- * @body    { email: string, password: string }
+ * @requiredBody {
+ *   email: string,
+ *   password: string
+ * }
  */
 authRoutes.post("/login", authController.login);
 
 /**
  * @route   POST /api/auth/logout
  * @desc    Log out the currently authenticated user
- * @access  Private (Requires authentication)
+ * @access  Private (Requires Authorization Header with token)
+ * @body    None
  */
 authRoutes.post("/logout", authenticate, authController.logout);
 

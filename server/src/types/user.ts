@@ -3,9 +3,13 @@ export interface UserAttributes {
   fullname: string;
   email: string;
   password_hash: string;
+  profile_image: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface UserCreationAttributes
-  extends Omit<UserAttributes, "id" | "createdAt" | "updatedAt"> {}
+  extends Omit<
+    UserAttributes,
+    "id" | "profile_image" | "createdAt" | "updatedAt"
+  > {}

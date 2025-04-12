@@ -39,13 +39,19 @@ influencerRoutes.get("/:handle", InfluencerController.getInfluencer);
  * @desc    Create a new influencer
  * @access  Private
  * @body    {
- *            fullname: string,
- *            handle: string,
- *            profile_image: string,
- *            bio?: string,
- *            location: string,
- *            socialPlatforms: [{ platform_id: string, follower_count: number, platform_profile_link: string }],
- *            categories: string[]
+ *            fullname: string (required),
+ *            handle: string (required),
+ *            profile_image: string (required),
+ *            location: string (required),
+ *            socialPlatforms: [
+ *              {
+ *                platform_id: string (required),
+ *                follower_count: number (required),
+ *                platform_profile_link: string (required)
+ *              }
+ *            ] (must include at least one),
+ *            categories: string[] (at least one required),
+ *            bio?: string (optional)
  *          }
  */
 influencerRoutes.post("/", authenticate, InfluencerController.createInfluencer);
@@ -55,13 +61,10 @@ influencerRoutes.post("/", authenticate, InfluencerController.createInfluencer);
  * @desc    Update an existing influencer by ID
  * @access  Private
  * @body    {
- *            fullname: string,
- *            handle: string,
- *            profile_image: string,
- *            bio?: string,
- *            location: string,
- *            socialPlatforms: [{ platform_id: string, follower_count: number, platform_profile_link: string }],
- *            categories: string[]
+ *            fullname?: string (optional),
+ *            profile_image?: string (optional),
+ *            location?: string (optional),
+ *            bio?: string (optional)
  *          }
  */
 influencerRoutes.put(

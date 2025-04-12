@@ -34,6 +34,10 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    profile_image: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
   },
   {
     timestamps: true,

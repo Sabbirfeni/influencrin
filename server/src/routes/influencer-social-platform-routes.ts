@@ -3,12 +3,14 @@ import express from "express";
 import * as InfluencerSocialPlatformController from "../controllers/influencer-social-platform-controller";
 import authenticate from "../middleware/authenticate";
 
+// Create router instance
 const influencerSocialPlatformRoutes = express.Router();
 
 /**
  * @route   GET /api/influencers/social-platforms
  * @desc    Fetch all social media platforms used by influencers
  * @access  Public
+ * @body    None
  */
 influencerSocialPlatformRoutes.get(
   "/",
@@ -17,12 +19,12 @@ influencerSocialPlatformRoutes.get(
 
 /**
  * @route   POST /api/influencers/social-platforms/:influencer_id
- * @desc    Create social media platform entry for a specific influencer
+ * @desc    Create a social media platform entry for a specific influencer
  * @access  Private
  * @body    {
- *            platform_id: string,
- *            platform_profile_link: string,
- *            follower_count?: number
+ *            platform_id: string (required),
+ *            platform_profile_link: string (required),
+ *            follower_count?: number (optional)
  *          }
  */
 influencerSocialPlatformRoutes.post(
@@ -33,12 +35,12 @@ influencerSocialPlatformRoutes.post(
 
 /**
  * @route   PUT /api/influencers/social-platforms/:influencer_id
- * @desc    Update social media platform entry for a specific influencer
+ * @desc    Update a social media platform entry for a specific influencer
  * @access  Private
  * @body    {
- *            platform_id: string,
- *            platform_profile_link: string,
- *            follower_count?: number
+ *            platform_id: string (required),
+ *            platform_profile_link: string (required),
+ *            follower_count?: number (optional)
  *          }
  */
 influencerSocialPlatformRoutes.put(
@@ -49,9 +51,11 @@ influencerSocialPlatformRoutes.put(
 
 /**
  * @route   DELETE /api/influencers/social-platforms/:influencer_id
- * @desc    Delete social media platform entry for a specific influencer
+ * @desc    Delete a social media platform entry for a specific influencer
  * @access  Private
- * @body    { platform_id: string }
+ * @body    {
+ *            platform_id: string (required)
+ *          }
  */
 influencerSocialPlatformRoutes.delete(
   "/:influencer_id",

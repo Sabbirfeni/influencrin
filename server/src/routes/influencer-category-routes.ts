@@ -10,6 +10,7 @@ const influencerCategoryRoutes = express.Router();
  * @route   GET /api/influencers/categories
  * @desc    Get all unique influencer categories (case-insensitive)
  * @access  Public
+ * @body    None
  */
 influencerCategoryRoutes.get(
   "/",
@@ -20,7 +21,9 @@ influencerCategoryRoutes.get(
  * @route   POST /api/influencers/categories/:influencer_id
  * @desc    Create a single category for a specific influencer
  * @access  Private (Requires authentication)
- * @body    { category: string }
+ * @requiredBody {
+ *   category: string
+ * }
  */
 influencerCategoryRoutes.post(
   "/:influencer_id",
@@ -30,9 +33,11 @@ influencerCategoryRoutes.post(
 
 /**
  * @route   DELETE /api/influencers/categories/:influencer_id
- * @desc    Delete categories for a specific influencer
+ * @desc    Delete a specific category for a given influencer
  * @access  Private (Requires authentication)
- * @body    { category_id: string }
+ * @requiredBody {
+ *   category_id: string
+ * }
  */
 influencerCategoryRoutes.delete(
   "/:influencer_id",
