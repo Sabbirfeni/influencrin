@@ -4,17 +4,21 @@ import * as InfluencerController from "../controllers/influencer-controller";
 import * as InfluencerManagementController from "../controllers/influencer-management-controller";
 import authenticate from "../middleware/authenticate";
 
+// Create a new router instance for influencer
 const influencerRoutes = express.Router();
 
 /**
- * Public route - Fetch all influencers
- * GET /api/influencers
+ * @route   GET /api/influencers
+ * @desc    Fetch all influencers (public access)
+ * @access  Public
  */
 influencerRoutes.get("/", InfluencerController.getAllInfluencers);
 
 /**
- * Protected route - Get influencers created by the authenticated user
- * GET /api/influencers/me
+ * @route   GET /api/influencers/me
+ * @desc    Get influencers created by the authenticated user
+ * @access  Private
+ * @body    None
  */
 influencerRoutes.get(
   "/me",
@@ -23,20 +27,42 @@ influencerRoutes.get(
 );
 
 /**
- * Public route - Get a specific influencer by their unique handle
- * GET /api/influencers/:handle
+ * @route   GET /api/influencers/:handle
+ * @desc    Get a specific influencer by their unique handle
+ * @access  Public
+ * @body    None
  */
 influencerRoutes.get("/:handle", InfluencerController.getInfluencer);
 
 /**
- * Protected route - Create a new influencer entry
- * POST /api/influencers
+ * @route   POST /api/influencers
+ * @desc    Create a new influencer
+ * @access  Private
+ * @body    {
+ *            fullname: string,
+ *            handle: string,
+ *            profile_image: string,
+ *            bio?: string,
+ *            location: string,
+ *            socialPlatforms: [{ platform_id: string, follower_count: number, platform_profile_link: string }],
+ *            categories: string[]
+ *          }
  */
 influencerRoutes.post("/", authenticate, InfluencerController.createInfluencer);
 
 /**
- * Protected route - Update an existing influencer (by handle)
- * PUT /api/influencers/:handle
+ * @route   PUT /api/influencers/:influencer_id
+ * @desc    Update an existing influencer by ID
+ * @access  Private
+ * @body    {
+ *            fullname: string,
+ *            handle: string,
+ *            profile_image: string,
+ *            bio?: string,
+ *            location: string,
+ *            socialPlatforms: [{ platform_id: string, follower_count: number, platform_profile_link: string }],
+ *            categories: string[]
+ *          }
  */
 influencerRoutes.put(
   "/:influencer_id",
@@ -45,8 +71,10 @@ influencerRoutes.put(
 );
 
 /**
- * Protected route - Delete an influencer (by handle)
- * DELETE /api/influencers/:handle
+ * @route   DELETE /api/influencers/:influencer_id
+ * @desc    Delete an influencer by ID
+ * @access  Private
+ * @body    None
  */
 influencerRoutes.delete(
   "/:influencer_id",

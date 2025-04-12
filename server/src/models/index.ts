@@ -1,7 +1,7 @@
 import User from "./user-model";
 import Influencer from "./influencer-model";
 import InfluencerPlatform from "./influencer-social-platform-model";
-import Review from "./review-model";
+import Review from "./influencer-review-model";
 import SocialMediaPlatform from "./social-media-platform-model";
 import InfluencerCategory from "./influencer-category-model";
 

@@ -1,0 +1,67 @@
+import { Request, Response } from "express";
+import Influencer from "../models/influencer-model";
+import InfluencerReview from "../models/influencer-review-model";
+
+const createReviewForInfluencer = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { influencer_id } = req.params;
+    const user_id = req.body?.user?.id;
+    const { rating, comment } = req.body;
+
+    if (!influencer_id || !user_id) {
+      res.status(400).json({ message: "Missing influencer ID or user ID." });
+      return;
+    }
+
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+      res
+        .status(400)
+        .json({ message: "Rating must be a number between 1 and 5." });
+      return;
+    }
+
+    if (!comment || typeof comment !== "string") {
+      res
+        .status(400)
+        .json({ message: "Comment is required and must be a string." });
+      return;
+    }
+
+    const influencer = await Influencer.findByPk(influencer_id);
+    if (!influencer) {
+      res.status(404).json({ message: "Influencer not found." });
+      return;
+    }
+
+    // ✅ Check if review already exists for this user and influencer
+    const existingReview = await InfluencerReview.findOne({
+      where: { influencer_id, user_id },
+    });
+
+    if (existingReview) {
+      res.status(400).json({
+        message: "You have already submitted a review for this influencer.",
+      });
+      return;
+    }
+
+    const review = await InfluencerReview.create({
+      influencer_id,
+      user_id,
+      rating,
+      comment,
+    });
+
+    res.status(201).json({
+      message: "Review added successfully.",
+      review,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export { createReviewForInfluencer };

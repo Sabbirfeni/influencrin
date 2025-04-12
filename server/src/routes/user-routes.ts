@@ -6,9 +6,10 @@ import authenticate from "../middleware/authenticate";
 const userRoutes = express.Router();
 
 /**
- * Protected route - Get the currently authenticated user's information
- * GET /api/users/me
- * Requires a valid authentication token (middleware: authenticate)
+ * @route   GET /api/users/me
+ * @desc    Get the currently authenticated user's information
+ * @access  Private (Requires authentication)
+ * @body    None
  */
 userRoutes.get("/me", authenticate, userController.getMe);
 

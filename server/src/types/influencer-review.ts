@@ -1,4 +1,4 @@
-export interface ReviewAttributes {
+export interface InfluencerReviewAttributes {
   id?: string; // Optional because Sequelize auto-generates it
   user_id: string;
   influencer_id: string;
@@ -8,5 +8,5 @@ export interface ReviewAttributes {
   updatedAt?: Date;
 }
 
-export interface ReviewCreationAttributes
-  extends Omit<ReviewAttributes, "id" | "createdAt" | "updatedAt"> {}
+export interface InfluencerReviewCreationAttributes
+  extends Omit<InfluencerReviewAttributes, "id" | "createdAt" | "updatedAt"> {}

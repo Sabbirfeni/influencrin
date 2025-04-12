@@ -3,10 +3,13 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import User from "./user-model";
 import Influencer from "./influencer-model";
-import { ReviewAttributes, ReviewCreationAttributes } from "../types/review";
+import {
+  InfluencerReviewAttributes,
+  InfluencerReviewCreationAttributes,
+} from "../types/influencer-review";
 
-const Review = sequelize.define<
-  Model<ReviewAttributes, ReviewCreationAttributes>
+const InfluencerReview = sequelize.define<
+  Model<InfluencerReviewAttributes, InfluencerReviewCreationAttributes>
 >(
   "Review",
   {
@@ -57,4 +60,4 @@ const Review = sequelize.define<
   }
 );
 
-export default Review;
+export default InfluencerReview;
