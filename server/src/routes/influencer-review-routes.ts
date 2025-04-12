@@ -11,4 +11,10 @@ influencerReviewRoutes.post(
   InfluencerReviewController.createReviewForInfluencer
 );
 
+influencerReviewRoutes.put(
+  "/:influencer_id",
+  authenticate,
+  InfluencerReviewController.updateInfluencerReview
+);
+
 export default influencerReviewRoutes;

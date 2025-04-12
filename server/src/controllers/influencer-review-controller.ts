@@ -36,7 +36,7 @@ const createReviewForInfluencer = async (
       return;
     }
 
-    // ✅ Check if review already exists for this user and influencer
+    // Check if review already exists for this user and influencer
     const existingReview = await InfluencerReview.findOne({
       where: { influencer_id, user_id },
     });
@@ -64,4 +64,57 @@ const createReviewForInfluencer = async (
   }
 };
 
-export { createReviewForInfluencer };
+const updateInfluencerReview = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { influencer_id } = req.params;
+    const user_id = req.body?.user?.id;
+    const { rating, comment } = req.body;
+
+    if (!influencer_id || !user_id) {
+      res.status(400).json({ message: "Missing influencer or user ID." });
+      return;
+    }
+
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+      res
+        .status(400)
+        .json({ message: "Rating must be a number between 1 and 5." });
+      return;
+    }
+
+    const influencer = await Influencer.findByPk(influencer_id);
+    if (!influencer) {
+      res.status(404).json({ message: "Influencer not found." });
+      return;
+    }
+
+    const review = await InfluencerReview.findOne({
+      where: {
+        user_id,
+        influencer_id,
+      },
+    });
+
+    if (!review) {
+      res.status(404).json({ message: "Review not found for this user." });
+      return;
+    }
+
+    review.set("rating", rating);
+    review.set("comment", comment);
+    await review.save();
+
+    res.status(200).json({
+      message: "Review updated successfully.",
+      review,
+    });
+  } catch (error) {
+    console.error("Error updating influencer review:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export { createReviewForInfluencer, updateInfluencerReview };
