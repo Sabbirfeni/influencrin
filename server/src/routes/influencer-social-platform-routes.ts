@@ -11,4 +11,10 @@ influencerSocialPlatformRoutes.post(
   InfluencerSocialPlatformController.createInfluencerSocialPlatform
 );
 
+influencerSocialPlatformRoutes.put(
+  "/:influencer_id",
+  authenticate,
+  InfluencerSocialPlatformController.updateInfluencerSocialPlatform
+);
+
 export default influencerSocialPlatformRoutes;
