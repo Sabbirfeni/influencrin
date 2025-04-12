@@ -12,4 +12,10 @@ influencerCategoryRoutes.get(
   InfluencerCategoryController.getAllInfluencerCategories
 );
 
+influencerCategoryRoutes.post(
+  "/:influencer_id",
+  authenticate,
+  InfluencerCategoryController.createCategoriesForInfluencer
+);
+
 export default influencerCategoryRoutes;

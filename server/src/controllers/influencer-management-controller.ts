@@ -9,7 +9,7 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
     const userId = req.body?.user?.id;
 
     if (!influencer_id) {
-      res.status(400).json({ message: "Handle is required." });
+      res.status(400).json({ message: "Influence ID is required." });
       return;
     }
 
