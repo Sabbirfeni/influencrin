@@ -3,7 +3,7 @@ export interface UserAttributes {
   fullname: string;
   email: string;
   password_hash: string;
-  profile_image: string;
+  profile_image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

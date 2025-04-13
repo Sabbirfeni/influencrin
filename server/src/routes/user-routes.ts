@@ -18,11 +18,12 @@ userRoutes.get("/me", authenticate, userController.getMe);
  * @route   PUT /api/users/me
  * @desc    Update the currently authenticated user's information
  * @access  Private (Requires authentication)
- * @multipart/form-data {
- *    fullname (optional)
- *    profile_image (optional)
- *  }
+ *
+ * @formdata
+ * - fullname: string (optional) - New full name
+ * - profile_image: file (optional) - New profile image file
  */
+
 userRoutes.put(
   "/me",
   multerUserProfileImageUpload.single("profile_image"),

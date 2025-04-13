@@ -7,9 +7,12 @@ import { UserAttributes } from "../types/user";
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 import { ValidationError } from "sequelize";
+import path from "path";
+import fs from "fs";
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const { fullname, email, password } = req.body;
+  const file = req.file;
 
   if (!fullname || !email || !password) {
     res.status(400).json({
@@ -19,12 +22,17 @@ const register = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    // Create the new user
-    const newUser = await User.create({
+    const userDataToSave: any = {
       fullname,
       email,
       password_hash: password,
-    });
+    };
+
+    if (file) {
+      userDataToSave.profile_image = file.filename;
+    }
+
+    const newUser = await User.create(userDataToSave);
 
     const userData = newUser.get() as UserAttributes;
 
@@ -34,9 +42,22 @@ const register = async (req: Request, res: Response): Promise<void> => {
         id: userData.id,
         fullname: userData.fullname,
         email: userData.email,
+        profile_image: userData.profile_image,
       },
     });
   } catch (error: any) {
+    // delete the profile image that already upload to the disk
+    if (file) {
+      const newImagePath = path.join(
+        __dirname,
+        "../../public/images/uploads/user-profiles",
+        file.filename
+      );
+      if (fs.existsSync(newImagePath)) {
+        fs.unlinkSync(newImagePath); // Clean up failed upload
+      }
+    }
+
     if (error instanceof ValidationError) {
       res.status(400).json({
         message: error.errors[0].message,

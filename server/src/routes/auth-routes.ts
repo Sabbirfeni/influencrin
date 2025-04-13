@@ -2,6 +2,7 @@
 import express from "express";
 import * as authController from "../controllers/auth-controller";
 import authenticate from "../middleware/authenticate";
+import { multerUserProfileImageUpload } from "../middleware/multer-upload";
 
 const authRoutes = express.Router();
 
@@ -9,13 +10,19 @@ const authRoutes = express.Router();
  * @route   POST /api/auth/register
  * @desc    Register a new user
  * @access  Public
- * @requiredBody {
- *   fullname: string,
- *   email: string,
- *   password: string
- * }
+ * @form    multipart/form-data
+ *
+ * @body
+ * - fullname: string (required) - Full name of the user
+ * - email: string (required) - Email address of the user
+ * - password: string (required) - Password for the account
+ * - profile_image: file (optional) - Profile image file
  */
-authRoutes.post("/register", authController.register);
+authRoutes.post(
+  "/register",
+  multerUserProfileImageUpload.single("profile_image"),
+  authController.register
+);
 
 /**
  * @route   POST /api/auth/login
