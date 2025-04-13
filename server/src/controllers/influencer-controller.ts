@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { ValidationError, Op } from "sequelize";
+import { ValidationError, Op, Sequelize } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import Influencer from "../models/influencer-model";
 import InfluencerSocialPlatform from "../models/influencer-social-platform-model";
 import InfluencerCategory from "../models/influencer-category-model";
 import SocialMediaPlatform from "../models/social-media-platform-model";
-import { InfluencerCreationAttributes } from "../types/influencer";
+import InfluencerReview from "../models/influencer-review-model";
 
 const createInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
@@ -194,11 +194,157 @@ const getAllInfluencers = async (
       order: [["createdAt", "DESC"]],
     });
 
+    if (influencers.length === 0) {
+      res.status(404).json({ message: "No influencers found." });
+      return;
+    }
+
     res.status(200).json({
       message: "Influencers fetched successfully.",
       influencers,
     });
   } catch (error: any) {
+    res.status(500).json({
+      message: error.message || "Internal server error.",
+    });
+  }
+};
+
+const searchOrGetInfluencers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      q,
+      platform_name,
+      category,
+      min_followers,
+      max_followers,
+      min_rating,
+    } = req.query;
+
+    const whereClause: any = {};
+    const include: any = [
+      {
+        model: InfluencerSocialPlatform,
+        attributes: ["platform_profile_link", "follower_count"],
+        include: [
+          {
+            model: SocialMediaPlatform,
+            attributes: ["platform_name", "platform_icon_url"],
+          },
+        ],
+      },
+      {
+        model: InfluencerCategory,
+        attributes: ["category_name"],
+      },
+      {
+        model: InfluencerReview,
+        attributes: [],
+      },
+    ];
+
+    // 🔍 Search by fullname or handle
+    if (q) {
+      whereClause[Op.or] = [
+        { fullname: { [Op.iLike]: `%${q}%` } },
+        { handle: { [Op.iLike]: `%${q}%` } },
+      ];
+    }
+
+    // 🔎 Filter by platform_id
+    if (platform_name) {
+      include[0].include[0].where = {
+        platform_name: {
+          [Op.iLike]: `%${platform_name}%`,
+        },
+      };
+      include[0].required = true;
+    }
+
+    // 🔎 Filter by category (case-insensitive)
+    if (category) {
+      include[1].where = Sequelize.where(
+        Sequelize.fn(
+          "LOWER",
+          Sequelize.col("InfluencerCategories.category_name")
+        ),
+        "LIKE",
+        `%${(category as string).toLowerCase()}%`
+      );
+      include[1].required = true;
+    }
+
+    // 🔎 Filter by follower count range
+    if (min_followers || max_followers) {
+      include[0].where = {
+        ...(include[0].where || {}),
+        follower_count: {
+          ...(min_followers && { [Op.gte]: +min_followers }),
+          ...(max_followers && { [Op.lte]: +max_followers }),
+        },
+      };
+      include[0].required = true;
+    }
+
+    // 🧮 Define all the necessary attributes & Include avg review score
+
+    const attributes: any = [
+      "fullname",
+      "handle",
+      "profile_image",
+      "location",
+      [
+        Sequelize.fn(
+          "ROUND",
+          Sequelize.fn("AVG", Sequelize.col("Reviews.rating"))
+        ),
+        "avg_review_score",
+      ],
+    ];
+
+    // 🔎 Filter by avg review score
+    let having: any;
+
+    if (min_rating) {
+      having = Sequelize.where(
+        Sequelize.fn(
+          "ROUND",
+          Sequelize.fn("AVG", Sequelize.col("Reviews.rating"))
+        ),
+        {
+          [Op.gte]: +min_rating,
+        }
+      );
+    }
+
+    const influencers = await Influencer.findAll({
+      where: whereClause,
+      include,
+      attributes,
+      group: [
+        "Influencer.id",
+        "InfluencerSocialPlatforms.id",
+        "InfluencerSocialPlatforms->SocialMediaPlatform.id",
+        "InfluencerCategories.id",
+      ],
+      having,
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (!influencers.length) {
+      res.status(404).json({ message: "No influencers found." });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Influencers fetched successfully.",
+      influencers,
+    });
+  } catch (error: any) {
+    console.error("Error fetching influencers:", error);
     res.status(500).json({
       message: error.message || "Internal server error.",
     });
@@ -283,6 +429,11 @@ const getInfluencersByUser = async (
       order: [["createdAt", "DESC"]],
     });
 
+    if (influencers.length === 0) {
+      res.status(404).json({ message: "No influencers found." });
+      return;
+    }
+
     res.status(200).json({
       message: "Influencers fetched successfully.",
       influencers,
@@ -297,6 +448,7 @@ const getInfluencersByUser = async (
 export {
   createInfluencer,
   getAllInfluencers,
+  searchOrGetInfluencers,
   getInfluencer,
   getInfluencersByUser,
 };

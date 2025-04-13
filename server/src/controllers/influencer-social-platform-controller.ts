@@ -12,6 +12,10 @@ export const getAllSocialMediaPlatforms = async (
   try {
     const platforms = await SocialMediaPlatform.findAll();
 
+    if (platforms.length === 0) {
+      res.status(404).json({ message: "No platforms found." });
+      return;
+    }
     res.status(200).json({
       message: "Social platforms fetched successfully.",
       socialMediaPlatforms: platforms,

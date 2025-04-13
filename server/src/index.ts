@@ -5,6 +5,10 @@ import routes from "./routes";
 import "./models"; // Make sure models are initialized
 
 import { connectToDatabase, syncDatabase } from "./db/sequelize";
+import { seedInfluencers } from "./db/seeders/influencers-seed";
+import { seedInfluencerCategories } from "./db/seeders/influencer-categories-seed";
+import { seedInfluencerSocialPlatforms } from "./db/seeders/influencer-social-platforms-seed";
+import { seedReviews } from "./db/seeders/influencer-reviews-seed";
 
 const app = express();
 const port = 3000;
@@ -23,7 +27,11 @@ app.use(express.json());
 const startServer = async () => {
   try {
     await connectToDatabase();
-    // await syncDatabase(); // only alter: true or force: true in dev
+    await syncDatabase(); // only alter: true or force: true in dev
+    // await seedInfluencers();
+    // await seedInfluencerCategories();
+    // await seedInfluencerSocialPlatforms();
+    // await seedReviews();
 
     app.use("/api", routes);
 

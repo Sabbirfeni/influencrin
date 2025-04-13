@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import InfluencerCategory from "../models/influencer-category-model";
+import { Op, fn, col, where } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import Influencer from "../models/influencer-model";
 
@@ -68,7 +69,25 @@ const createCategoryForInfluencer = async (
       return;
     }
 
-    // Step 2: Create the category for the influencer
+    // Step 2: Check if the category already exists for this influencer (case-insensitive)
+    const existingCategory = await InfluencerCategory.findOne({
+      where: {
+        influencer_id,
+        [Op.and]: where(
+          fn("LOWER", col("category_name")),
+          category.toLowerCase()
+        ),
+      },
+    });
+
+    if (existingCategory) {
+      res.status(409).json({
+        message: "Category already exists for this influencer.",
+      });
+      return;
+    }
+
+    // Step 3: Create the category
     const createdCategory = await InfluencerCategory.create({
       influencer_id,
       category_name: category,

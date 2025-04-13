@@ -14,6 +14,25 @@ const influencerRoutes = express.Router();
  */
 influencerRoutes.get("/", InfluencerController.getAllInfluencers);
 
+// routes/search-routes.ts
+
+const searchRoutes = express.Router();
+
+/**
+ * @route   GET /api/search
+ * @desc    Search and filter influencers
+ * @access  Public
+ * @query   {
+ *            q?: string,                // name or handle (case-insensitive)
+ *            platform_id?: string,
+ *            category?: string,         // case-insensitive
+ *            min_followers?: number,
+ *            max_followers?: number,
+ *            min_rating?: number        // average review score (e.g., 4.2)
+ *          }
+ */
+influencerRoutes.get("/search", InfluencerController.searchOrGetInfluencers);
+
 /**
  * @route   GET /api/influencers/me
  * @desc    Get influencers created by the authenticated user

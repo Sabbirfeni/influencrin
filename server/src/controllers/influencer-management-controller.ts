@@ -7,6 +7,7 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
   try {
     const { influencer_id } = req.params;
     const userId = req.body?.user?.id;
+    const { fullname, profile_image, bio, location } = req.body;
 
     if (!influencer_id) {
       res.status(400).json({ message: "Influence ID is required." });
@@ -27,8 +28,6 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-
-    const { fullname, profile_image, bio, location } = req.body;
 
     /** 
     We're changing the handle once it set. 

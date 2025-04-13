@@ -6,7 +6,7 @@ import authenticate from "../middleware/authenticate";
 const influencerReviewRoutes = express.Router();
 
 /**
- * @route   GET /api/influencers/:influencer_id/reviews
+ * @route   GET /api/influencers/reviews/:influencer_id
  * @desc    Get all reviews for a specific influencer
  * @access  Public
  */
@@ -16,7 +16,7 @@ influencerReviewRoutes.get(
 );
 
 /**
- * @route   POST /api/influencers/:influencer_id/reviews
+ * @route   POST /api/influencers/reviews/:influencer_id
  * @desc    Create a review for a specific influencer (only once per user)
  * @access  Protected
  * @body    {
@@ -31,7 +31,7 @@ influencerReviewRoutes.post(
 );
 
 /**
- * @route   PUT /api/influencers/:influencer_id/reviews
+ * @route   PUT /api/influencers/reviews/:influencer_id
  * @desc    Update an existing review by the same user for the influencer
  * @access  Protected
  * @body    {

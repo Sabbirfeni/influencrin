@@ -13,7 +13,7 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { id, email, fullname } = user.get();
+    const { id, email, fullname, profile_image } = user.get();
 
     res.status(200).json({
       message: "User details retrieved successfully",
@@ -21,6 +21,7 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
         id,
         email,
         fullname,
+        profile_image,
       },
     });
   } catch (error) {
@@ -50,6 +51,11 @@ const getReviewsByUser = async (req: Request, res: Response): Promise<void> => {
       ],
       order: [["createdAt", "DESC"]],
     });
+
+    if (reviews.length === 0) {
+      res.status(404).json({ message: "No reviews yet." });
+      return;
+    }
 
     res.status(200).json({
       message: "Reviews fetched successfully.",

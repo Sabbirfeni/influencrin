@@ -33,12 +33,16 @@ const getReviewsForInfluencer = async (
       order: [["createdAt", "DESC"]],
     });
 
+    if (reviews.length === 0) {
+      res.status(404).json({ message: "No reviews yet." });
+      return;
+    }
+
     res.status(200).json({
       message: "Reviews fetched successfully.",
       reviews,
     });
   } catch (error) {
-    console.error("Error fetching influencer reviews:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
@@ -123,6 +127,13 @@ const updateInfluencerReview = async (
       res
         .status(400)
         .json({ message: "Rating must be a number between 1 and 5." });
+      return;
+    }
+
+    if (!comment || typeof comment !== "string") {
+      res
+        .status(400)
+        .json({ message: "Comment is required and must be a string." });
       return;
     }
 
