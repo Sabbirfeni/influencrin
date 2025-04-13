@@ -247,9 +247,26 @@ const searchOrGetInfluencers = async (
     ];
 
     // 🔍 Search by fullname or handle
+
     if (q) {
+      let normalizedQuery: string | undefined;
+
+      if (typeof q === "string") {
+        normalizedQuery = q.toLowerCase().replace(/\s+/g, "");
+      }
+
       whereClause[Op.or] = [
-        { fullname: { [Op.iLike]: `%${q}%` } },
+        Sequelize.where(
+          Sequelize.fn(
+            "REPLACE",
+            Sequelize.fn("LOWER", Sequelize.col("fullname")),
+            " ",
+            ""
+          ),
+          {
+            [Op.like]: `%${normalizedQuery}%`,
+          }
+        ),
         { handle: { [Op.iLike]: `%${q}%` } },
       ];
     }
@@ -258,7 +275,7 @@ const searchOrGetInfluencers = async (
     if (platform_name) {
       include[0].include[0].where = {
         platform_name: {
-          [Op.iLike]: `%${platform_name}%`,
+          [Op.iLike]: `${platform_name}`,
         },
       };
       include[0].required = true;
