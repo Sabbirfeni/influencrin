@@ -84,29 +84,43 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
     // Update the fullname if it's provided
     if (fullname !== undefined) user.set("fullname", fullname);
 
-    // If a file is uploaded, save it to disk and update the user's profile_image
-    // Handle profile image upload
+    const previousImage = user.get("profile_image") as string;
+
     if (file) {
-      const previousImage = user.get("profile_image") as string;
-
-      // Delete previous image if it exists
-      if (previousImage) {
-        const imagePath = path.join(
-          __dirname,
-          "../../public/images/uploads/user-profiles",
-          previousImage
-        );
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath); // Delete the file
-        }
-      }
-
-      // Save new image filename
+      // Temporarily set new image (don't delete old one yet)
       user.set("profile_image", file.filename);
     }
 
-    // Save the user data to the database
-    await user.save();
+    try {
+      await user.save(); // Only save now
+    } catch (error) {
+      // If saving failed, clean up the uploaded new file (optional)
+      if (file) {
+        const newImagePath = path.join(
+          __dirname,
+          "../../public/images/uploads/user-profiles",
+          file.filename
+        );
+        if (fs.existsSync(newImagePath)) {
+          fs.unlinkSync(newImagePath); // Clean up failed upload
+        }
+      }
+
+      res.status(500).json({ error: "Failed to update user profile." });
+      return;
+    }
+
+    // Now safe to delete the previous image
+    if (file && previousImage && previousImage !== file.filename) {
+      const oldImagePath = path.join(
+        __dirname,
+        "../../public/images/uploads/user-profiles",
+        previousImage
+      );
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath); // Delete after successful save
+      }
+    }
 
     // Respond with the updated user data, including the profile image URL
     res.status(200).json({
