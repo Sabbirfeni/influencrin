@@ -217,8 +217,8 @@ const searchOrGetInfluencers = async (
   try {
     const {
       q,
-      platform_name,
-      category,
+      platform_names,
+      category_names,
       min_followers,
       max_followers,
       min_rating,
@@ -271,26 +271,39 @@ const searchOrGetInfluencers = async (
       ];
     }
 
-    // 🔎 Filter by platform_id
-    if (platform_name) {
+    // Filter by multiple platform names
+    if (platform_names) {
+      const platformList =
+        typeof platform_names === "string"
+          ? platform_names.split(",").map((name) => name.trim())
+          : Array.isArray(platform_names)
+          ? platform_names.map((p) => String(p).trim())
+          : [];
+
       include[0].include[0].where = {
-        platform_name: {
-          [Op.iLike]: `${platform_name}`,
-        },
+        [Op.or]: platformList.map((name) => ({
+          platform_name: { [Op.iLike]: name },
+        })),
       };
+
       include[0].required = true;
     }
 
-    // 🔎 Filter by category (case-insensitive)
-    if (category) {
-      include[1].where = Sequelize.where(
-        Sequelize.fn(
-          "LOWER",
-          Sequelize.col("InfluencerCategories.category_name")
-        ),
-        "LIKE",
-        `%${(category as string).toLowerCase()}%`
-      );
+    // Filter by multiple categories
+    if (category_names) {
+      const categoryList =
+        typeof category_names === "string"
+          ? category_names.split(",").map((name) => name.trim())
+          : Array.isArray(category_names)
+          ? category_names.map((c) => String(c).trim())
+          : [];
+
+      include[1].where = {
+        [Op.or]: categoryList.map((cat) => ({
+          category_name: { [Op.iLike]: cat },
+        })),
+      };
+
       include[1].required = true;
     }
 

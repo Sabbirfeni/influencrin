@@ -23,12 +23,12 @@ const searchRoutes = express.Router();
  * @desc    Search and filter influencers
  * @access  Public
  * @query   {
- *            q?: string,                // name or handle (case-insensitive)
- *            platform_id?: string,
- *            category?: string,         // case-insensitive
+ *            q?: string,
+ *            platform_names?: string,
+ *            category_names?: string,
  *            min_followers?: number,
  *            max_followers?: number,
- *            min_rating?: number        // average review score (e.g., 4.2)
+ *            min_rating?: number
  *          }
  */
 influencerRoutes.get("/search", InfluencerController.searchOrGetInfluencers);
