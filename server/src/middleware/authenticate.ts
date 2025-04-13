@@ -13,6 +13,7 @@ const authenticate = (
   res: Response,
   next: NextFunction
 ): void => {
+  console.log(req.body);
   const token = req.cookies?.token;
 
   if (!token) {

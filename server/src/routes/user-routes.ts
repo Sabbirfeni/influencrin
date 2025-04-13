@@ -2,6 +2,7 @@
 import express from "express";
 import * as userController from "../controllers/user-controller";
 import authenticate from "../middleware/authenticate";
+import { multerUserProfileImageUpload } from "../middleware/multer-upload";
 
 const userRoutes = express.Router();
 
@@ -12,6 +13,22 @@ const userRoutes = express.Router();
  * @body    None
  */
 userRoutes.get("/me", authenticate, userController.getMe);
+
+/**
+ * @route   PUT /api/users/me
+ * @desc    Update the currently authenticated user's information
+ * @access  Private (Requires authentication)
+ * @multipart/form-data {
+ *    fullname (optional)
+ *    profile_image (optional)
+ *  }
+ */
+userRoutes.put(
+  "/me",
+  multerUserProfileImageUpload.single("profile_image"),
+  authenticate,
+  userController.updateMe
+);
 
 /**
  * @route   GET /api/users/:user_id/reviews

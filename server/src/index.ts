@@ -9,6 +9,7 @@ import { seedInfluencers } from "./db/seeders/influencers-seed";
 import { seedInfluencerCategories } from "./db/seeders/influencer-categories-seed";
 import { seedInfluencerSocialPlatforms } from "./db/seeders/influencer-social-platforms-seed";
 import { seedReviews } from "./db/seeders/influencer-reviews-seed";
+import path from "path";
 
 const app = express();
 const port = 3000;
@@ -22,6 +23,12 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
+// Serve static files from the 'public' directory
+app.use(
+  "/uploads/user-profiles",
+  express.static(path.join(__dirname, "public/uploads/user-profiles"))
+);
 
 // Start server only after DB is ready
 const startServer = async () => {
