@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "path";
 
-// Define the storage configuration
+// Define the user profile storage configuration
 const userProfileImageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Store files in a 'uploads' folder in your project directory

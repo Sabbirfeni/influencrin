@@ -6,6 +6,8 @@ import InfluencerSocialPlatform from "../models/influencer-social-platform-model
 import InfluencerCategory from "../models/influencer-category-model";
 import SocialMediaPlatform from "../models/social-media-platform-model";
 import InfluencerReview from "../models/influencer-review-model";
+import path from "path";
+import fs from "fs";
 
 const createInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
@@ -17,29 +19,18 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const user_id = req.body?.user?.id;
-    const {
-      fullname,
-      handle,
-      profile_image,
-      bio,
-      location,
-      socialPlatforms: platformsFromBody,
-      categories,
-    } = req.body as {
-      fullname: string;
-      handle: string;
-      profile_image: string;
-      bio?: string;
-      location: string;
-      socialPlatforms: {
-        platform_id: string;
-        follower_count: number;
-        platform_profile_link: string;
-      }[];
-      categories: string[];
-    };
 
-    // assign so it's available in catch block
+    const { fullname, handle, bio, location } = req.body;
+
+    // Get the uploaded image filename
+    const profileImageFile = req.file;
+    const profile_image = profileImageFile ? profileImageFile.filename : "";
+
+    // Parse JSON fields
+    const platformsFromBody = JSON.parse(req.body.socialPlatforms || "[]");
+    const categories = JSON.parse(req.body.categories || "[]");
+
+    // Assign for catch block access
     socialPlatforms = platformsFromBody;
 
     if (
@@ -56,15 +47,14 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Check for duplicate platform_ids in the payload
+    // Check for duplicate platform_ids
     const seenPlatformIds = new Set<string>();
     const duplicatePlatform = platformsFromBody.find((platform) => {
-      if (seenPlatformIds.has(platform.platform_id)) {
-        return true;
-      }
+      if (seenPlatformIds.has(platform.platform_id)) return true;
       seenPlatformIds.add(platform.platform_id);
       return false;
     });
+
     if (duplicatePlatform) {
       res.status(400).json({
         message: "Can't add same platform multiple times.",
@@ -72,7 +62,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Check for duplicate categories in the payload (case-insensitive)
+    // Check for duplicate categories (case-insensitive)
     const seenCategories = new Set<string>();
     const duplicateCategory = categories.find((category) => {
       const lower = category.trim().toLowerCase();
@@ -80,6 +70,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       seenCategories.add(lower);
       return false;
     });
+
     if (duplicateCategory) {
       res.status(400).json({
         message: "Can't add the same category multiple times.",
@@ -89,7 +80,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Check for handle uniqueness (case-insensitive)
+    // Check handle uniqueness
     const existingInfluencer = await Influencer.findOne({
       where: {
         handle: {
@@ -121,7 +112,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
     const influencerId = influencer.get("id") as string;
 
-    // Prepare and create social platforms
+    // Create social platforms
     const socialEntries = platformsFromBody.map((platform) => ({
       ...platform,
       influencer_id: influencerId,
@@ -129,7 +120,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
 
     await InfluencerSocialPlatform.bulkCreate(socialEntries, { transaction });
 
-    // Prepare and create categories
+    // Create categories
     const categoryEntries = categories.map((name) => ({
       influencer_id: influencerId,
       category_name: name,
@@ -145,6 +136,22 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error: any) {
     await transaction.rollback();
+
+    // Delete uploaded file if DB creation failed
+    if (req.file) {
+      const filePath = path.join(
+        __dirname,
+        "../../public/images/uploads/influencer-profiles",
+        req.file.filename
+      );
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("Failed to delete uploaded file:", err);
+        } else {
+          console.log("Uploaded file deleted due to error.");
+        }
+      });
+    }
 
     if (error instanceof ValidationError) {
       const uniqueError = error.errors.find(

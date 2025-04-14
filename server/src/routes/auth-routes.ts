@@ -2,7 +2,7 @@
 import express from "express";
 import * as authController from "../controllers/auth-controller";
 import authenticate from "../middleware/authenticate";
-import { multerUserProfileImageUpload } from "../middleware/multer-upload";
+import { multerUserProfileImageUpload } from "../middleware/multer-user-profile-upload";
 
 const authRoutes = express.Router();
 

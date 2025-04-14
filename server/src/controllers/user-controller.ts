@@ -81,48 +81,30 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Update the fullname if it's provided
     if (fullname !== undefined) user.set("fullname", fullname);
 
     const previousImage = user.get("profile_image") as string;
 
     if (file) {
-      // Temporarily set new image (don't delete old one yet)
       user.set("profile_image", file.filename);
     }
 
     try {
       await user.save(); // Only save now
     } catch (error) {
-      // If saving failed, clean up the uploaded new file (optional)
       if (file) {
-        const newImagePath = path.join(
-          __dirname,
-          "../../public/images/uploads/user-profiles",
-          file.filename
-        );
-        if (fs.existsSync(newImagePath)) {
-          fs.unlinkSync(newImagePath); // Clean up failed upload
-        }
+        deleteUserProfileImageFromDisk(file.filename);
       }
 
       res.status(500).json({ error: "Failed to update user profile." });
       return;
     }
 
-    // Now safe to delete the previous image
+    // Delete old image only after successful update
     if (file && previousImage && previousImage !== file.filename) {
-      const oldImagePath = path.join(
-        __dirname,
-        "../../public/images/uploads/user-profiles",
-        previousImage
-      );
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath); // Delete after successful save
-      }
+      deleteUserProfileImageFromDisk(previousImage);
     }
 
-    // Respond with the updated user data, including the profile image URL
     res.status(200).json({
       message: "User updated successfully",
       user: {
@@ -135,6 +117,25 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Internal server error!" });
+  }
+};
+
+/**
+ * Deletes a file if it exists, logs errors if any.
+ */
+const deleteUserProfileImageFromDisk = (filename: string) => {
+  const fullPath = path.join(
+    __dirname,
+    "../../public/images/uploads/user-profiles",
+    filename
+  );
+  if (fs.existsSync(fullPath)) {
+    try {
+      fs.unlinkSync(fullPath);
+      console.log(`Deleted file: ${fullPath}`);
+    } catch (err) {
+      console.error(`Failed to delete file: ${fullPath}`, err);
+    }
   }
 };
 

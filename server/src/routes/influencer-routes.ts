@@ -3,6 +3,7 @@ import express from "express";
 import * as InfluencerController from "../controllers/influencer-controller";
 import * as InfluencerManagementController from "../controllers/influencer-management-controller";
 import authenticate from "../middleware/authenticate";
+import { multerInfluencerProfileImageUpload } from "../middleware/multer-influencer-profile-upload";
 
 // Create a new router instance for influencer
 const influencerRoutes = express.Router();
@@ -57,23 +58,23 @@ influencerRoutes.get("/:handle", InfluencerController.getInfluencer);
  * @route   POST /api/influencers
  * @desc    Create a new influencer
  * @access  Private
- * @body    {
- *            fullname: string (required),
- *            handle: string (required),
- *            profile_image: string (required),
- *            location: string (required),
- *            socialPlatforms: [
- *              {
- *                platform_id: string (required),
- *                follower_count: number (required),
- *                platform_profile_link: string (required)
- *              }
- *            ] (must include at least one),
- *            categories: string[] (at least one required),
- *            bio?: string (optional)
- *          }
+ * @body    multipart/form-data:
+ *            - fullname: string (required)
+ *            - handle: string (required)
+ *            - profile_image: File (required)
+ *            - location: string (required)
+ *            - socialPlatforms: stringified JSON array of objects (required)
+ *                e.g. [{"platform_id":"1","follower_count":1000,"platform_profile_link":"..."}]
+ *            - categories: stringified JSON array (required)
+ *                e.g. ["fashion", "travel"]
+ *            - bio: string (optional)
  */
-influencerRoutes.post("/", authenticate, InfluencerController.createInfluencer);
+influencerRoutes.post(
+  "/",
+  multerInfluencerProfileImageUpload.single("profile_image"),
+  authenticate,
+  InfluencerController.createInfluencer
+);
 
 /**
  * @route   PUT /api/influencers/:influencer_id
@@ -88,6 +89,7 @@ influencerRoutes.post("/", authenticate, InfluencerController.createInfluencer);
  */
 influencerRoutes.put(
   "/:influencer_id",
+  multerInfluencerProfileImageUpload.single("profile_image"),
   authenticate,
   InfluencerManagementController.updateInfluencer
 );

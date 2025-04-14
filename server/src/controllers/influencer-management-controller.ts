@@ -3,18 +3,24 @@ import { Op, ValidationError } from "sequelize";
 import Influencer from "../models/influencer-model";
 import { sequelize } from "../db/sequelize";
 
+import fs from "fs";
+import path from "path";
+
 const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
+  const uploadedFile = req.file;
+  let previousImageFilename: string | null = null;
+
   try {
     const { influencer_id } = req.params;
     const userId = req.body?.user?.id;
-    const { fullname, profile_image, bio, location } = req.body;
+    const { fullname, bio, location } = req.body;
 
     if (!influencer_id) {
-      res.status(400).json({ message: "Influence ID is required." });
+      res.status(400).json({ message: "Influencer ID is required." });
       return;
     }
 
-    // Find influencer by handle and user_id
+    // Find influencer by ID and user_id
     const influencer = await Influencer.findOne({
       where: {
         id: influencer_id,
@@ -23,29 +29,44 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!influencer) {
+      // Clean up uploaded image if influencer not found
+      if (uploadedFile) {
+        deleteInfluencerProfileImageFromDisk(uploadedFile.filename);
+      }
+
       res.status(404).json({
         message: `Influencer not found or unauthorized.`,
       });
       return;
     }
 
-    /** 
-    We're changing the handle once it set. 
-    So don't add it in the updateData or update the handle anyway. 
-    */
+    // Save old image name to delete after update
+    previousImageFilename = (influencer.get("profile_image") as string) || null;
+
+    // Prepare update data
     const updateData: Partial<Record<string, any>> = {};
     if (fullname) updateData.fullname = fullname;
-    if (profile_image) updateData.profile_image = profile_image;
     if (bio) updateData.bio = bio;
     if (location) updateData.location = location;
+    if (uploadedFile) updateData.profile_image = uploadedFile.filename;
 
     await influencer.update(updateData);
+
+    // Delete old image if a new one was uploaded and update succeeded
+    if (uploadedFile && previousImageFilename) {
+      deleteInfluencerProfileImageFromDisk(previousImageFilename);
+    }
 
     res.status(200).json({
       message: "Influencer updated successfully.",
       influencer,
     });
   } catch (error: any) {
+    // Delete newly uploaded image if update fails
+    if (uploadedFile) {
+      deleteInfluencerProfileImageFromDisk(uploadedFile.filename);
+    }
+
     if (error instanceof ValidationError) {
       res.status(400).json({
         message: error.errors[0].message,
@@ -59,6 +80,22 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
     });
   }
 };
+
+// Helper to delete a file
+function deleteInfluencerProfileImageFromDisk(filename: string) {
+  const filePath = path.join(
+    __dirname,
+    "../../public/images/uploads/influencer-profiles",
+    filename
+  );
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error("Failed to delete file:", filename, err);
+    } else {
+      console.log("Deleted file:", filename);
+    }
+  });
+}
 
 const deleteInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();

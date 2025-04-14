@@ -2,7 +2,7 @@
 import express from "express";
 import * as userController from "../controllers/user-controller";
 import authenticate from "../middleware/authenticate";
-import { multerUserProfileImageUpload } from "../middleware/multer-upload";
+import { multerUserProfileImageUpload } from "../middleware/multer-user-profile-upload";
 
 const userRoutes = express.Router();
 
