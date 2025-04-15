@@ -1,15 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./routes/app-routes";
 import "./App.css";
 
 function App() {
   return (
-    <>
-      <div className="flex flex-col items-center justify-center min-h-svh">
-        <Button>Click me</Button>
-        <Heart color="#0A66C2" fill="#0A66C2" />
-      </div>
-    </>
+    <Router>
+      <AppRoutes />
+    </Router>
   );
 }
 
