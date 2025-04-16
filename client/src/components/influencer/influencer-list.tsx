@@ -1,4 +1,4 @@
-import InfluencerCard from "./influencer-card";
+import InfluencerCard from "./card/influencer-card";
 
 function InfluencerList() {
   return (

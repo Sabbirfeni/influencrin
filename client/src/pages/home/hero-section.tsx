@@ -7,12 +7,12 @@ function HeroSection() {
     <SectionWrappers style="bg-gradient-to-b to-[#ffe6e6] from-white">
       <div className="w-full h-[92vh] flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
         <div className="w-full md:w-1/2 order-2 md:order-1 flex flex-col items-center md:items-start">
-          <h1 className="text-[36px] md:text-[80px] text-center md:text-left font-bold leading-tight">
+          <h1 className="text-[32px] md:text-[75px] text-center md:text-left font-bold leading-tight">
             <div className="text-primary">Meet Influencers</div>
             <div>in your niche &</div>
             <div className="text-primary"> Grow Together</div>
           </h1>
-          <Button className="w-[fit-content] md:px-6 md:py-5 mt-5 md:text-base shadow-xl">
+          <Button className="w-[fit-content] md:px-6 md:py-5 mt-6 md:text-base shadow-xl">
             Find Influencers
           </Button>
         </div>

@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { X, Instagram, Youtube } from "lucide-react";
-import InfluencerAvgRating from "./influencer-avg-rating";
+import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link } from "react-router-dom";
 
 type Platform = {
@@ -38,7 +38,7 @@ export default function InfluencerCard({
       <Card className="relative rounded-2xl py-4 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
         <CardContent className=" p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
-            <InfluencerAvgRating rating={rating} size="3" />
+            <InfluencerAvgRating rating={rating} size="3" textSize="xs" />
           </div>
 
           {/* Profile Image */}

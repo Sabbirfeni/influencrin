@@ -1,0 +1,17 @@
+import { User } from "lucide-react";
+
+function TotalReviewCount() {
+  return (
+    <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
+      <div className="flex items-center gap-1">
+        <User className="w-5 h-5 md:w-6 md:h-6" fill="#0a66c2" stroke="none" />
+        <span className="text-sm font-semibold md:text-xl text-primary">
+          43
+        </span>
+      </div>
+      <h2 className="text-md font-semibold">Total Reviews</h2>
+    </div>
+  );
+}
+
+export default TotalReviewCount;
