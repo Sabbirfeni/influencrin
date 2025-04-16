@@ -6,7 +6,7 @@ import InfluencerProfileImage from "./influencer-profile-image";
 
 function InfluencerPrimaryInfo() {
   return (
-    <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl shadow-md">
+    <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl">
       <InfluencerProfileImage />
       <div className="w-full md:w-2/3">
         <h1 className="text-xl md:text-2xl font-bold">Samantha Brooks</h1>

@@ -5,7 +5,7 @@ function InfluencerBanner() {
     <div className="w-full h-[20vh] md:h-[30vh]">
       <img
         src={ImpluencerPlaceholderBanner}
-        className="w-full h-full object-cover rounded-t-2xl"
+        className="w-full h-full object-cover"
         alt="impluencer banner"
       />
     </div>

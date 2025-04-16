@@ -2,6 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 
+type Props = {
+  style?: string;
+};
+
 const categories = [
   "Beauty",
   "Lifestyle",
@@ -11,9 +15,11 @@ const categories = [
   "Beauty",
   "Lifestyle",
 ];
-function InfluencerCategoryList() {
+function InfluencerCategoryList({ style }: Props) {
   return (
-    <div className="shadow-md p-4 flex flex-col gap-4 border border-gray-100 rounded-xl">
+    <div
+      className={`p-4 ${style} flex-col gap-4 border border-gray-200 rounded-xl`}
+    >
       {/* Categories card header */}
       <div className="flex items-start justify-between">
         <h4 className="text-sm font-semibold">Categories</h4>

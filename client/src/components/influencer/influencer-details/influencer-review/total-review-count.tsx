@@ -9,7 +9,7 @@ function TotalReviewCount() {
           43
         </span>
       </div>
-      <h2 className="text-md font-semibold">Total Reviews</h2>
+      <h2 className="text-sm md:text-md font-semibold">Total Reviews</h2>
     </div>
   );
 }

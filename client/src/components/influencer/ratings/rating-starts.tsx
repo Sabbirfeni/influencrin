@@ -17,7 +17,7 @@ export default function RatingStars({ rating, size = 12 }: RatingStarsProps) {
       ))}
       {[...Array(totalStars - fullStars - (hasHalfStar ? 1 : 0))].map(
         (_, i) => (
-          <Star key={`empty-${i}`} size={size} className="text-gray-400" />
+          <Star key={`empty-${i}`} size={size} className="text-primary" />
         )
       )}
     </div>

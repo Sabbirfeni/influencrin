@@ -35,10 +35,15 @@ export default function InfluencerCard({
 }: InfluencerCardProps) {
   return (
     <Link to={`/influencers/${name}`}>
-      <Card className="relative rounded-2xl py-4 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+      <Card className="relative rounded-xl py-4 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
         <CardContent className=" p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
-            <InfluencerAvgRating rating={rating} size="3" textSize="xs" />
+            <InfluencerAvgRating
+              rating={rating}
+              size="4"
+              style="text-sm"
+              isTitle={false}
+            />
           </div>
 
           {/* Profile Image */}
@@ -60,8 +65,8 @@ export default function InfluencerCard({
                 key={idx}
                 className="flex items-center gap-1 px-2 py-1 rounded-sm bg-gray-100"
               >
-                {platform.followers}
                 {platformIcons[platform.name]}
+                {platform.followers}
               </div>
             ))}
           </div>
