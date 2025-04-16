@@ -1,13 +1,7 @@
-// src/components/About.tsx
 import React from "react";
 
-const About = () => {
-  return (
-    <div>
-      <h1>About Page</h1>
-      <p>Welcome to the about page!</p>
-    </div>
-  );
-};
+function About() {
+  return <div>About</div>;
+}
 
 export default About;

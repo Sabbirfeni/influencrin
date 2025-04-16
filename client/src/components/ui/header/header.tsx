@@ -12,7 +12,7 @@ function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between shadow-sm px-2 md:px-20 py-3 md:py-4">
+    <div className="flex items-center justify-between gap-0 md:gap-2 shadow-sm px-2 md:px-20 py-3 md:py-4">
       <Logo />
 
       <SearchBar />
