@@ -28,14 +28,13 @@ function Header() {
       <Logo />
 
       <SearchBar />
-      {/* <HeaderUserAvatar /> */}
+      <HeaderUserAvatar />
 
       {/* Desktop actions */}
-      <div className="hidden md:flex items-center gap-3">
+      {/* <div className="hidden md:flex items-center gap-3">
         <Link to="/join-influencrin">
           {" "}
           <Button>
-            {/* <Plus className="h-4 w-4 mr-1" strokeWidth={3} /> */}
             Join InfluencrIn
           </Button>
         </Link>
@@ -43,10 +42,10 @@ function Header() {
         <Link to="/login">
           <Button>Log in</Button>
         </Link>
-      </div>
+      </div> */}
 
       {/* Mobile menu */}
-      <div className="md:hidden">
+      {/* <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" className="pr-0 !important">
@@ -60,7 +59,6 @@ function Header() {
           <SheetContent side="right" className="w-[260px] px-4 py-6">
             <div className="flex flex-col gap-3 mt-8">
               <Button variant="default" onClick={navigateToJoinInfluencrInPage}>
-                {/* <Plus className="h-4 w-4 mr-1" strokeWidth={3} /> */}
                 Join InfluencrIn
               </Button>
 
@@ -68,7 +66,7 @@ function Header() {
             </div>
           </SheetContent>
         </Sheet>
-      </div>
+      </div> */}
     </div>
   );
 }

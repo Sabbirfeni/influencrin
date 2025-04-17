@@ -6,6 +6,9 @@ import SearchPage from "@/pages/search";
 import JoinInfluencrInPage from "@/pages/join-influencrin";
 import LoginPage from "@/pages/login";
 
+import MyAccountPage from "@/pages/my-account";
+import InfluencerManagementLayout from "@/layouts/influencer-management-layout";
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -15,6 +18,10 @@ const AppRoutes = () => {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/join-influencrin" element={<JoinInfluencrInPage />} />
         <Route path="/login" element={<LoginPage />} />
+      </Route>
+
+      <Route element={<InfluencerManagementLayout />}>
+        <Route path="/my-account" element={<MyAccountPage />} />
       </Route>
     </Routes>
   );
