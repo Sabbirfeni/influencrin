@@ -1,6 +1,7 @@
 import SectionWrappers from "@/components/wrappers/section-wrapper";
 import HeroImage from "../../assets/images/home-hero-image.png";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 function HeroSection() {
   return (
@@ -12,9 +13,11 @@ function HeroSection() {
             <div>in your niche &</div>
             <div className="text-primary"> Grow Together</div>
           </h1>
-          <Button className="w-[fit-content] md:px-6 md:py-5 mt-6 md:text-base shadow-xl">
-            Find Influencers
-          </Button>
+          <Link to="/search">
+            <Button className="w-[fit-content] md:px-6 md:py-5 mt-6 md:text-base shadow-xl">
+              Meet Influencers
+            </Button>
+          </Link>
         </div>
         <div className="w-full md:w-1/2 order-1 md:order-2">
           <img src={HeroImage} alt="home hero image" className="w-full" />

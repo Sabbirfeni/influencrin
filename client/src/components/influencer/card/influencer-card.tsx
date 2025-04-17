@@ -63,7 +63,7 @@ export default function InfluencerCard({
             {platforms.map((platform, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-1 px-2 py-1 rounded-sm bg-gray-100"
+                className="flex items-center gap-2 text-xs font-semibold px-2 py-1 rounded-sm bg-gray-100"
               >
                 {platformIcons[platform.name]}
                 {platform.followers}

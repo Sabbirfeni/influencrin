@@ -7,10 +7,21 @@ import { Button } from "../button";
 import { Plus, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
-import { SidebarTrigger } from "../sidebar";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const navigateToJoinInfluencrInPage = () => {
+    setOpen(false);
+    navigate("/join-influencrin");
+  };
+
+  const navigateToLoginPage = () => {
+    setOpen(false);
+    navigate("/login");
+  };
 
   return (
     <div className="z-50 flex items-center justify-between gap-0 md:gap-2 shadow-sm px-2 md:px-20 py-3 md:py-4">
@@ -21,12 +32,17 @@ function Header() {
 
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">
-        <Button>
-          <Plus className="h-4 w-4 mr-1" strokeWidth={3} />
-          Add Influencer
-        </Button>
-        <Button>Login</Button>
-        {/* <SidebarTrigger /> */}
+        <Link to="/join-influencrin">
+          {" "}
+          <Button>
+            {/* <Plus className="h-4 w-4 mr-1" strokeWidth={3} /> */}
+            Join InfluencrIn
+          </Button>
+        </Link>
+
+        <Link to="/login">
+          <Button>Log in</Button>
+        </Link>
       </div>
 
       {/* Mobile menu */}
@@ -43,11 +59,12 @@ function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[260px] px-4 py-6">
             <div className="flex flex-col gap-3 mt-8">
-              <Button variant="default" onClick={() => setOpen(false)}>
-                Add Influencer
+              <Button variant="default" onClick={navigateToJoinInfluencrInPage}>
+                {/* <Plus className="h-4 w-4 mr-1" strokeWidth={3} /> */}
+                Join InfluencrIn
               </Button>
 
-              <Button onClick={() => setOpen(false)}>Login</Button>
+              <Button onClick={navigateToLoginPage}>Log in</Button>
             </div>
           </SheetContent>
         </Sheet>
