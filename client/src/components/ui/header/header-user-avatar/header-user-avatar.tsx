@@ -15,10 +15,18 @@ function HeaderUserAvatar() {
     <div className="ml-3 md:ml-0">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="cursor-pointer w-10 h-10 border border-gray-200">
-            <AvatarImage sizes="4" src="/avatar.jpg" alt="User" />
-            <AvatarFallback className="text-muted-foreground">U</AvatarFallback>
-          </Avatar>
+          <div className="flex items-center gap-2 cursor-pointer">
+            <Avatar className="cursor-pointer w-10 h-10 border border-gray-200">
+              <AvatarImage sizes="4" src="/avatar.jpg" alt="User" />
+              <AvatarFallback className="text-muted-foreground">
+                U
+              </AvatarFallback>
+            </Avatar>
+            <div className="hidden md:flex md:flex-col">
+              <h4 className="text-xs">Name Here</h4>
+              <p className="text-[10px] text-gray-400">example@gmail.com</p>
+            </div>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="border border-gray-200">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>

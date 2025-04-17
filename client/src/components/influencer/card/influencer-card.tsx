@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { X, Instagram, Youtube } from "lucide-react";
 import InfluencerAvgRating from "../ratings/influencer-avg-rating";
