@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserIcon, UsersIcon, LogOutIcon } from "lucide-react";
+import { UserIcon, UsersIcon, LogOutIcon, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // make sure this path is correct
 import { Link } from "react-router-dom";
 
@@ -37,10 +37,18 @@ function HeaderUserAvatar() {
               Account
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>
-            <UsersIcon className="mr-2 h-4 w-4" />
-            Manage Influencers
-          </DropdownMenuItem>
+          <Link to="/add-influencer">
+            <DropdownMenuItem>
+              <Users className="mr-2 h-4 w-4" />
+              Add Influencer
+            </DropdownMenuItem>
+          </Link>
+          <Link to="/manage-influencers">
+            <DropdownMenuItem>
+              <Users className="mr-2 h-4 w-4" />
+              Manage Influencers
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>
             <LogOutIcon className="mr-2 h-4 w-4" />
             Log out

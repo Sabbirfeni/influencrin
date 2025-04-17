@@ -5,7 +5,7 @@ import InfluencerReviewSlider from "./influencer-review-slider";
 import TotalReviewCount from "./total-review-count";
 function InfluencerReviewsContainer() {
   return (
-    <div className="flex flex-col gap-2 mt-3 md:mt-5">
+    <div className="flex flex-col gap-2 mt-3 md:mt-4">
       <div className="flex items-center">
         <TotalReviewCount />
         <div className="flex items-center gap-2 pl-4">

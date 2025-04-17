@@ -22,7 +22,7 @@ function AddInfluencerPage() {
           </div>
 
           <div className="w-full md:w-1/3 flex flex-col gap-4">
-            <InfluencerCategoryList />
+            <InfluencerCategoryList style="hidden md:flex" />
           </div>
         </div>
       </div>

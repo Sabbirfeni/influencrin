@@ -5,7 +5,7 @@ import { useState } from "react";
 type SliderProps = React.ComponentProps<typeof Slider>;
 
 export function FollowersFilter({ className, ...props }: SliderProps) {
-  const [value, setValue] = useState<[number, number]>([0, 5000]);
+  const [value, setValue] = useState<[number, number]>([0, 8000]);
   const minGap = 2000; // Minimum allowed gap
   const handleSliderChange = (newValue: [number, number]) => {
     let [min, max] = newValue;

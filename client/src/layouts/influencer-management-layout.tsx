@@ -9,7 +9,7 @@ export default function InfluencerManagementLayout() {
         <InfluencerManagementSidebar />
 
         <main className="flex-1 relative overflow-auto">
-          <SidebarTrigger className="absolute top-4 left-4 z-50" />
+          <SidebarTrigger className="absolute top-2 left-2 z-50" />
           <Outlet />
         </main>
       </div>

@@ -87,7 +87,7 @@ export default function LoginForm({
                 Don&apos;t have an account?{" "}
                 <Link
                   to="/join-influencrin"
-                  className="ml-2 underline underline-offset-4"
+                  className="ml-2 font-semibold text-primary"
                 >
                   Join InfluencrIn
                 </Link>

@@ -95,7 +95,7 @@ export default function JoinInfluencrInForm({
               <div className="text-center text-xs md:text-sm">
                 {/* Don&apos;t have an account?{" "} */}
                 Already have an account?
-                <Link to="/login" className="ml-2 underline underline-offset-4">
+                <Link to="/login" className="ml-2 font-semibold text-primary">
                   Log in
                 </Link>
               </div>
