@@ -15,9 +15,9 @@ function HeaderUserAvatar() {
     <div className="ml-3 md:ml-0">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="cursor-pointer w-10 h-10">
+          <Avatar className="cursor-pointer w-10 h-10 border border-gray-200">
             <AvatarImage sizes="4" src="/avatar.jpg" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarFallback className="text-muted-foreground">U</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="border border-gray-200">

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Instagram, Youtube } from "lucide-react";
 import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link } from "react-router-dom";
+import { ProfileImage } from "@/components/ui/profile-image";
 
 type Platform = {
   name: "Instagram" | "Youtube" | "X";
@@ -13,7 +14,7 @@ type Platform = {
 type InfluencerCardProps = {
   name: string;
   handle: string;
-  avatarUrl?: string;
+  profileImageSrc?: string;
   rating: number;
   platforms: Platform[];
   categories: string[];
@@ -28,7 +29,7 @@ const platformIcons: Record<string, JSX.Element> = {
 export default function InfluencerCard({
   name,
   handle,
-  avatarUrl = "/avatar.jpg",
+  profileImageSrc = "/avatar.jpg",
   rating,
   platforms,
   categories,
@@ -36,7 +37,7 @@ export default function InfluencerCard({
   return (
     <Link to={`/influencers/${name}`}>
       <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
-        <CardContent className=" p-4 flex flex-col items-center text-center space-y-3">
+        <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
             <InfluencerAvgRating
               rating={rating}
@@ -47,10 +48,12 @@ export default function InfluencerCard({
           </div>
 
           {/* Profile Image */}
-          <Avatar className="w-25 h-25 shadow-xl">
-            <AvatarImage src={avatarUrl} alt={name} />
-            <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            style="w-25 h-25 shadow-2xl"
+            userName="Shabbir"
+            src={profileImageSrc}
+            backgroundColor="bg-gray-200 text-xl"
+          />
 
           {/* Name & Handle */}
           <div className="mb-5">

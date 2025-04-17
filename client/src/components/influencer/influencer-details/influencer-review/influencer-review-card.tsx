@@ -1,15 +1,18 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import RatingStars from "../../ratings/rating-starts";
+import { ProfileImage } from "@/components/ui/profile-image";
 
 function InfluencerReviewCard() {
   return (
     <div className="h-full border border-gray-200 bg-gradient-to-b to-[#fff5f5] from-white rounded-lg p-6 transition duration-300 hover:shadow-md cursor-pointer">
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
-          <Avatar className="cursor-pointer w-12 h-12">
-            <AvatarImage sizes="4" src="/avatar.jpg" alt="User" />
-            <AvatarFallback className="bg-gray-200">U</AvatarFallback>
-          </Avatar>
+          <ProfileImage
+            style="w-12 h-12"
+            userName="Shabbir"
+            src=""
+            backgroundColor="bg-gray-100"
+          />
           <div>
             <h4 className="text-sm font-semibold">Amdad Shabbir</h4>
             <RatingStars rating={4} />
