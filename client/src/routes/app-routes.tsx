@@ -8,6 +8,8 @@ import LoginPage from "@/pages/login";
 
 import MyAccountPage from "@/pages/my-account";
 import InfluencerManagementLayout from "@/layouts/influencer-management-layout";
+import ManageInfluencersPage from "@/pages/manage-influencers";
+import AddInfluencerPage from "@/pages/add-influencer";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +24,8 @@ const AppRoutes = () => {
 
       <Route element={<InfluencerManagementLayout />}>
         <Route path="/my-account" element={<MyAccountPage />} />
+        <Route path="/manage-influencers" element={<ManageInfluencersPage />} />
+        <Route path="/add-influencer" element={<AddInfluencerPage />} />
       </Route>
     </Routes>
   );

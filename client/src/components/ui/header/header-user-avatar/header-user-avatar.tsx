@@ -23,7 +23,7 @@ function HeaderUserAvatar() {
               </AvatarFallback>
             </Avatar>
             <div className="hidden md:flex md:flex-col">
-              <h4 className="text-xs">Name Here</h4>
+              <h4 className="text-xs font-semibold text-primary">Name Here</h4>
               <p className="text-[10px] text-gray-400">example@gmail.com</p>
             </div>
           </div>

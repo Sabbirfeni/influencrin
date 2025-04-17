@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Plus, User, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,52 +9,76 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
+
+import InfluencerManagmentSidebarHeader from "./influencer-managment-sidebar-header";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
+    title: "My Account",
+    url: "/my-account",
+    icon: User,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Manage Influencers",
+    url: "/manage-influencers",
+    icon: Users,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    title: "Add Influencer",
+    url: "/add-influencer",
+    icon: Plus,
   },
 ];
 
 export default function InfluencerManagementSidebar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const getActiveClass = (path: string) => {
+    return location.pathname === path ? "bg-gray-100 text-black" : "";
+  };
+  const isMenuActive = (path: string) => {
+    return location.pathname === path;
+  };
+
+  const { openMobile, setOpenMobile } = useSidebar();
+
+  const navigateToPage = (url: string) => {
+    setOpenMobile(!openMobile);
+    navigate(url);
+  };
+
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas">
+      {/* Sidebar header */}
+      <InfluencerManagmentSidebarHeader />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-2">
+            Manager Actions
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
+                  <SidebarMenuButton
+                    asChild
+                    className={getActiveClass(item.url)}
+                    onClick={() => navigateToPage(item.url)}
+                  >
+                    {/* <Link to={item.url} className="py-5"> */}
+                    <div className="flex items-center py-5 cursor-pointer">
+                      <item.icon
+                        className={isMenuActive(item.url) ? "text-primary" : ""}
+                        strokeWidth={3}
+                      />
                       <span>{item.title}</span>
-                    </a>
+                    </div>
+
+                    {/* </Link> */}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
