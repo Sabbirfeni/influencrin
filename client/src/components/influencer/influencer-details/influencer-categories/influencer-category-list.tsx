@@ -24,7 +24,7 @@ function InfluencerCategoryList({ style }: Props) {
       <div className="flex items-start justify-between">
         <h4 className="text-sm font-semibold">Categories</h4>
         {/* <Button className="w-10 h-8 flex items-center justify-center shadow-none text-primary bg-white hover:bg-primary hover:text-white hover:shadow-lg"></Button> */}
-        <Button className="w-8 h-6 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
+        <Button className="w-7 h-7 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
           <Plus className="w-3 h-3" />
         </Button>
       </div>

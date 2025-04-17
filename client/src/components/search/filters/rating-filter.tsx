@@ -29,7 +29,7 @@ export function RatingFilter() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[160px] justify-between"
+          className="w-[110px] justify-between"
         >
           {selected ? (
             <span className="flex items-center gap-1">
@@ -41,14 +41,14 @@ export function RatingFilter() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[160px] p-0">
+      <PopoverContent className="w-[110px] p-0">
         <Command>
           <CommandGroup>
             {ratings.map((rating) => (
               <CommandItem key={rating} onSelect={() => handleSelect(rating)}>
                 <Star
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "mr-1 h-4 w-4",
                     selected === rating
                       ? "fill-primary text-primary"
                       : "text-muted-foreground"

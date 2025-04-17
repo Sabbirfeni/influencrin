@@ -6,8 +6,8 @@ import SocialPlatformFilter from "./filters/social-platform-filter";
 function FilterList() {
   return (
     <>
-      <CategoryFilter />
       <SocialPlatformFilter />
+      <CategoryFilter />
       <RatingFilter />
       <FollowersFilter />
     </>

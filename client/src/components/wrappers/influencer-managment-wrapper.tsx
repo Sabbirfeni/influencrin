@@ -8,7 +8,7 @@ function InfluencerManagementWrapper({
   children,
   style,
 }: SectionWrappersProps) {
-  return <div className={`p-3 md:p-12 ${style ?? ""}`}>{children}</div>;
+  return <div className={`p-3 md:p-12 ${style ?? ""} w-full`}>{children}</div>;
 }
 
 export default InfluencerManagementWrapper;
