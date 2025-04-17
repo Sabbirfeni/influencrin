@@ -7,12 +7,13 @@ import { Button } from "../button";
 import { Plus, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { SidebarTrigger } from "../sidebar";
 
 function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between gap-0 md:gap-2 shadow-sm px-2 md:px-20 py-3 md:py-4">
+    <div className="z-50 flex items-center justify-between gap-0 md:gap-2 shadow-sm px-2 md:px-20 py-3 md:py-4">
       <Logo />
 
       <SearchBar />
@@ -21,10 +22,11 @@ function Header() {
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-1" strokeWidth={3} />
           Add Influencer
         </Button>
         <Button>Login</Button>
+        {/* <SidebarTrigger /> */}
       </div>
 
       {/* Mobile menu */}

@@ -67,7 +67,7 @@ influencerRoutes.get("/:handle", InfluencerController.getInfluencer);
  *                e.g. [{"platform_id":"1","follower_count":1000,"platform_profile_link":"..."}]
  *            - categories: stringified JSON array (required)
  *                e.g. ["fashion", "travel"]
- *            - bio: string (optional)
+ *            - bio: string (optional, character limit 204)
  */
 influencerRoutes.post(
   "/",
@@ -84,7 +84,7 @@ influencerRoutes.post(
  *            fullname?: string (optional),
  *            profile_image?: string (optional),
  *            location?: string (optional),
- *            bio?: string (optional)
+ *            bio?: string (optional, character limit 204)
  *          }
  */
 influencerRoutes.put(

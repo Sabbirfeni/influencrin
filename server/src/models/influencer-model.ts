@@ -47,7 +47,7 @@ const Influencer = sequelize.define<
     },
 
     bio: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT(),
       allowNull: true,
     },
 

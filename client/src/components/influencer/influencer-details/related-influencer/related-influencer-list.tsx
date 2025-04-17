@@ -14,6 +14,7 @@ function RelatedInfluencerList() {
         <RelatedInfluencerCard />
         <RelatedInfluencerCard />
         <RelatedInfluencerCard />
+        <RelatedInfluencerCard />
         <Link
           to="/"
           className="text-center text-sm font-semibold mt-3 text-primary"

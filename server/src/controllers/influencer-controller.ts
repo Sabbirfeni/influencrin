@@ -334,10 +334,7 @@ const searchOrGetInfluencers = async (
       "profile_image",
       "location",
       [
-        Sequelize.fn(
-          "ROUND",
-          Sequelize.fn("AVG", Sequelize.col("Reviews.rating"))
-        ),
+        Sequelize.literal('CAST(AVG("Reviews"."rating") AS NUMERIC(10, 1))'),
         "avg_review_score",
       ],
     ];
@@ -368,7 +365,6 @@ const searchOrGetInfluencers = async (
         "InfluencerCategories.id",
       ],
       having,
-      order: [["createdAt", "DESC"]],
     });
 
     if (!influencers.length) {

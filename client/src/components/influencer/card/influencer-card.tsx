@@ -35,7 +35,7 @@ export default function InfluencerCard({
 }: InfluencerCardProps) {
   return (
     <Link to={`/influencers/${name}`}>
-      <Card className="relative rounded-xl py-4 shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
+      <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
         <CardContent className=" p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
             <InfluencerAvgRating
