@@ -31,18 +31,16 @@ function Header() {
       <HeaderUserAvatar />
 
       {/* Desktop actions */}
-      {/* <div className="hidden md:flex items-center gap-3">
+      <div className="hidden md:flex items-center gap-3">
         <Link to="/join-influencrin">
           {" "}
-          <Button>
-            Join InfluencrIn
-          </Button>
+          <Button>Join InfluencrIn</Button>
         </Link>
 
         <Link to="/login">
           <Button>Log in</Button>
         </Link>
-      </div> */}
+      </div>
 
       {/* Mobile menu */}
       {/* <div className="md:hidden">

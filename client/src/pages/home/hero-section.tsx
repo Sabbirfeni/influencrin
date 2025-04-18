@@ -11,6 +11,7 @@ function HeroSection() {
           <h1 className="text-[32px] md:text-[75px] text-center md:text-left font-bold leading-tight">
             <div className="text-primary">Meet Influencers</div>
             <div>in your niche &</div>
+            {/* <div>across the world &</div> */}
             <div className="text-primary"> Grow Together</div>
           </h1>
           <Link to="/search">

@@ -10,13 +10,17 @@ type Platform = {
   followers: string;
 };
 
+type Category = {
+  category_name: string;
+};
+
 type InfluencerCardProps = {
-  name: string;
+  fullname: string;
   handle: string;
   profileImageSrc?: string;
   rating: number;
   platforms: Platform[];
-  categories: string[];
+  categories: Category[];
 };
 
 const platformIcons: Record<string, JSX.Element> = {
@@ -26,7 +30,7 @@ const platformIcons: Record<string, JSX.Element> = {
 };
 
 export default function InfluencerCard({
-  name,
+  fullname,
   handle,
   profileImageSrc = "/avatar.jpg",
   rating,
@@ -34,7 +38,7 @@ export default function InfluencerCard({
   categories,
 }: InfluencerCardProps) {
   return (
-    <Link to={`/influencers/${name}`}>
+    <Link to={`/influencers/${handle}`}>
       <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
         <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
@@ -56,7 +60,7 @@ export default function InfluencerCard({
 
           {/* Name & Handle */}
           <div className="mb-5">
-            <h3 className="text-lg font-semibold">{name}</h3>
+            <h3 className="text-lg font-semibold">{fullname}</h3>
             <p className="text-sm text-muted-foreground">@{handle}</p>
           </div>
 
@@ -67,21 +71,26 @@ export default function InfluencerCard({
                 key={idx}
                 className="flex items-center gap-2 text-xs font-semibold px-2 py-1 rounded-sm bg-gray-100"
               >
-                {platformIcons[platform.name]}
-                {platform.followers}
+                <img
+                  className="w-4 h-4"
+                  src={platform.SocialMediaPlatform.platform_icon_url}
+                  alt=""
+                />
+
+                {platform.follower_count}
               </div>
             ))}
           </div>
 
           {/* Categories */}
           <div className="flex flex-wrap gap-1 justify-center mt-2">
-            {categories.map((cat, idx) => (
+            {categories.map((category, idx) => (
               <Badge
                 key={idx}
                 variant="outline"
                 className="text-xs px-3 py-1 rounded-full text-gray-500 border-1 border-gray-200"
               >
-                {cat}
+                {category.category_name}
               </Badge>
             ))}
           </div>

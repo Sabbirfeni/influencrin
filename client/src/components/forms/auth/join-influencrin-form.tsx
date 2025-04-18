@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-import JoinInfluncrInImage from "@/assets/images/join-influencrin-form-image.jpg";
+import JoinInfluncrInImage from "@/assets/images/join-influencrin-form-image.png";
 
 export default function JoinInfluencrInForm({
   className,
@@ -14,7 +14,7 @@ export default function JoinInfluencrInForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0 border border-gray-200 shadow-none">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8 border-r z-50 bg-white">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center mb-3">
                 <h1 className="text-2xl font-semibold">
@@ -101,11 +101,12 @@ export default function JoinInfluencrInForm({
               </div>
             </div>
           </form>
-          <div className="relative hidden bg-muted md:block">
+
+          <div className="hidden md:flex items-center justify-center">
             <img
               src={JoinInfluncrInImage}
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="max-w-[440px] dark:brightness-[0.2] dark:grayscale"
             />
           </div>
         </CardContent>

@@ -23,14 +23,14 @@ const items = [
     icon: User,
   },
   {
-    title: "Manage Influencers",
-    url: "/manage-influencers",
-    icon: Users,
-  },
-  {
     title: "Add Influencer",
     url: "/add-influencer",
     icon: Plus,
+  },
+  {
+    title: "Manage Influencers",
+    url: "/manage-influencers",
+    icon: Users,
   },
 ];
 
@@ -70,7 +70,7 @@ export default function InfluencerManagementSidebar() {
                     onClick={() => navigateToPage(item.url)}
                   >
                     {/* <Link to={item.url} className="py-5"> */}
-                    <div className="flex items-center py-5 cursor-pointer">
+                    <div className="flex items-center py-5 font-medium cursor-pointer">
                       <item.icon
                         className={isMenuActive(item.url) ? "text-primary" : ""}
                         strokeWidth={3}
