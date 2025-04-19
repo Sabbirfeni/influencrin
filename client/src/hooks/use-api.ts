@@ -8,28 +8,28 @@ type ApiFunc<T> = (...args: any[]) => Promise<T>;
 type UseApiReturn<T> = {
   request: (...args: any[]) => Promise<T | undefined>;
   loading: boolean;
-  error: string | null;
+  errorMessage: string | null;
 };
 
 const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const request = async (...args: any[]): Promise<T | undefined> => {
     setLoading(true);
-    setError(null);
+    setErrorMessage(null);
     try {
       const result = await apiFunc(...args);
       return result;
     } catch (err) {
       const error = handlApiError(err);
-      setError(error);
+      setErrorMessage(error);
     } finally {
       setLoading(false);
     }
   };
 
-  return { request, loading, error };
+  return { request, loading, errorMessage };
 };
 
 export default useApi;
