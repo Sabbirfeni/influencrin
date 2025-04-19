@@ -109,7 +109,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "none",
         maxAge: 60 * 60 * 1000,
       })
@@ -120,6 +120,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
           id: userData.id,
           fullname: userData.fullname,
           email: userData.email,
+          profile_image: userData.profile_image,
         },
       });
   } catch (error: unknown) {

@@ -1,18 +1,19 @@
 // import { useLoaderData } from "react-router-dom";
-import InfluencerList from "@/components/influencer/influencer-list";
+
 import { Button } from "@/components/ui/button";
 import SectionWrappers from "@/components/wrappers/section-wrapper";
 import { Link } from "react-router-dom";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useApi } from "@/hooks";
 import influencerApiService from "@/api/endpoints/influencer-api-service";
+import InfluencerList from "@/components/influencer/influencer-list";
+import InfluencerListSkeleton from "@/components/skeletons/influencer/influencer-list-skeleton";
 
 function InfluencerListHome() {
   const [influencers, setInfluencers] = useState([]);
   const { request, loading, error } = useApi(
     influencerApiService.searchInfluencers
   );
-  console.log(influencers);
   useEffect(() => {
     const loadInfluencers = async () => {
       const data = await request();
@@ -28,18 +29,30 @@ function InfluencerListHome() {
           Rising Voices
         </h1>
 
-        {loading && <div>Loading...</div>}
+        {loading && <InfluencerListSkeleton length={10} />}
         {error && <div>{error}</div>}
 
-        <InfluencerList influencers={influencers} />
+        {/* No Results */}
+        {!loading && !error && influencers.length === 0 && (
+          <div className="text-center py-4 text-gray-500">
+            No Influencer found.
+          </div>
+        )}
 
-        <div className="flex justify-center mt-6 md:mt-12">
-          <Link to="/search">
-            <Button className="md:px-6 md:py-5 md:text-base border border-primary bg-transparent hover:bg-primary text-primary hover:text-white">
-              All Influencers
-            </Button>
-          </Link>
-        </div>
+        {/* Influencer List */}
+        {!loading && !error && influencers.length > 0 && (
+          <>
+            <InfluencerList influencers={influencers} />
+
+            <div className="flex justify-center mt-6 md:mt-12">
+              <Link to="/search">
+                <Button className="md:px-6 md:py-5 md:text-base border border-primary bg-transparent hover:bg-primary text-primary hover:text-white">
+                  All Influencers
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </SectionWrappers>
   );

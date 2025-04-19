@@ -3,6 +3,14 @@ import { sequelize } from "../db/sequelize";
 import bcrypt from "bcrypt";
 import { UserAttributes, UserCreationAttributes } from "../types/user";
 
+// Profile image
+// Fullname
+// Bio
+// Role/Permission
+// Account status
+// Signup date
+// Last login
+
 // Define the User model
 const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
   "User",

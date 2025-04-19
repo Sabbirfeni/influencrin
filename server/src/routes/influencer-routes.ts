@@ -32,7 +32,7 @@ const searchRoutes = express.Router();
  *            min_rating?: number
  *          }
  */
-influencerRoutes.get("/search", InfluencerController.searchOrGetInfluencers);
+influencerRoutes.get("/search", InfluencerController.searchInfluencers);
 
 /**
  * @route   GET /api/influencers/me

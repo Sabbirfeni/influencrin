@@ -201,10 +201,10 @@ const getAllInfluencers = async (
       order: [["createdAt", "DESC"]],
     });
 
-    if (influencers.length === 0) {
-      res.status(404).json({ message: "No influencers found." });
-      return;
-    }
+    // if (influencers.length === 0) {
+    //   res.status(404).json({ message: "No influencers found." });
+    //   return;
+    // }
 
     res.status(200).json({
       message: "Influencers fetched successfully.",
@@ -217,7 +217,7 @@ const getAllInfluencers = async (
   }
 };
 
-const searchOrGetInfluencers = async (
+const searchInfluencers = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -235,20 +235,24 @@ const searchOrGetInfluencers = async (
     const include: any = [
       {
         model: InfluencerSocialPlatform,
+        as: "socialPlatforms",
         attributes: ["platform_profile_link", "follower_count"],
         include: [
           {
             model: SocialMediaPlatform,
+            as: "platform",
             attributes: ["platform_name", "platform_icon_url"],
           },
         ],
       },
       {
         model: InfluencerCategory,
+        as: "categories",
         attributes: ["category_name"],
       },
       {
         model: InfluencerReview,
+        as: "reviews",
         attributes: [],
       },
     ];
@@ -334,7 +338,7 @@ const searchOrGetInfluencers = async (
       "profile_image",
       "location",
       [
-        Sequelize.literal('CAST(AVG("Reviews"."rating") AS NUMERIC(10, 1))'),
+        Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
         "avg_review_score",
       ],
     ];
@@ -346,7 +350,7 @@ const searchOrGetInfluencers = async (
       having = Sequelize.where(
         Sequelize.fn(
           "ROUND",
-          Sequelize.fn("AVG", Sequelize.col("Reviews.rating"))
+          Sequelize.fn("AVG", Sequelize.col("reviews.rating"))
         ),
         {
           [Op.gte]: +min_rating,
@@ -360,17 +364,17 @@ const searchOrGetInfluencers = async (
       attributes,
       group: [
         "Influencer.id",
-        "InfluencerSocialPlatforms.id",
-        "InfluencerSocialPlatforms->SocialMediaPlatform.id",
-        "InfluencerCategories.id",
+        "socialPlatforms.id",
+        "socialPlatforms->platform.id",
+        "categories.id",
       ],
       having,
     });
 
-    if (!influencers.length) {
-      res.status(404).json({ message: "No influencers found." });
-      return;
-    }
+    // if (!influencers.length) {
+    //   res.status(404).json({ message: "No influencers found." });
+    //   return;
+    // }
 
     res.status(200).json({
       message: "Influencers fetched successfully.",
@@ -481,7 +485,7 @@ const getInfluencersByUser = async (
 export {
   createInfluencer,
   getAllInfluencers,
-  searchOrGetInfluencers,
+  searchInfluencers,
   getInfluencer,
   getInfluencersByUser,
 };

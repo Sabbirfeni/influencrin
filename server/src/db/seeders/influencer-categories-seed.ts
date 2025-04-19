@@ -4,201 +4,201 @@ import { sequelize } from "../sequelize";
 const influencerCategoriesData = [
   // Sarah Johnson (Travel/Food)
   {
-    influencer_id: "62915cb9-d1ef-40f7-a6b5-fd0a75493afc",
+    influencer_id: "1ab21f6b-2f85-4247-8a16-e808f74a073d",
     category_name: "Travel",
   },
   {
-    influencer_id: "62915cb9-d1ef-40f7-a6b5-fd0a75493afc",
+    influencer_id: "1ab21f6b-2f85-4247-8a16-e808f74a073d",
     category_name: "Food",
   },
 
   // Michael Chen (Tech/Gadgets)
   {
-    influencer_id: "9f25491f-b670-47b8-a2ca-7371d31999bd",
+    influencer_id: "1afb0e29-39ba-4c67-b469-c46537776ea7",
     category_name: "Technology",
   },
   {
-    influencer_id: "9f25491f-b670-47b8-a2ca-7371d31999bd",
+    influencer_id: "1afb0e29-39ba-4c67-b469-c46537776ea7",
     category_name: "Gadgets",
   },
 
   // Emma Wilson (Fitness/Wellness)
   {
-    influencer_id: "dbc9bcac-a359-4be9-bb0c-0432c6b0bc48",
+    influencer_id: "28d0ead9-bb2d-4875-97a8-3c01467ef2e5",
     category_name: "Fitness",
   },
   {
-    influencer_id: "dbc9bcac-a359-4be9-bb0c-0432c6b0bc48",
+    influencer_id: "28d0ead9-bb2d-4875-97a8-3c01467ef2e5",
     category_name: "Wellness",
   },
 
   // David Rodriguez (Photography/Art)
   {
-    influencer_id: "c0bcafe1-ad7c-4d40-a95d-30210d471360",
+    influencer_id: "392fa3af-e277-495e-a503-cc43a04f21f0",
     category_name: "Photography",
   },
   {
-    influencer_id: "c0bcafe1-ad7c-4d40-a95d-30210d471360",
+    influencer_id: "392fa3af-e277-495e-a503-cc43a04f21f0",
     category_name: "Art",
   },
 
   // Olivia Martinez (Fashion/Lifestyle)
   {
-    influencer_id: "22f334ee-e5c1-4563-9e02-892dcbab5167",
+    influencer_id: "40ed4e32-8702-437d-9913-160ed995ec8a",
     category_name: "Fashion",
   },
   {
-    influencer_id: "22f334ee-e5c1-4563-9e02-892dcbab5167",
+    influencer_id: "40ed4e32-8702-437d-9913-160ed995ec8a",
     category_name: "Lifestyle",
   },
 
   // James Wilson (Finance/Investing)
   {
-    influencer_id: "c0793546-18a4-47c9-a447-4039b9ffcffc",
+    influencer_id: "4266fef6-735a-412e-8d2d-d864cd206d33",
     category_name: "Finance",
   },
   {
-    influencer_id: "c0793546-18a4-47c9-a447-4039b9ffcffc",
+    influencer_id: "4266fef6-735a-412e-8d2d-d864cd206d33",
     category_name: "Investing",
   },
 
   // Sophia Lee (Food/Vegan)
   {
-    influencer_id: "0138461d-8199-4fd9-b338-6d43e13c4abf",
+    influencer_id: "5696eecc-395d-4fd1-b341-9d934d1b5850",
     category_name: "Food",
   },
   {
-    influencer_id: "0138461d-8199-4fd9-b338-6d43e13c4abf",
+    influencer_id: "5696eecc-395d-4fd1-b341-9d934d1b5850",
     category_name: "Vegan",
   },
 
   // Daniel Brown (Travel/Adventure)
   {
-    influencer_id: "d1f3c2df-7121-4c3d-a613-e9d87f883e2e",
+    influencer_id: "6858ddb9-3a3d-4dd8-aa61-6293942462d2",
     category_name: "Travel",
   },
   {
-    influencer_id: "d1f3c2df-7121-4c3d-a613-e9d87f883e2e",
+    influencer_id: "6858ddb9-3a3d-4dd8-aa61-6293942462d2",
     category_name: "Adventure",
   },
 
   // Ava Garcia (Beauty/Makeup)
   {
-    influencer_id: "25f900e7-3091-4c57-bf8d-0dddb86a34d5",
+    influencer_id: "75ec372c-1624-4bb0-a1c2-a159b4fcea6c",
     category_name: "Beauty",
   },
   {
-    influencer_id: "25f900e7-3091-4c57-bf8d-0dddb86a34d5",
+    influencer_id: "75ec372c-1624-4bb0-a1c2-a159b4fcea6c",
     category_name: "Makeup",
   },
 
   // Ethan Moore (Lifestyle/Productivity)
   {
-    influencer_id: "057d2599-cf59-46fb-aad5-1cd129388d4c",
+    influencer_id: "76294436-4f3d-47cf-99a0-e96e26749db4",
     category_name: "Lifestyle",
   },
   {
-    influencer_id: "057d2599-cf59-46fb-aad5-1cd129388d4c",
+    influencer_id: "76294436-4f3d-47cf-99a0-e96e26749db4",
     category_name: "Productivity",
   },
 
   // Mia Thompson (Parenting/Family)
   {
-    influencer_id: "b9f5dfe8-9260-461e-9e37-b2f035a43f85",
+    influencer_id: "8145c29d-e6df-44e9-8a19-ca7bdfa0e2cd",
     category_name: "Parenting",
   },
   {
-    influencer_id: "b9f5dfe8-9260-461e-9e37-b2f035a43f85",
+    influencer_id: "8145c29d-e6df-44e9-8a19-ca7bdfa0e2cd",
     category_name: "Family",
   },
 
   // Noah Anderson (DIY/Home Improvement)
   {
-    influencer_id: "fb24fc91-c6a7-4300-acbc-6ef7769f5a09",
+    influencer_id: "86abce82-b9f3-42d2-af19-3a3c167f8a96",
     category_name: "DIY",
   },
   {
-    influencer_id: "fb24fc91-c6a7-4300-acbc-6ef7769f5a09",
+    influencer_id: "86abce82-b9f3-42d2-af19-3a3c167f8a96",
     category_name: "Home Improvement",
   },
 
   // Isabella Clark (Sustainability/Eco-Friendly)
   {
-    influencer_id: "1d795213-8474-4b4a-bd20-224223eaca33",
+    influencer_id: "8e979230-3969-4dc9-a28a-8148b8effa7f",
     category_name: "Sustainability",
   },
   {
-    influencer_id: "1d795213-8474-4b4a-bd20-224223eaca33",
+    influencer_id: "8e979230-3969-4dc9-a28a-8148b8effa7f",
     category_name: "Eco-Friendly",
   },
 
   // Liam White (Music/Entertainment)
   {
-    influencer_id: "738ae5f0-e889-42d4-b32f-0b1ca4dfdc31",
+    influencer_id: "b3aabef9-e98b-4d4c-a4a4-e5728690634a",
     category_name: "Music",
   },
   {
-    influencer_id: "738ae5f0-e889-42d4-b32f-0b1ca4dfdc31",
+    influencer_id: "b3aabef9-e98b-4d4c-a4a4-e5728690634a",
     category_name: "Entertainment",
   },
 
   // Charlotte Hall (Books/Literature)
   {
-    influencer_id: "7b36a323-f9e1-427c-a3b8-6b12ec0e14f3",
+    influencer_id: "b6bac9d8-0535-4200-a97f-50f8c572a685",
     category_name: "Books",
   },
   {
-    influencer_id: "7b36a323-f9e1-427c-a3b8-6b12ec0e14f3",
+    influencer_id: "b6bac9d8-0535-4200-a97f-50f8c572a685",
     category_name: "Literature",
   },
 
   // Benjamin Young (Automotive/Cars)
   {
-    influencer_id: "19d7b423-90cb-414d-9f61-bdc4789429e1",
+    influencer_id: "cb1ec6f3-0410-4851-8cdc-9b55c98f6f09",
     category_name: "Automotive",
   },
   {
-    influencer_id: "19d7b423-90cb-414d-9f61-bdc4789429e1",
+    influencer_id: "cb1ec6f3-0410-4851-8cdc-9b55c98f6f09",
     category_name: "Cars",
   },
 
   // Amelia King (Yoga/Wellness)
   {
-    influencer_id: "82c5339e-c5d4-4097-9aaf-c951877d6054",
+    influencer_id: "cf7a5d62-6d21-400e-829b-f6ee8a54a291",
     category_name: "Yoga",
   },
   {
-    influencer_id: "82c5339e-c5d4-4097-9aaf-c951877d6054",
+    influencer_id: "cf7a5d62-6d21-400e-829b-f6ee8a54a291",
     category_name: "Wellness",
   },
 
   // Lucas Scott (Gaming/Esports)
   {
-    influencer_id: "071627d8-1e65-4ff7-9ba9-430b8f044c64",
+    influencer_id: "e8db2dee-3fcc-4ec8-9721-b52ff1103e16",
     category_name: "Gaming",
   },
   {
-    influencer_id: "071627d8-1e65-4ff7-9ba9-430b8f044c64",
+    influencer_id: "e8db2dee-3fcc-4ec8-9721-b52ff1103e16",
     category_name: "Esports",
   },
 
   // Harper Adams (Art/Culture)
   {
-    influencer_id: "02c7c4b8-e25d-4fe9-ad06-8eedef7d45fe",
+    influencer_id: "ecc8183d-b2b4-4d34-8bfc-d307144d0c3a",
     category_name: "Art",
   },
   {
-    influencer_id: "02c7c4b8-e25d-4fe9-ad06-8eedef7d45fe",
+    influencer_id: "ecc8183d-b2b4-4d34-8bfc-d307144d0c3a",
     category_name: "Culture",
   },
 
   // Henry Baker (Food/Cooking)
   {
-    influencer_id: "50cfcdd7-6e1e-44f5-8c36-3ca249952fe1",
+    influencer_id: "f0305997-c602-4132-8efe-044254cfa29f",
     category_name: "Food",
   },
   {
-    influencer_id: "50cfcdd7-6e1e-44f5-8c36-3ca249952fe1",
+    influencer_id: "f0305997-c602-4132-8efe-044254cfa29f",
     category_name: "Cooking",
   },
 ];

@@ -2,9 +2,15 @@
 
 import InfluencerCard from "./card/influencer-card";
 
-type Platform = {
-  name: "Instagram" | "Youtube" | "X";
-  followers: string;
+type SocialMediaPlatform = {
+  platform_name: string;
+  platform_icon_url: string;
+};
+
+type influencerSocialPlatformInfo = {
+  platform_profile_link: string;
+  follower_count: number;
+  platform: SocialMediaPlatform;
 };
 
 type Category = {
@@ -14,10 +20,10 @@ type Category = {
 type Influencer = {
   fullname: string;
   handle: string;
-  profile_image: string;
-  rating: number;
-  InfluencerSocialPlatforms: Platform[];
-  InfluencerCategories: Category[];
+  profile_image?: string;
+  avg_review_score: number;
+  socialPlatforms: influencerSocialPlatformInfo[];
+  categories: Category[];
 };
 
 type InfluencerListProps = {
@@ -32,10 +38,10 @@ function InfluencerList({ influencers }: InfluencerListProps) {
           key={influencer.handle}
           fullname={influencer.fullname}
           handle={influencer.handle}
-          rating={influencer.rating}
-          profileImageSrc={influencer.profile_image}
-          platforms={influencer.InfluencerSocialPlatforms}
-          categories={influencer.InfluencerCategories.slice(0, 3)}
+          avg_review_score={influencer.avg_review_score}
+          profile_image={influencer.profile_image}
+          socialPlatforms={influencer.socialPlatforms}
+          categories={influencer.categories.slice(0, 3)}
         />
       ))}
     </div>

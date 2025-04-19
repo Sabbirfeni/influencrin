@@ -5,9 +5,15 @@ import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link } from "react-router-dom";
 import { ProfileImage } from "@/components/ui/profile-image";
 
-type Platform = {
-  name: "Instagram" | "Youtube" | "X";
-  followers: string;
+type SocialMediaPlatform = {
+  platform_name: string;
+  platform_icon_url: string;
+};
+
+type influencerSocialPlatformInfo = {
+  platform_profile_link: string;
+  follower_count: number;
+  platform: SocialMediaPlatform;
 };
 
 type Category = {
@@ -17,9 +23,9 @@ type Category = {
 type InfluencerCardProps = {
   fullname: string;
   handle: string;
-  profileImageSrc?: string;
-  rating: number;
-  platforms: Platform[];
+  profile_image?: string;
+  avg_review_score: number;
+  socialPlatforms: influencerSocialPlatformInfo[];
   categories: Category[];
 };
 
@@ -32,9 +38,9 @@ const platformIcons: Record<string, JSX.Element> = {
 export default function InfluencerCard({
   fullname,
   handle,
-  profileImageSrc = "/avatar.jpg",
-  rating,
-  platforms,
+  profile_image = "/avatar.jpg",
+  avg_review_score,
+  socialPlatforms,
   categories,
 }: InfluencerCardProps) {
   return (
@@ -43,7 +49,7 @@ export default function InfluencerCard({
         <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
             <InfluencerAvgRating
-              rating={rating}
+              rating={avg_review_score}
               size="4"
               style="text-sm"
               isTitle={false}
@@ -53,8 +59,8 @@ export default function InfluencerCard({
           {/* Profile Image */}
           <ProfileImage
             style="w-25 h-25 shadow-2xl"
-            userName="Shabbir"
-            src={profileImageSrc}
+            fullname={fullname}
+            src={profile_image}
             backgroundColor="bg-gray-200 text-xl"
           />
 
@@ -66,18 +72,18 @@ export default function InfluencerCard({
 
           {/* Platforms */}
           <div className="flex flex-row flex-wrap justify-center items-center gap-1 text-sm text-muted-foreground">
-            {platforms.map((platform, idx) => (
+            {socialPlatforms.map((influencerSocialMedia, idx) => (
               <div
                 key={idx}
                 className="flex items-center gap-2 text-xs font-semibold px-2 py-1 rounded-sm bg-gray-100"
               >
                 <img
                   className="w-4 h-4"
-                  src={platform.SocialMediaPlatform.platform_icon_url}
+                  src={influencerSocialMedia.platform.platform_icon_url}
                   alt=""
                 />
 
-                {platform.follower_count}
+                {influencerSocialMedia.follower_count}
               </div>
             ))}
           </div>
