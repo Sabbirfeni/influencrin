@@ -2,11 +2,25 @@ import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-type SliderProps = React.ComponentProps<typeof Slider>;
+type FollowersFilterProps = {
+  searchParams: URLSearchParams;
+  className?: string;
+} & React.ComponentProps<typeof Slider>;
 
-export function FollowersFilter({ className, ...props }: SliderProps) {
-  const [value, setValue] = useState<[number, number]>([0, 8000]);
-  const minGap = 2000; // Minimum allowed gap
+export function FollowersFilter({
+  searchParams,
+  className,
+  ...props
+}: FollowersFilterProps) {
+  const currentMinFollowers = searchParams.get("min_followers");
+  const currentMaxFollowers = searchParams.get("max_followers");
+  const minFollowers = Number(currentMinFollowers) || 0;
+  const maxFollowers = Number(currentMaxFollowers) || 30000;
+  const [value, setValue] = useState<[number, number]>([
+    minFollowers,
+    maxFollowers,
+  ]);
+  const minGap = 5000; // Minimum allowed gap
   const handleSliderChange = (newValue: [number, number]) => {
     let [min, max] = newValue;
 
@@ -20,6 +34,13 @@ export function FollowersFilter({ className, ...props }: SliderProps) {
         min = max - minGap;
       }
     }
+
+    if (min) {
+      searchParams.set("min_followers", min.toString());
+    } else {
+      searchParams.delete("min_followers");
+    }
+    searchParams.set("max_followers", max.toString());
 
     setValue([min, max]);
   };
@@ -45,7 +66,7 @@ export function FollowersFilter({ className, ...props }: SliderProps) {
           value={value}
           onValueChange={handleSliderChange}
           min={0}
-          max={10000}
+          max={1000000}
           step={500}
           {...props}
         />

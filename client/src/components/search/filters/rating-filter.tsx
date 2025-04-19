@@ -11,11 +11,20 @@ import { cn } from "@/lib/utils";
 
 const ratings = [1, 2, 3, 4, 5];
 
-export function RatingFilter() {
+type RatingFilterProps = {
+  searchParams: URLSearchParams;
+};
+
+export function RatingFilter({ searchParams }: RatingFilterProps) {
+  const current = searchParams.get("min_rating");
+  const rating = current || null;
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number | string | null>(
+    rating
+  );
 
   const handleSelect = (rating: number) => {
+    searchParams.set("min_rating", rating.toString());
     setSelected(rating);
     setOpen(false); // auto close after selection
   };

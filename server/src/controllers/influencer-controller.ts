@@ -350,10 +350,7 @@ const searchInfluencers = async (
 
     if (min_rating) {
       having = Sequelize.where(
-        Sequelize.fn(
-          "ROUND",
-          Sequelize.fn("AVG", Sequelize.col("reviews.rating"))
-        ),
+        Sequelize.fn("AVG", Sequelize.col("reviews.rating")),
         {
           [Op.gte]: +min_rating,
         }

@@ -12,8 +12,8 @@ function FilterList({ searchParams }: FilterListProps) {
     <>
       <SocialPlatformFilter searchParams={searchParams} />
       <CategoryFilter searchParams={searchParams} />
-      <RatingFilter />
-      <FollowersFilter />
+      <RatingFilter searchParams={searchParams} />
+      <FollowersFilter searchParams={searchParams} />
     </>
   );
 }
