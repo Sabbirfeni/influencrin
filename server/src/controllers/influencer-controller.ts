@@ -388,7 +388,10 @@ const searchInfluencers = async (
   }
 };
 
-const getInfluencer = async (req: Request, res: Response): Promise<void> => {
+const getInfluencerByHandle = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { handle } = req.params;
 
@@ -406,17 +409,17 @@ const getInfluencer = async (req: Request, res: Response): Promise<void> => {
       include: [
         {
           model: InfluencerSocialPlatform,
-          as: "InfluencerSocialPlatforms",
+          as: "socialPlatforms",
           include: [
             {
               model: SocialMediaPlatform,
-              as: "SocialMediaPlatform",
+              as: "platform",
             },
           ],
         },
         {
           model: InfluencerCategory,
-          as: "InfluencerCategories",
+          as: "categories",
         },
       ],
     });
@@ -486,6 +489,6 @@ export {
   createInfluencer,
   getAllInfluencers,
   searchInfluencers,
-  getInfluencer,
+  getInfluencerByHandle,
   getInfluencersByUser,
 };

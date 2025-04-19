@@ -1,25 +1,36 @@
 import { Button } from "@/components/ui/button";
-
 import { MapPin } from "lucide-react";
 import { Pencil } from "lucide-react";
 import InfluencerProfileImage from "./influencer-profile-image";
 
-function InfluencerPrimaryInfo() {
+type Influencer = {
+  fullname: string;
+  handle: string;
+  bio: string;
+  location: string;
+  profile_image: string;
+};
+
+interface InfluencerPrimaryInfoProps {
+  influencer: Influencer;
+}
+
+function InfluencerPrimaryInfo({ influencer }: InfluencerPrimaryInfoProps) {
+  const { profile_image, fullname, handle, bio, location } = influencer;
   return (
     <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl">
-      <InfluencerProfileImage />
+      <InfluencerProfileImage
+        profileImageUrl={profile_image}
+        fullname={fullname}
+      />
       <div className="w-full md:w-2/3">
-        <h1 className="text-xl md:text-2xl font-bold">Samantha Brooks</h1>
+        <h1 className="text-xl md:text-2xl font-bold">{fullname}</h1>
         <div className="text-sm">
-          <p className="text-muted-foreground">@samantha_brooks</p>
-          <p className="text-sm md:text-[15px] mt-3">
-            Passionate content creator connecting with niche audiences through
-            authentic storytelling • Always exploring new trends and creative
-            ideas • Meaningful collaborations across platforms.
-          </p>
+          <p className="text-muted-foreground">@{handle}</p>
+          <p className="text-sm md:text-[15px] mt-3">{bio}</p>
           <div className="flex items-center gap-1 mt-3 md:mt-5">
             <MapPin className="w-3 h-3 text-primary" />
-            <p className="text-xs text-muted-foreground"> Dhaka, BD</p>
+            <p className="text-xs text-muted-foreground"> {location}</p>
           </div>
         </div>
       </div>

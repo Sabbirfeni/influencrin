@@ -7,7 +7,7 @@ function RelatedInfluencerCard() {
       <div className="flex items-center gap-2 md:gap-3">
         <ProfileImage
           style="w-9 h-9 md:w-12 md:h-12"
-          userName="Shabbir"
+          fullname="Shabbir"
           src=""
           backgroundColor="bg-gray-200 text-sm"
         />

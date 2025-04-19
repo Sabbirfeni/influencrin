@@ -31,7 +31,12 @@ function InfluencerListHome() {
         </h1>
 
         {loading && <InfluencerListSkeleton length={10} />}
-        {errorMessage && <ErrorSection errorMessage={errorMessage} />}
+        {errorMessage && (
+          <ErrorSection
+            errorHeading="Faild to load influencer list"
+            errorMessage={errorMessage}
+          />
+        )}
 
         {/* No Results */}
         {!loading && !errorMessage && influencers.length === 0 && (

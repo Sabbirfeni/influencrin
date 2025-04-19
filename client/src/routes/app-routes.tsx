@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/layouts/main-layout";
 import Home from "@/pages/home";
 
-import InfluencerDetails from "@/pages/influencer-details";
+import InfluencerDetailsPage from "@/pages/influencer-details";
 import SearchPage from "@/pages/search";
 import JoinInfluencrInPage from "@/pages/join-influencrin";
 import LoginPage from "@/pages/login";
@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/influencers/:handle",
-        element: <InfluencerDetails />,
+        element: <InfluencerDetailsPage />,
       },
       {
         path: "/search",

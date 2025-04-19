@@ -52,7 +52,7 @@ influencerRoutes.get(
  * @access  Public
  * @body    None
  */
-influencerRoutes.get("/:handle", InfluencerController.getInfluencer);
+influencerRoutes.get("/:handle", InfluencerController.getInfluencerByHandle);
 
 /**
  * @route   POST /api/influencers

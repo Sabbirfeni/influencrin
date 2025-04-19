@@ -5,31 +5,69 @@ import InfluencerPrimaryInfo from "@/components/influencer/influencer-details/in
 import InfluencerReviewsContainer from "@/components/influencer/influencer-details/influencer-review/influencer-reviews-container";
 import InfluencerCategoryList from "@/components/influencer/influencer-details/influencer-categories/influencer-category-list";
 import RelatedInfluencerList from "@/components/influencer/influencer-details/related-influencer/related-influencer-list";
+import { useApi } from "@/hooks";
+import influencerApiService from "@/api/endpoints/influencer-api-service";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import InfluencerDetailsSkeleton from "@/components/skeletons/influencer/influencer-details-skeleton";
+import ErrorSection from "@/components/error/error-section";
 
-function InfluencerDetails() {
+function InfluencerDetailsPage() {
+  const { handle } = useParams();
+  const [influencer, setInfluencer] = useState(null);
+  const { request, loading, errorMessage } = useApi(
+    influencerApiService.getInfluencerByHandle
+  );
+  console.log(influencer);
+  useEffect(() => {
+    if (!handle) return;
+    const loadInfluencer = async () => {
+      const data = await request(handle);
+      if (data) setInfluencer(data.influencer);
+    };
+
+    loadInfluencer();
+  }, [handle]);
+
   return (
     <SectionWrappers style="pt-2 md:pt-6">
-      <div className="flex flex-col gap-3 md:gap-4">
-        <div className="border border-gray-200 rounded-xl overflow-hidden">
-          <InfluencerBanner />
-          <InfluencerPrimaryInfo />
-        </div>
+      {/* Loading State */}
+      {loading && <InfluencerDetailsSkeleton />}
 
-        <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
-          <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
-            <InfluencerSocialList />
-            <InfluencerCategoryList style="flex md:hidden" />
-            <InfluencerReviewsContainer />
+      {/* Error State */}
+      {!loading && errorMessage && (
+        <ErrorSection
+          errorHeading="Failed to load influencer details."
+          errorMessage={errorMessage}
+        />
+      )}
+
+      {/* Content */}
+      {!loading && influencer && (
+        <div className="flex flex-col gap-3 md:gap-4">
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <InfluencerBanner />
+            <InfluencerPrimaryInfo influencer={influencer} />
           </div>
 
-          <div className="w-full md:w-1/3 flex flex-col gap-4">
-            <InfluencerCategoryList style="hidden md:flex" />
-            <RelatedInfluencerList />
+          <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
+            <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
+              <InfluencerSocialList
+                socialPlatformList={influencer.socialPlatforms}
+              />
+              <InfluencerCategoryList style="flex md:hidden" />
+              {/* <InfluencerReviewsContainer influencer={influencer} /> */}
+            </div>
+
+            <div className="w-full md:w-1/3 flex flex-col gap-4">
+              <InfluencerCategoryList style="hidden md:flex" />
+              {/* <RelatedInfluencerList influencer={influencer} /> */}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </SectionWrappers>
   );
 }
 
-export default InfluencerDetails;
+export default InfluencerDetailsPage;

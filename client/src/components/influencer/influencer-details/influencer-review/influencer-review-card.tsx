@@ -9,7 +9,7 @@ function InfluencerReviewCard() {
         <div className="flex items-center gap-3">
           <ProfileImage
             style="w-12 h-12"
-            userName="Shabbir"
+            fullname="Shabbir"
             src=""
             backgroundColor="bg-gray-100"
           />
