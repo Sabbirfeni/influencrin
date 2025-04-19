@@ -15,7 +15,7 @@ interface InfluencerAvgRatingProps {
 }
 
 function InfluencerAvgRating({
-  reviews,
+  reviews = [],
   size = 5,
   style = "",
   isTitle,

@@ -31,9 +31,10 @@ type InfluencerListProps = {
 };
 
 function InfluencerList({ influencers }: InfluencerListProps) {
+  console.log(influencers);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-      {influencers.slice(0, 15).map((influencer) => (
+      {influencers.map((influencer) => (
         <InfluencerCard
           key={influencer.handle}
           fullname={influencer.fullname}

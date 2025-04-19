@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Instagram, Youtube } from "lucide-react";
 import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link } from "react-router-dom";
 import { ProfileImage } from "@/components/ui/profile-image";
@@ -27,12 +26,6 @@ type InfluencerCardProps = {
   avg_review_score: number;
   socialPlatforms: influencerSocialPlatformInfo[];
   categories: Category[];
-};
-
-const platformIcons: Record<string, JSX.Element> = {
-  Instagram: <Instagram className="h-4 w-4 text-pink-500" />,
-  Youtube: <Youtube className="h-4 w-4 text-red-500" />,
-  X: <X className="h-4 w-4 text-blue-500" />,
 };
 
 export default function InfluencerCard({
@@ -94,7 +87,7 @@ export default function InfluencerCard({
               <Badge
                 key={idx}
                 variant="outline"
-                className="text-xs px-3 py-1 rounded-full text-gray-500 border-1 border-gray-200"
+                className="text-xs px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
               >
                 {category.category_name}
               </Badge>
