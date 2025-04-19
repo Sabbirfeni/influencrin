@@ -30,7 +30,7 @@ function InfluencerListHome() {
           Rising Voices
         </h1>
 
-        {loading && <InfluencerListSkeleton length={10} />}
+        {loading && <InfluencerListSkeleton length={15} />}
         {errorMessage && (
           <ErrorSection
             errorHeading="Faild to load influencer list"
@@ -48,7 +48,7 @@ function InfluencerListHome() {
         {/* Influencer List */}
         {!loading && !errorMessage && influencers.length > 0 && (
           <>
-            <InfluencerList influencers={influencers} />
+            <InfluencerList influencers={influencers.slice(0, 15)} />
 
             <div className="flex justify-center mt-6 md:mt-12">
               <Link to="/search">

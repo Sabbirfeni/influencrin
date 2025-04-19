@@ -57,11 +57,32 @@ const options: Option[] = [
   { label: "Periscope", value: "periscope" },
 ];
 
-export function SocialPlatformFilter() {
+type SocialPlatformFilterProps = {
+  searchParams: URLSearchParams;
+};
+
+export function SocialPlatformFilter({
+  searchParams,
+}: SocialPlatformFilterProps) {
+  const current = searchParams.get("platform_names");
+  let platforms = current ? current.split(",") : [];
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<string[]>(platforms);
 
   const toggleSelection = (value: string) => {
+    // Toggle the selected value
+    if (platforms.includes(value)) {
+      platforms = platforms.filter((item) => item !== value);
+    } else {
+      platforms = [...platforms, value];
+    }
+
+    // Update searchParams with the new list
+    if (platforms.length > 0) {
+      searchParams.set("platform_names", platforms.join(","));
+    } else {
+      searchParams.delete("platform_names");
+    }
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );

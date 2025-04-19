@@ -57,11 +57,31 @@ const options: Option[] = [
   { label: "Women’s Style", value: "womens_style" },
 ];
 
-export function CategoryFilter() {
+type CategoryFilterProps = {
+  searchParams: URLSearchParams;
+};
+
+export function CategoryFilter({ searchParams }: CategoryFilterProps) {
+  const current = searchParams.get("category_names");
+  let categories = current ? current.split(",") : [];
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<string[]>(categories);
 
   const toggleSelection = (value: string) => {
+    // Toggle the selected value
+    if (categories.includes(value)) {
+      categories = categories.filter((item) => item !== value);
+    } else {
+      categories = [...categories, value];
+    }
+
+    // Update searchParams with the new list
+    if (categories.length > 0) {
+      searchParams.set("category_names", categories.join(","));
+    } else {
+      searchParams.delete("category_names");
+    }
+
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );

@@ -8,7 +8,8 @@ interface Review {
 }
 
 interface InfluencerAvgRatingProps {
-  reviews: Review[];
+  reviews?: Review[];
+  avg_review_score?: number;
   size?: number | string;
   style?: string;
   isTitle: boolean;
@@ -16,6 +17,7 @@ interface InfluencerAvgRatingProps {
 
 function InfluencerAvgRating({
   reviews = [],
+  avg_review_score,
   size = 5,
   style = "",
   isTitle,
@@ -34,7 +36,9 @@ function InfluencerAvgRating({
     <>
       <div className="flex items-center gap-1">
         <Star className={`w-${size} h-${size}`} fill="#0a66c2" stroke="none" />
-        <span className={`${style} font-semibold text-primary`}>{average}</span>
+        <span className={`${style} font-semibold text-primary`}>
+          {avg_review_score || average}
+        </span>
       </div>
       {isTitle && (
         <h2 className="text-sm md:text-md font-semibold">Average Rating</h2>

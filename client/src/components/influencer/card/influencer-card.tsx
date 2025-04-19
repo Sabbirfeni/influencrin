@@ -42,7 +42,7 @@ export default function InfluencerCard({
         <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
           <div className="absolute top-5 right-5">
             <InfluencerAvgRating
-              rating={avg_review_score}
+              avg_review_score={avg_review_score}
               size="4"
               style="text-sm"
               isTitle={false}

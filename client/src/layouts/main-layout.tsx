@@ -1,12 +1,13 @@
+import { Toaster } from "@/components/ui/sonner";
 import { Outlet } from "react-router-dom";
 
 import Header from "@/components/ui/header/header";
 import Footer from "@/components/ui/footer/footer";
-import { SidebarProvider } from "@/components/ui/sidebar";
+
 const MainLayout = () => {
   return (
-    // <SidebarProvider>
     <div>
+      <Toaster />
       <header>
         <Header />
       </header>
@@ -15,7 +16,6 @@ const MainLayout = () => {
       </main>
       <Footer />
     </div>
-    // </SidebarProvider>
   );
 };
 

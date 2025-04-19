@@ -3,11 +3,15 @@ import FollowersFilter from "./filters/followers-filter";
 import RatingFilter from "./filters/rating-filter";
 import SocialPlatformFilter from "./filters/social-platform-filter";
 
-function FilterList() {
+type FilterListProps = {
+  searchParams: URLSearchParams;
+};
+
+function FilterList({ searchParams }: FilterListProps) {
   return (
     <>
-      <SocialPlatformFilter />
-      <CategoryFilter />
+      <SocialPlatformFilter searchParams={searchParams} />
+      <CategoryFilter searchParams={searchParams} />
       <RatingFilter />
       <FollowersFilter />
     </>

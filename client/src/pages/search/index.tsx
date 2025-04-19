@@ -6,8 +6,10 @@ import InfluencerListSkeleton from "@/components/skeletons/influencer/influencer
 import SectionWrappers from "@/components/wrappers/section-wrapper";
 import { useApi } from "@/hooks";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function SearchPage() {
+  const [params, setParams] = useSearchParams();
   const [influencers, setInfluencers] = useState(null);
   const { request, loading, errorMessage } = useApi(
     influencerApiService.searchInfluencers
@@ -15,15 +17,15 @@ function SearchPage() {
 
   useEffect(() => {
     const loadInfluencers = async () => {
-      const data = await request();
+      const data = await request(params);
       if (data) setInfluencers(data.influencers);
     };
 
     loadInfluencers();
-  }, []);
+  }, [params]);
 
   return (
-    <SectionWrappers style="pt-2 md:pt-6 flex flex-col gap-4">
+    <SectionWrappers style="pt-2 md:pt-6 flex flex-col gap-2">
       {/* Filters Section */}
       <InfluencerFilterSection />
 
@@ -41,7 +43,16 @@ function SearchPage() {
 
       {/* Handle Data Display */}
       {!loading && !errorMessage && influencers && (
-        <InfluencerList influencers={influencers} />
+        <>
+          {params.toString() && (
+            <div className="font-semibold flex items-center gap-1 text-sm">
+              <span className="text-primary">{influencers.length}</span>{" "}
+              Influencers found.
+            </div>
+          )}
+
+          <InfluencerList influencers={influencers} />
+        </>
       )}
     </SectionWrappers>
   );
