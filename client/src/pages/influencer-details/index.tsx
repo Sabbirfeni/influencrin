@@ -18,7 +18,7 @@ function InfluencerDetailsPage() {
   const { request, loading, errorMessage } = useApi(
     influencerApiService.getInfluencerByHandle
   );
-  console.log(influencer);
+
   useEffect(() => {
     if (!handle) return;
     const loadInfluencer = async () => {
@@ -29,6 +29,7 @@ function InfluencerDetailsPage() {
     loadInfluencer();
   }, [handle]);
 
+  console.log(influencer);
   return (
     <SectionWrappers style="pt-2 md:pt-6">
       {/* Loading State */}
@@ -55,13 +56,19 @@ function InfluencerDetailsPage() {
               <InfluencerSocialList
                 socialPlatformList={influencer.socialPlatforms}
               />
-              <InfluencerCategoryList style="flex md:hidden" />
-              {/* <InfluencerReviewsContainer influencer={influencer} /> */}
+              <InfluencerCategoryList
+                style="flex md:hidden"
+                categories={influencer.categories}
+              />
+              <InfluencerReviewsContainer reviews={influencer.reviews} />
             </div>
 
             <div className="w-full md:w-1/3 flex flex-col gap-4">
-              <InfluencerCategoryList style="hidden md:flex" />
-              {/* <RelatedInfluencerList influencer={influencer} /> */}
+              <InfluencerCategoryList
+                style="hidden md:flex"
+                categories={influencer.categories}
+              />
+              <RelatedInfluencerList categories={influencer.categories} />
             </div>
           </div>
         </div>

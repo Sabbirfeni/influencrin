@@ -33,9 +33,9 @@ const InfluencerCategory = sequelize.define<
     category_name: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      set(value: string) {
-        this.setDataValue("category_name", value.toLowerCase());
-      },
+      // set(value: string) {
+      //   this.setDataValue("category_name", value.toLowerCase());
+      // },
     },
   },
   {

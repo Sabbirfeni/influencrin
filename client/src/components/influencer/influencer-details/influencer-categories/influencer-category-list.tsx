@@ -2,20 +2,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 
-type Props = {
-  style?: string;
+type Category = {
+  id: string;
+  influencer_id: string;
+  category_name: string;
 };
 
-const categories = [
-  "Beauty",
-  "Lifestyle",
-  "Beauty",
-  "Lifestyle",
-  "Lifestyle",
-  "Beauty",
-  "Lifestyle",
-];
-function InfluencerCategoryList({ style }: Props) {
+type InfluencerCategoryListProps = {
+  style?: string;
+  categories: Category[];
+};
+
+function InfluencerCategoryList({
+  style,
+  categories,
+}: InfluencerCategoryListProps) {
   return (
     <div
       className={`p-4 ${style} flex-col gap-4 border border-gray-200 rounded-xl`}
@@ -30,13 +31,13 @@ function InfluencerCategoryList({ style }: Props) {
       </div>
       {/* Category list */}
       <div className="flex flex-wrap gap-2">
-        {categories.map((cat, idx) => (
+        {categories.map((cat) => (
           <Badge
-            key={idx}
+            key={cat.id}
             variant="outline"
             className="group cursor-pointer flex items-center gap-1 text-xs px-3 py-1 rounded-full transition duration-300 bg-white text-primary border border-primary"
           >
-            {cat}
+            {cat.category_name}
             <X
               className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
               strokeWidth={3}

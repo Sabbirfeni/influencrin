@@ -72,7 +72,7 @@ export default function InfluencerCard({
 
           {/* Platforms */}
           <div className="flex flex-row flex-wrap justify-center items-center gap-1 text-sm text-muted-foreground">
-            {socialPlatforms.map((influencerSocialMedia, idx) => (
+            {socialPlatforms.slice(0, 2).map((influencerSocialMedia, idx) => (
               <div
                 key={idx}
                 className="flex items-center gap-2 text-xs font-semibold px-2 py-1 rounded-sm bg-gray-100"

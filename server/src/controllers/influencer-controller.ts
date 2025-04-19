@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ValidationError, Op, Sequelize } from "sequelize";
+import { ValidationError, Op, Sequelize, Model } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import Influencer from "../models/influencer-model";
 import InfluencerSocialPlatform from "../models/influencer-social-platform-model";
@@ -8,6 +8,8 @@ import SocialMediaPlatform from "../models/social-media-platform-model";
 import InfluencerReview from "../models/influencer-review-model";
 import path from "path";
 import fs from "fs";
+import { InfluencerReviewAttributes } from "../types/influencer-review";
+import User from "../models/user-model";
 
 const createInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
@@ -389,7 +391,7 @@ const searchInfluencers = async (
 };
 
 const getInfluencerByHandle = async (
-  req: Request,
+  req: Request<{ handle: string }, any, any, any>,
   res: Response
 ): Promise<void> => {
   try {
@@ -400,6 +402,7 @@ const getInfluencerByHandle = async (
       return;
     }
 
+    // Find influencer with associated models, including reviews
     const influencer = await Influencer.findOne({
       where: {
         handle: {
@@ -421,6 +424,18 @@ const getInfluencerByHandle = async (
           model: InfluencerCategory,
           as: "categories",
         },
+        {
+          model: InfluencerReview,
+          as: "reviews",
+          attributes: ["id", "rating", "comment", "createdAt"],
+          include: [
+            {
+              model: User,
+              as: "author",
+              attributes: ["fullname", "profile_image"],
+            },
+          ],
+        },
       ],
     });
 
@@ -431,9 +446,11 @@ const getInfluencerByHandle = async (
       return;
     }
 
-    res
-      .status(200)
-      .json({ message: "Influencers fetched successfully.", influencer });
+    // Return influencer data with the calculated average rating and all reviews
+    res.status(200).json({
+      message: "Influencer fetched successfully.",
+      influencer,
+    });
   } catch (error: any) {
     res.status(500).json({
       message: error.message || "Internal server error.",

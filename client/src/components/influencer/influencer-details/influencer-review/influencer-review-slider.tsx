@@ -7,7 +7,18 @@ import {
 } from "@/components/ui/carousel";
 import InfluencerReviewCard from "./influencer-review-card";
 
-function InfluencerReviewSlider() {
+interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+interface InfluencerReviewSliderProps {
+  reviews: Review[];
+}
+
+function InfluencerReviewSlider({ reviews }: InfluencerReviewSliderProps) {
   return (
     <Carousel className="mt-2">
       <div className="absolute -bottom-2 right-1/2 md:right-14 md:bottom-66 gap-0">
@@ -16,27 +27,11 @@ function InfluencerReviewSlider() {
       </div>
 
       <CarouselContent className="gap-0 pb-5">
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
-        <CarouselItem className="md:basis-1/2">
-          <InfluencerReviewCard />
-        </CarouselItem>
+        {reviews.map((review) => (
+          <CarouselItem key={review.id} className="md:basis-1/2">
+            <InfluencerReviewCard review={review} />
+          </CarouselItem>
+        ))}
       </CarouselContent>
     </Carousel>
   );
