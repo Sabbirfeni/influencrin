@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link } from "react-router-dom";
 import { ProfileImage } from "@/components/ui/profile-image";
+import formatFollowers from "@/utils/format-follwers";
 
 type SocialMediaPlatform = {
   platform_name: string;
@@ -76,7 +77,7 @@ export default function InfluencerCard({
                   alt=""
                 />
 
-                {influencerSocialMedia.follower_count}
+                {formatFollowers(influencerSocialMedia.follower_count)}
               </div>
             ))}
           </div>

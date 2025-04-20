@@ -1,3 +1,4 @@
+import formatFollowers from "@/utils/format-follwers";
 import { ExternalLink } from "lucide-react";
 import { Edit } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -46,7 +47,7 @@ function InfluencerSocialCard({
       <div className="flex-1 p-3 flex flex-row items-center justify-center gap-4">
         <div className="text-center">
           <h1 className="text-md md:text-2xl font-semibold">
-            {follower_count}
+            {formatFollowers(follower_count)}
           </h1>
           <p className="text-xs md:text-sm text-muted-foreground">Followers</p>
         </div>

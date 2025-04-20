@@ -1,5 +1,6 @@
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import formatFollowers from "@/utils/format-follwers";
 import { useState } from "react";
 
 type FollowersFilterProps = {
@@ -15,7 +16,7 @@ export function FollowersFilter({
   const currentMinFollowers = searchParams.get("min_followers");
   const currentMaxFollowers = searchParams.get("max_followers");
   const minFollowers = Number(currentMinFollowers) || 0;
-  const maxFollowers = Number(currentMaxFollowers) || 30000;
+  const maxFollowers = Number(currentMaxFollowers) || 300000;
   const [value, setValue] = useState<[number, number]>([
     minFollowers,
     maxFollowers,
@@ -52,11 +53,11 @@ export function FollowersFilter({
         {/* Tooltip labels */}
         <div className="flex justify-between px-1 mb-2 text-sm font-medium">
           <div>
-            {value[0].toLocaleString()}{" "}
+            {formatFollowers(value[0])}{" "}
             <span className="text-gray-400 text-xs">to</span>{" "}
           </div>
           <div>
-            {value[1].toLocaleString()}{" "}
+            {formatFollowers(value[1])}{" "}
             <span className="text-gray-400 text-xs">followers</span>{" "}
           </div>
         </div>

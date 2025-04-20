@@ -21,7 +21,7 @@ interface InfluencerReviewSliderProps {
 function InfluencerReviewSlider({ reviews }: InfluencerReviewSliderProps) {
   return (
     <Carousel className="mt-2">
-      <div className="absolute -bottom-2 right-1/2 md:right-14 md:bottom-66 gap-0">
+      <div className="absolute -bottom-0 right-1/2 md:right-14 md:bottom-[112%] gap-0">
         <CarouselPrevious className="z-10 -left-7 hover:bg-primary hover:text-white border-primary text-primary" />
         <CarouselNext className="z-10 hover:bg-primary hover:text-white border-primary text-primary" />
       </div>
