@@ -14,17 +14,16 @@ export function ProfileImage({
   backgroundColor,
 }: ProfileImageProps) {
   const firstLetterOfUsername = fullname?.trim().charAt(0).toUpperCase();
-  console.log(
-    `${
-      import.meta.env.VITE_SERVER_BASE_URL
-    }/images/uploads/user-profiles/${src}`
-  );
   return (
     <Avatar className={`cursor-pointer ${style}`}>
       <AvatarImage
-        src={`${
-          import.meta.env.VITE_SERVER_BASE_URL
-        }/images/uploads/user-profiles/${src}`}
+        src={
+          src?.startsWith("blob:")
+            ? src // show preview image
+            : `${
+                import.meta.env.VITE_SERVER_BASE_URL
+              }/images/uploads/user-profiles/${src}` // fallback to server image
+        }
         className="object-cover"
         alt={fullname}
       />

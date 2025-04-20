@@ -27,7 +27,7 @@ const authenticate = async (
   if (!token) {
     res.status(401).json({
       success: false,
-      error: "Authentication required. No token provided.",
+      message: "Authentication required. No token provided.",
     });
     return; // Explicit return to stop execution
   }
@@ -52,7 +52,7 @@ const authenticate = async (
 
     res.status(401).json({
       success: false,
-      error: errorMessage,
+      message: errorMessage,
     });
   }
 };

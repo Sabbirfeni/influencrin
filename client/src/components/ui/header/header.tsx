@@ -31,12 +31,12 @@ function Header() {
       <Logo />
 
       <SearchBar />
-      {/* {userLoading && <HeaderUserAvatarSkeleton />} */}
+      {userLoading && <HeaderUserAvatarSkeleton />}
       {user && <HeaderUserAvatar user={user} />}
 
       {/* Desktop actions */}
 
-      {!user && (
+      {!userLoading && !user && (
         <div className="hidden md:flex items-center gap-3">
           <Link to="/join-influencrin">
             {" "}

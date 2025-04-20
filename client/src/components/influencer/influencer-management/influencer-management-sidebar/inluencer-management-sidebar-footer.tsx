@@ -15,7 +15,7 @@ import { ChevronsUpDown } from "lucide-react";
 
 function InluencerManagementSidebarFooter() {
   const { user, logout } = useAuth();
-
+  const firstLetterOfUsername = user?.fullname?.trim().charAt(0).toUpperCase();
   return (
     <SidebarFooter>
       <SidebarMenu>
@@ -33,7 +33,7 @@ function InluencerManagementSidebarFooter() {
                       alt="User"
                     />
                     <AvatarFallback className="text-muted-foreground">
-                      U
+                      {firstLetterOfUsername}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:flex md:flex-col">

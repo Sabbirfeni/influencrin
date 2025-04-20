@@ -6,7 +6,7 @@ import { LoginSchemaType } from "@/components/forms/schemas/auth/log-in-schema";
 import ToastDescription from "@/components/toast/toast-description";
 import { AuthContext } from "@/contexts";
 import { useApi } from "@/hooks";
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -20,14 +20,27 @@ export interface User {
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
 
-  const token = localStorage.getItem("token");
-  let decodedUser: User | null = null;
-  if (token) {
-    decodedUser = jwtDecode<User>(token);
-  }
+  // Fetch user data on app load
+  const {
+    request,
+    loading: userLoading,
+    errorMessage: userErrorMessage,
+  } = useApi(authApiService.getProfile);
 
-  const [user, setUser] = useState<User | null>(decodedUser);
+  const fetchUser = async () => {
+    const data = await request();
+    if (data) {
+      setUser(data.user);
+    } else if (userErrorMessage) {
+      toast(userErrorMessage);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   // User registration api call
   const {
@@ -83,6 +96,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        userLoading,
+        setUser,
         login,
         registerUser,
         logout,

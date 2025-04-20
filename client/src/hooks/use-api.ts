@@ -12,7 +12,7 @@ type UseApiReturn<T> = {
 };
 
 const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const request = async (...args: any[]): Promise<T | undefined> => {

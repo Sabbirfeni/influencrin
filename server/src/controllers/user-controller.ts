@@ -81,14 +81,14 @@ const getReviewsByUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const updateMe = async (req: Request, res: Response): Promise<void> => {
-  const userId = req.body.user.id;
+  const userId = req.user!.id;
   const { fullname } = req.body;
   const file = req.file;
 
   try {
     const user = await User.findByPk(userId);
     if (!user) {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
@@ -107,7 +107,7 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
         deleteUserProfileImageFromDisk(file.filename);
       }
 
-      res.status(500).json({ error: "Failed to update user profile." });
+      res.status(500).json({ message: "Failed to update user profile." });
       return;
     }
 
@@ -117,17 +117,15 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.status(200).json({
-      message: "User updated successfully",
+      message: "Your profile has been updated successfully",
       user: {
-        id: user.get("id"),
-        email: user.get("email"),
         fullname: user.get("fullname"),
         profile_image: user.get("profile_image"),
       },
     });
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(500).json({ error: "Internal server error!" });
+    res.status(500).json({ message: "Internal server error!" });
   }
 };
 

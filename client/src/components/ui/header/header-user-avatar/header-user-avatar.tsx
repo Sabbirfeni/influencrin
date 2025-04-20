@@ -25,7 +25,7 @@ interface HeaderUserAvatarProps {
 
 const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
   const { fullname, email, profile_image } = user;
-
+  const firstLetterOfUsername = fullname?.trim().charAt(0).toUpperCase();
   return (
     <div className="ml-3 md:ml-0">
       <DropdownMenu>
@@ -40,7 +40,7 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
                 alt="User"
               />
               <AvatarFallback className="text-muted-foreground">
-                U
+                {firstLetterOfUsername}
               </AvatarFallback>
             </Avatar>
             <div className="hidden md:flex md:flex-col">

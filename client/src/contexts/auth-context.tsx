@@ -13,6 +13,8 @@ export interface User {
 
 export interface AuthContextType {
   user: User | null;
+  userLoading: boolean;
+  setUser: (user: User) => void;
   login: (userData: LoginSchemaType) => void;
   registerUser: (registrationData: RegistrationSchemaSchemaType) => void;
   logout: () => void;
