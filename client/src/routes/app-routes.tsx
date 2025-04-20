@@ -10,10 +10,15 @@ import InfluencerManagementLayout from "@/layouts/influencer-management-layout";
 import MyAccountPage from "@/pages/my-account";
 import ManageInfluencersPage from "@/pages/manage-influencers";
 import AddInfluencerPage from "@/pages/add-influencer";
+import AuthProvider from "@/providers/auth-provider";
 
 export const router = createBrowserRouter([
   {
-    element: <MainLayout />,
+    element: (
+      <AuthProvider>
+        <MainLayout />
+      </AuthProvider>
+    ),
     children: [
       {
         path: "/",
@@ -38,7 +43,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <InfluencerManagementLayout />,
+    element: (
+      <AuthProvider>
+        <InfluencerManagementLayout />
+      </AuthProvider>
+    ),
     children: [
       {
         path: "/my-account",
