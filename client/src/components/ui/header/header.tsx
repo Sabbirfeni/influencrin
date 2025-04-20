@@ -14,7 +14,7 @@ import HeaderUserAvatarSkeleton from "@/components/skeletons/user/header-user-av
 function Header() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { user, loading } = useAuth();
+  const { user, userLoading } = useAuth();
 
   const navigateToJoinInfluencrInPage = () => {
     setOpen(false);
@@ -31,44 +31,52 @@ function Header() {
       <Logo />
 
       <SearchBar />
-      {loading && <HeaderUserAvatarSkeleton />}
+      {userLoading && <HeaderUserAvatarSkeleton />}
       {user && <HeaderUserAvatar user={user} />}
 
       {/* Desktop actions */}
-      <div className="hidden md:flex items-center gap-3">
-        <Link to="/join-influencrin">
-          {" "}
-          <Button>Join InfluencrIn</Button>
-        </Link>
 
-        <Link to="/login">
-          <Button>Log in</Button>
-        </Link>
-      </div>
+      {!user && (
+        <div className="hidden md:flex items-center gap-3">
+          <Link to="/join-influencrin">
+            {" "}
+            <Button>Join InfluencrIn</Button>
+          </Link>
+
+          <Link to="/login">
+            <Button>Log in</Button>
+          </Link>
+        </div>
+      )}
 
       {/* Mobile menu */}
-      {/* <div className="md:hidden">
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" className="pr-0 !important">
-              <Menu
-                style={{ height: "20px", width: "20px" }}
-                className="text-primary"
-                strokeWidth={2.5}
-              />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-[260px] px-4 py-6">
-            <div className="flex flex-col gap-3 mt-8">
-              <Button variant="default" onClick={navigateToJoinInfluencrInPage}>
-                Join InfluencrIn
+      {!user && (
+        <div className="md:hidden">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" className="pr-0 !important">
+                <Menu
+                  style={{ height: "20px", width: "20px" }}
+                  className="text-primary"
+                  strokeWidth={2.5}
+                />
               </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[260px] px-4 py-6">
+              <div className="flex flex-col gap-3 mt-8">
+                <Button
+                  variant="default"
+                  onClick={navigateToJoinInfluencrInPage}
+                >
+                  Join InfluencrIn
+                </Button>
 
-              <Button onClick={navigateToLoginPage}>Log in</Button>
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div> */}
+                <Button onClick={navigateToLoginPage}>Log in</Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
     </div>
   );
 }

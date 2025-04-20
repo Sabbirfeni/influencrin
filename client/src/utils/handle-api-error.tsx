@@ -5,12 +5,14 @@ type ApiError = {
     };
   };
   message?: string;
+  error?: string;
 };
 
 const handlApiError = (
   error: ApiError,
   fallbackMessage: string = "Something went wrong"
 ): string => {
+  console.log(error);
   const message =
     error?.response?.data?.message ||
     error?.message ||

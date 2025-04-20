@@ -26,8 +26,8 @@ const authApiService = {
     return res.data;
   },
 
-  signup: async (formData: FormData): Promise<AuthResponse> => {
-    const res = await axios.post<AuthResponse>("/auth/signup", formData, {
+  register: async (formData: FormData): Promise<AuthResponse> => {
+    const res = await axios.post<AuthResponse>("/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

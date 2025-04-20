@@ -53,7 +53,11 @@ const authenticate = (
     next(); // Proceed to the next middleware or route handler
   } catch (error: any) {
     // If the token is invalid or expired, respond with an error
-    res.status(401).json({ message: error.message });
+    res
+      .status(401)
+      .json({
+        message: "Invalid token or expired session. Please login again.",
+      });
   }
 };
 

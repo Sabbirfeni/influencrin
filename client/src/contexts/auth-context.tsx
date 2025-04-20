@@ -1,3 +1,5 @@
+import { RegistrationSchemaSchemaType } from "@/components/forms/schemas/auth/registration-schema";
+import { LoginSchemaType } from "@/components/forms/schemas/auth/log-in-schema";
 import { createContext } from "react";
 
 // 1. Define User and AuthContextType interfaces
@@ -11,8 +13,9 @@ export interface User {
 export interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  loading: boolean;
-  errorMessage: string | null;
+  userLoading: boolean;
+  login: (userData: LoginSchemaType) => void;
+  registerUser: (registrationData: RegistrationSchemaSchemaType) => void;
   logout: () => void;
 }
 

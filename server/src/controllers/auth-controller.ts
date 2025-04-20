@@ -23,6 +23,17 @@ const register = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    res.status(400).json({
+      message:
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+    });
+    return;
+  }
+
   try {
     const userDataToSave: any = {
       fullname,
@@ -39,7 +50,8 @@ const register = async (req: Request, res: Response): Promise<void> => {
     const userData = newUser.get() as UserAttributes;
 
     res.status(201).json({
-      message: "Registration successful",
+      message:
+        "Your account has been created successfully. You can now log in to InfluencrIn.",
       user: {
         id: userData.id,
         fullname: userData.fullname,
@@ -86,7 +98,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      res.status(401).json({ error: "Invalid email or password." });
+      res.status(401).json({ message: "Invalid email or password." });
       return;
     }
 
@@ -97,7 +109,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       userData.password_hash
     );
     if (!isPasswordValid) {
-      res.status(401).json({ error: "Invalid email or password." });
+      res.status(401).json({ message: "Invalid email or password." });
       return;
     }
 
@@ -117,7 +129,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       })
       .status(200)
       .json({
-        message: "Welcome, you're logged in",
+        message: "You're logging into InfluencrIn",
         user: {
           id: userData.id,
           fullname: userData.fullname,
@@ -127,9 +139,9 @@ const login = async (req: Request, res: Response): Promise<void> => {
       });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ error: "Server error during login." });
+      res.status(500).json({ message: "Server error during login." });
     }
   }
 };
