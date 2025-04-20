@@ -8,6 +8,15 @@ interface DecodedToken {
   email: string;
 }
 
+// Extend Express Request to include `user`
+declare global {
+  namespace Express {
+    interface Request {
+      user?: DecodedToken;
+    }
+  }
+}
+
 const authenticate = (
   req: Request,
   res: Response,
@@ -39,13 +48,12 @@ const authenticate = (
 
     // Cast the decoded token into the expected structure
     const decodedToken = decoded as DecodedToken;
-
     // Attach the decoded token to the request object for further use in the route handler
-    req.body.user = decodedToken;
+    req.user = decodedToken;
     next(); // Proceed to the next middleware or route handler
-  } catch (error) {
+  } catch (error: any) {
     // If the token is invalid or expired, respond with an error
-    res.status(401).json({ error: "Invalid or expired token." });
+    res.status(401).json({ message: error.message });
   }
 };
 

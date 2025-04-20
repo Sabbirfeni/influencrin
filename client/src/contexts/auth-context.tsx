@@ -13,6 +13,7 @@ export interface AuthContextType {
   setUser: (user: User | null) => void;
   loading: boolean;
   errorMessage: string | null;
+  logout: () => void;
 }
 
 // 2. Create context with correct type and default null

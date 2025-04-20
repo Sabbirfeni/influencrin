@@ -23,12 +23,11 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api", routes);
 
 // Serve static files from the 'public' directory
-app.use(
-  "/uploads/user-profiles",
-  express.static(path.join(__dirname, "public/uploads/user-profiles"))
-);
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Start server only after DB is ready
 const startServer = async () => {
@@ -39,8 +38,6 @@ const startServer = async () => {
     // await seedInfluencerCategories();
     // await seedInfluencerSocialPlatforms();
     // await seedReviews();
-
-    app.use("/api", routes);
 
     app.listen(port, () => {
       console.log(`✅ Server is running at http://localhost:${port}`);

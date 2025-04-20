@@ -10,6 +10,8 @@ import { ValidationError } from "sequelize";
 import path from "path";
 import fs from "fs";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const register = async (req: Request, res: Response): Promise<void> => {
   const { fullname, email, password } = req.body;
   const file = req.file;
@@ -109,8 +111,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 60 * 60 * 1000,
       })
       .status(200)
@@ -135,11 +137,11 @@ const login = async (req: Request, res: Response): Promise<void> => {
 const logout = (req: Request, res: Response): void => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "none",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
-  res.status(200).json({ message: "Logged out successfully." });
+  res.status(200).json({ message: "You're logged out" });
 };
 
 export { register, login, logout };

@@ -6,7 +6,13 @@ import fs from "fs";
 import path from "path";
 
 const getMe = async (req: Request, res: Response): Promise<void> => {
-  const userId = req.body.user.id;
+  if (!req.user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const userId = req.user.id;
+
   try {
     const user = await User.findByPk(userId);
 

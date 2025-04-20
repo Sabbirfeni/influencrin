@@ -11,3 +11,7 @@ body {
 .hide-scrollbar {
   scrollbar-width: none; /* For Firefox */
 }
+
+.toaster {
+  color: #4b5563; /* Tailwind's text-gray-600 */
+}

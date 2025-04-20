@@ -1,26 +1,64 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
 import LoginImage from "@/assets/images/login-influencrin-form-image.png";
+import { loginSchema, LoginSchemaType } from "../schemas/auth/log-schema";
+import { useApi } from "@/hooks";
+import { authApiService } from "@/api/endpoints";
+import { useAuth } from "@/hooks/use-auth";
+import { toast } from "sonner";
+import ToastDescription from "@/components/toast/toast-description";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const { request, errorMessage } = useApi(authApiService.login);
+  const { setUser } = useAuth();
+
+  const onSubmit = async (data: LoginSchemaType) => {
+    const responseData = await request(data);
+    if (responseData) {
+      toast.success("Welcome", {
+        description: (
+          <ToastDescription description="You're logging into InfluencrIn" />
+        ),
+      });
+      setUser(responseData.user);
+
+      reset(); // ✅ Clear form fields after login
+    } else if (errorMessage) {
+      toast.error("Login Failed", {
+        description: errorMessage,
+      });
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0 border border-gray-200 shadow-none">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8 border-r z-50 bg-white">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="p-6 md:p-8 border-r z-50 bg-white"
+          >
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center mb-3">
-                <h1 className="text-2xl font-semibold">
-                  Log in
-                  {/* Influencr<span className="text-primary">In</span> */}
-                </h1>
+                <h1 className="text-2xl font-semibold">Log in</h1>
                 <p className="text-xs text-muted-foreground mt-1">
                   Manage or review influencers in your niche.
                 </p>
@@ -32,24 +70,31 @@ export default function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   className="text-xs md:text-sm"
-                  required
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <p className="text-xs text-red-500">{errors.email.message}</p>
+                )}
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   className="text-xs md:text-sm"
-                  required
+                  {...register("password")}
                 />
+                {errors.password?.message && (
+                  <p className="text-xs text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
-              <Button type="submit" className="w-full">
-                Log in
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Logging in..." : "Log in"}
               </Button>
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              {/* Social buttons */}
+              {/* <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or continue with
                 </span>
@@ -82,22 +127,13 @@ export default function LoginForm({
                   </svg>
                   <span className="sr-only">Login with Meta</span>
                 </Button>
-              </div>
-              <div className="text-center text-xs md:text-sm">
-                Don&apos;t have an account?{" "}
-                <Link
-                  to="/join-influencrin"
-                  className="ml-2 font-semibold text-primary"
-                >
-                  Join InfluencrIn
-                </Link>
-              </div>
+              </div> */}
             </div>
           </form>
           <div className="hidden md:flex items-center justify-center">
             <img
               src={LoginImage}
-              alt="Image"
+              alt="Login"
               className="max-w-[380px] dark:brightness-[0.2] dark:grayscale"
             />
           </div>

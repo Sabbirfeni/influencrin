@@ -22,11 +22,7 @@ export interface UserProfile {
 
 const authApiService = {
   login: async (formData: FormData): Promise<AuthResponse> => {
-    const res = await axios.post<AuthResponse>("/auth/login", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const res = await axios.post<AuthResponse>("/auth/login", formData);
     return res.data;
   },
 
@@ -40,7 +36,11 @@ const authApiService = {
   },
 
   getProfile: async (): Promise<UserProfile> => {
-    const res = await axios.get<UserProfile>("/auth/me");
+    const res = await axios.get<UserProfile>("/users/me");
+    return res.data;
+  },
+  logout: async (): Promise<UserProfile> => {
+    const res = await axios.post<UserProfile>("/auth/logout");
     return res.data;
   },
 };

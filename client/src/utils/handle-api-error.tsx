@@ -12,7 +12,10 @@ const handlApiError = (
   fallbackMessage: string = "Something went wrong"
 ): string => {
   const message =
-    error?.response?.data?.message || error?.message || fallbackMessage;
+    error?.response?.data?.message ||
+    error?.message ||
+    error?.error ||
+    fallbackMessage;
 
   return message;
 };

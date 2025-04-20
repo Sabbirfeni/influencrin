@@ -8,10 +8,13 @@ import { Plus, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
+import HeaderUserAvatarSkeleton from "@/components/skeletons/user/header-user-avatar-skeleton";
 
 function Header() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   const navigateToJoinInfluencrInPage = () => {
     setOpen(false);
@@ -28,7 +31,8 @@ function Header() {
       <Logo />
 
       <SearchBar />
-      <HeaderUserAvatar />
+      {loading && <HeaderUserAvatarSkeleton />}
+      {user && <HeaderUserAvatar user={user} />}
 
       {/* Desktop actions */}
       <div className="hidden md:flex items-center gap-3">

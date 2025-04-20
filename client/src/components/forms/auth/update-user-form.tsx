@@ -35,7 +35,7 @@ export default function UpdateUserForm({
               <div className="grid gap-2 justify-center mb-5">
                 <ProfileImage
                   style="w-28 h-28"
-                  userName="Shabbir"
+                  fullname="Shabbir"
                   src="/avatar.jpg"
                   backgroundColor="bg-gray-300"
                 />

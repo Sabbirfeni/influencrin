@@ -13,7 +13,7 @@ function AddInfluencerPage() {
       <div className="flex flex-col gap-3 md:gap-4">
         <div className="border border-gray-200 rounded-xl overflow-hidden">
           <InfluencerBanner />
-          <InfluencerPrimaryInfo />
+          {/* <InfluencerPrimaryInfo /> */}
         </div>
 
         <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
