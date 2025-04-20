@@ -8,21 +8,28 @@ import SectionWrappers from "@/components/wrappers/section-wrapper";
 import InfluencerManagementWrapper from "@/components/wrappers/influencer-managment-wrapper";
 
 function AddInfluencerPage() {
+  const influencer = {
+    fullname: "",
+    handle: "",
+    bio: "",
+    location: "",
+    profile_image: "",
+  };
   return (
     <InfluencerManagementWrapper>
       <div className="flex flex-col gap-3 md:gap-4">
         <div className="border border-gray-200 rounded-xl overflow-hidden">
           <InfluencerBanner />
-          {/* <InfluencerPrimaryInfo /> */}
+          <InfluencerPrimaryInfo influencer={influencer} />
         </div>
 
         <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
           <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
-            <InfluencerSocialList />
+            {/* <InfluencerSocialList /> */}
           </div>
 
           <div className="w-full md:w-1/3 flex flex-col gap-4">
-            <InfluencerCategoryList style="hidden md:flex" />
+            {/* <InfluencerCategoryList style="hidden md:flex" /> */}
           </div>
         </div>
       </div>
