@@ -7,7 +7,9 @@ import path from "path";
 
 const getMe = async (req: Request, res: Response): Promise<void> => {
   if (!req.user) {
-    res.status(401).json({ error: "Unauthorized" });
+    res
+      .status(401)
+      .json({ message: "You are not authorized to access this resource." });
     return;
   }
 
@@ -17,14 +19,16 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findByPk(userId);
 
     if (!user) {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({
+        message: "No user account found with the provided credentials.",
+      });
       return;
     }
 
     const { id, email, fullname, profile_image } = user.get();
 
     res.status(200).json({
-      message: "User details retrieved successfully",
+      message: "Your account details were retrieved successfully.",
       user: {
         id,
         email,
@@ -34,7 +38,8 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     res.status(500).json({
-      error: "Internal server error!",
+      message:
+        "An unexpected error occurred while retrieving your information.",
     });
   }
 };

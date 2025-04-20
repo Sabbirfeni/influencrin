@@ -31,7 +31,7 @@ function Header() {
       <Logo />
 
       <SearchBar />
-      {userLoading && <HeaderUserAvatarSkeleton />}
+      {/* {userLoading && <HeaderUserAvatarSkeleton />} */}
       {user && <HeaderUserAvatar user={user} />}
 
       {/* Desktop actions */}

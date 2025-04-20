@@ -11,6 +11,7 @@ import MyAccountPage from "@/pages/my-account";
 import ManageInfluencersPage from "@/pages/manage-influencers";
 import AddInfluencerPage from "@/pages/add-influencer";
 import AuthProvider from "@/providers/auth-provider";
+import PrivateRoute from "./private-route";
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +46,9 @@ export const router = createBrowserRouter([
   {
     element: (
       <AuthProvider>
-        <InfluencerManagementLayout />
+        <PrivateRoute>
+          <InfluencerManagementLayout />
+        </PrivateRoute>
       </AuthProvider>
     ),
     children: [

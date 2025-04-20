@@ -41,6 +41,5 @@ authRoutes.post("/login", authController.login);
  * @access  Private (Requires Authorization Header with token)
  * @body    None
  */
-authRoutes.post("/logout", authenticate, authController.logout);
 
 export default authRoutes;

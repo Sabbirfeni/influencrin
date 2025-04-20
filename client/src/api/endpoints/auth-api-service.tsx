@@ -2,12 +2,7 @@ import axios from "../axios";
 
 export interface AuthResponse {
   message: string;
-  user: {
-    id: string;
-    email: string;
-    fullname: string;
-    profile_image: string;
-  };
+  token: string;
 }
 
 export interface UserProfile {

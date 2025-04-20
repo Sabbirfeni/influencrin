@@ -1,11 +1,12 @@
-// auth-context.tsx
+import { jwtDecode } from "jwt-decode";
+
 import { authApiService } from "@/api/endpoints";
 import { RegistrationSchemaSchemaType } from "@/components/forms/schemas/auth/registration-schema";
 import { LoginSchemaType } from "@/components/forms/schemas/auth/log-in-schema";
 import ToastDescription from "@/components/toast/toast-description";
 import { AuthContext } from "@/contexts";
 import { useApi } from "@/hooks";
-import { useEffect, useState, ReactNode } from "react";
+import { useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -13,23 +14,22 @@ export interface User {
   id: string;
   fullname: string;
   email: string;
-  profile_image?: string;
+  profile_image?: string | null;
+  exp?: number;
 }
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
-  const { request, loading: userLoading } = useApi(authApiService.getProfile);
 
-  const fetchUser = async () => {
-    const data = await request();
-    if (data) setUser(data.user);
-  };
+  const token = localStorage.getItem("token");
+  let decodedUser: User | null = null;
+  if (token) {
+    decodedUser = jwtDecode<User>(token);
+  }
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  const [user, setUser] = useState<User | null>(decodedUser);
 
+  // User registration api call
   const {
     request: registrationRequest,
     errorMessage: registrationErrorMessage,
@@ -51,46 +51,39 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // User login api call
   const { request: loginRequest, errorMessage: loginErrorMessage } = useApi(
     authApiService.login
   );
   const login = async (loginData: LoginSchemaType) => {
-    const loggedUserData = await loginRequest(loginData);
-    if (loggedUserData) {
+    const loginResponse = await loginRequest(loginData);
+
+    if (loginResponse) {
+      localStorage.setItem("token", loginResponse.token);
+      const loggedUserData = jwtDecode<User>(loginResponse.token);
+      setUser(loggedUserData);
       toast.success("Welcome", {
-        description: <ToastDescription description={loggedUserData.message} />,
+        description: <ToastDescription description={loginResponse.message} />,
       });
-      setUser(loggedUserData.user);
     } else if (loginErrorMessage) {
-      console.log(loginErrorMessage);
-      toast.error("Login Failed", {
+      toast.error("Login failed", {
         description: loginErrorMessage,
       });
     }
   };
 
-  const { request: logoutRequest, errorMessage: logoutErrorMessage } = useApi(
-    authApiService.logout
-  );
+  // User logout api call
   const logout = async () => {
-    const data = await logoutRequest();
-    if (data) {
-      setUser(null);
-      toast.error(data.message);
-      navigate("/");
-    } else if (logoutErrorMessage) {
-      toast.error("Unable to log out", {
-        description: logoutErrorMessage,
-      });
-    }
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+    toast.error("You're logged out");
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        setUser,
-        userLoading,
         login,
         registerUser,
         logout,

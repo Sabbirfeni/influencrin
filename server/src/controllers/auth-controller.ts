@@ -115,28 +115,20 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
     // Generate JWT
     const token = jwt.sign(
-      { id: userData.id, email: userData.email },
+      {
+        id: userData.id,
+        fullname: userData.fullname,
+        email: userData.email,
+        profile_image: userData.profile_image,
+      },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
-        maxAge: 60 * 60 * 1000,
-      })
-      .status(200)
-      .json({
-        message: "You're logging into InfluencrIn",
-        user: {
-          id: userData.id,
-          fullname: userData.fullname,
-          email: userData.email,
-          profile_image: userData.profile_image,
-        },
-      });
+    res.status(200).json({
+      message: "You're logging into InfluencrIn",
+      token: token,
+    });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
@@ -146,14 +138,4 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const logout = (req: Request, res: Response): void => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-  });
-
-  res.status(200).json({ message: "You're logged out" });
-};
-
-export { register, login, logout };
+export { register, login };

@@ -7,13 +7,12 @@ export interface User {
   id: string;
   fullname: string;
   email: string;
-  profile_image?: string;
+  profile_image?: string | null;
+  exp?: number;
 }
 
 export interface AuthContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
-  userLoading: boolean;
   login: (userData: LoginSchemaType) => void;
   registerUser: (registrationData: RegistrationSchemaSchemaType) => void;
   logout: () => void;
