@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/sidebar";
 
 import InfluencerManagmentSidebarHeader from "./influencer-managment-sidebar-header";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import InluencerManagementSidebarFooter from "./inluencer-management-sidebar-footer";
 
 // Menu items.
 const items = [
@@ -86,6 +87,7 @@ export default function InfluencerManagementSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <InluencerManagementSidebarFooter />
     </Sidebar>
   );
 }

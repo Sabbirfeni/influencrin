@@ -41,17 +41,6 @@ const authenticate = async (
 
     req.user = decoded;
 
-    // Token refresh logic (optional)
-    const now = Math.floor(Date.now() / 1000);
-    if (decoded.exp && decoded.exp - now < 3600) {
-      const newToken = jwt.sign(
-        { id: decoded.id, email: decoded.email },
-        JWT_SECRET,
-        { expiresIn: "7d" }
-      );
-      res.setHeader("Authorization", `Bearer ${newToken}`);
-    }
-
     next(); // Proceed to next middleware
   } catch (error) {
     let errorMessage = "Invalid or expired token";

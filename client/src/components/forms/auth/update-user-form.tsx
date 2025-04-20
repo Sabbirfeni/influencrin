@@ -6,11 +6,14 @@ import { Label } from "@/components/ui/label";
 
 import JoinInfluncrInImage from "@/assets/images/join-influencrin-form-image.png";
 import { ProfileImage } from "@/components/ui/profile-image";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function UpdateUserForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { user } = useAuth();
+  console.log(user);
   return (
     <div
       className={cn(
@@ -24,7 +27,7 @@ export default function UpdateUserForm({
           <form className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center mb-3">
-                <h1 className="text-lg md:text-2xl font-semibold">
+                <h1 className="text-lg md:text-xl font-semibold">
                   Acccount Information
                 </h1>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -35,11 +38,11 @@ export default function UpdateUserForm({
               <div className="grid gap-2 justify-center mb-5">
                 <ProfileImage
                   style="w-28 h-28"
-                  fullname="Shabbir"
-                  src="/avatar.jpg"
+                  fullname={user?.fullname}
+                  src={user?.profile_image}
                   backgroundColor="bg-gray-300"
                 />
-                <Label htmlFor="profileImage" className="justify-center">
+                <Label htmlFor="profileImage" className="justify-center mt-2">
                   Profile Image
                 </Label>
               </div>
@@ -48,6 +51,7 @@ export default function UpdateUserForm({
                 <Input
                   id="fullname"
                   type="fullname"
+                  value={user?.fullname}
                   placeholder="your name"
                   className="text-xs md:text-sm"
                   required
@@ -58,6 +62,7 @@ export default function UpdateUserForm({
                 <Input
                   id="email"
                   type="email"
+                  value={user?.email}
                   placeholder="m@example.com"
                   className="text-xs md:text-sm"
                   disabled

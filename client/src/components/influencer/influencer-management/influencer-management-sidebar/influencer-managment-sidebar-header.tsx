@@ -11,8 +11,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { ChevronDown, ChevronsUpDown, Home, Search } from "lucide-react";
-import React from "react";
+import { ChevronsUpDown, Home, Search } from "lucide-react";
+
 import { Link } from "react-router-dom";
 
 function InfluencerManagmentSidebarHeader() {

@@ -34,7 +34,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     request: registrationRequest,
     errorMessage: registrationErrorMessage,
   } = useApi(authApiService.register);
-
   const registerUser = async (
     registrationData: RegistrationSchemaSchemaType
   ) => {
