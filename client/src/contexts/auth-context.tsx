@@ -15,7 +15,7 @@ export interface AuthContextType {
   user: User | null;
   userLoading: boolean;
   setUser: (user: User) => void;
-  login: (userData: LoginSchemaType) => void;
+  login: (userData: LoginSchemaType, redirectUrl: string) => void;
   registerUser: (registrationData: RegistrationSchemaSchemaType) => void;
   logout: () => void;
 }

@@ -68,13 +68,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { request: loginRequest, errorMessage: loginErrorMessage } = useApi(
     authApiService.login
   );
-  const login = async (loginData: LoginSchemaType) => {
+  const login = async (loginData: LoginSchemaType, redirectUrl: string) => {
     const loginResponse = await loginRequest(loginData);
 
     if (loginResponse) {
       localStorage.setItem("token", loginResponse.token);
       const loggedUserData = jwtDecode<User>(loginResponse.token);
       setUser(loggedUserData);
+      navigate(redirectUrl, { replace: true });
       toast.success("Welcome", {
         description: <ToastDescription description={loginResponse.message} />,
       });

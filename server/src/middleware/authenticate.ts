@@ -27,7 +27,7 @@ const authenticate = async (
   if (!token) {
     res.status(401).json({
       success: false,
-      message: "Authentication required. No token provided.",
+      message: "Authentication required. Please log in to your account.",
     });
     return; // Explicit return to stop execution
   }

@@ -10,6 +10,7 @@ import LoginImage from "@/assets/images/login-influencrin-form-image.png";
 import { loginSchema, LoginSchemaType } from "../schemas/auth/log-in-schema";
 
 import { useAuth } from "@/hooks/use-auth";
+import { redirect, useLocation } from "react-router-dom";
 
 export default function LoginForm({
   className,
@@ -23,11 +24,13 @@ export default function LoginForm({
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/my-account";
 
   const { login } = useAuth();
 
   const onSubmit = async (data: LoginSchemaType) => {
-    await login(data);
+    await login(data, from);
     reset();
   };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react"; // Optional: Replace with your spinner icon
 
@@ -9,6 +9,7 @@ type PrivateRouteProps = {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { user, userLoading } = useAuth();
+  const location = useLocation();
 
   if (userLoading) {
     return (
@@ -19,7 +20,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children ? <>{children}</> : <Outlet />;
