@@ -15,7 +15,7 @@ interface InfluencerData {
 const influencerApiService = {
   // Create a new influencer
   createInfluencer: async (formData: FormData) => {
-    const res = await axios.post("/influencers/create", formData, {
+    const res = await axios.post("/influencers", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

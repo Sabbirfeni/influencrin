@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 interface ProfileImageProps {
   style: string; // supports both numbers and Tailwind strings like "10"
   fullname: string | undefined;
-  src: string | undefined | null;
+  src: string | File | undefined | null;
   backgroundColor?: string; // expects Tailwind-friendly colors like "gray-200"
 }
 

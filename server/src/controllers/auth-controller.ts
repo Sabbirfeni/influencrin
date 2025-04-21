@@ -122,7 +122,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
         profile_image: userData.profile_image,
       },
       JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({

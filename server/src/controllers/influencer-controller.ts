@@ -19,9 +19,13 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
     platform_profile_link: string;
   }[] = [];
 
-  try {
-    const user_id = req.body?.user?.id;
+  const user_id = req?.user?.id;
+  if (!user_id) {
+    res.status(401).json({ message: "Unauthorized. Missing user ID." });
+    return;
+  }
 
+  try {
     const { fullname, handle, bio, location } = req.body;
 
     // Get the uploaded image filename

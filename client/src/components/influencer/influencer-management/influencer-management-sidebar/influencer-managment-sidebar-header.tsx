@@ -35,13 +35,13 @@ function InfluencerManagmentSidebarHeader() {
               align="end"
             >
               <DropdownMenuItem>
-                <Link to="/" className="flex items-center gap-2">
+                <Link to="/" className="flex items-center gap-2 w-full">
                   <Home className="mr-2 h-4 w-4" />
-                  <span className="w-full">Home</span>
+                  <p className="w-full">Home</p>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="/search" className="flex items-center gap-2">
+                <Link to="/search" className="flex items-center gap-2 w-full">
                   <Search className="flex-1 mr-2 h-4 w-4" />
                   <span className="">Search Influencers</span>
                 </Link>
