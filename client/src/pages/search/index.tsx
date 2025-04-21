@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 function SearchPage() {
   const [params, setParams] = useSearchParams();
   const [influencers, setInfluencers] = useState(null);
+
   const { request, loading, errorMessage } = useApi(
     influencerApiService.searchInfluencers
   );

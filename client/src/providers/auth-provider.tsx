@@ -9,6 +9,7 @@ import { useApi } from "@/hooks";
 import { useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import useUserApi from "@/hooks/use-user-api";
 
 export interface User {
   id: string;
@@ -27,7 +28,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     request,
     loading: userLoading,
     errorMessage: userErrorMessage,
-  } = useApi(authApiService.getProfile);
+  } = useUserApi(authApiService.getProfile);
 
   const fetchUser = async () => {
     const data = await request();

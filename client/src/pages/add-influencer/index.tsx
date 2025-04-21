@@ -15,6 +15,16 @@ function AddInfluencerPage() {
     location: "",
     profile_image: "",
   };
+
+  const socialPlatformList = [
+    {
+      follower_count: 0,
+      platform_profile_link: "www.link.com",
+      platform: {
+        platform_icon_url: "icon",
+      },
+    },
+  ];
   return (
     <InfluencerManagementWrapper>
       <div className="flex flex-col gap-3 md:gap-4">
@@ -24,9 +34,9 @@ function AddInfluencerPage() {
         </div>
 
         <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
-          <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
-            {/* <InfluencerSocialList /> */}
-          </div>
+          {/* <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
+            <InfluencerSocialList socialPlatformList={socialPlatformList} />
+          </div> */}
 
           <div className="w-full md:w-1/3 flex flex-col gap-4">
             {/* <InfluencerCategoryList style="hidden md:flex" /> */}
