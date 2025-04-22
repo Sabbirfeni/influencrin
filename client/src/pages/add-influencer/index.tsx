@@ -14,7 +14,21 @@ import ToastDescription from "@/components/toast/toast-description";
 
 const influencerSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
-  handle: z.string().min(1, "Handle is required"),
+  handle: z
+    .string()
+    .min(1, "Handle is required.") // Ensure handle is not empty
+    .min(3, "Handle must be at least 3 characters.") // Validate length
+    .max(30, "Handle must be no more than 30 characters.") // Validate length
+    .regex(/^[a-z0-9_-]+$/, {
+      message:
+        "Handle can only contain lowercase letters, numbers, underscores (_), and dashes (-).",
+    })
+    .refine((value) => value.trim() !== "", {
+      message: "Handle cannot be empty.",
+    })
+    .refine((value) => !/^[-_].*|.*[-_]$/.test(value), {
+      message: "Handle cannot start or end with a dash (-) or underscore (_).",
+    }),
   bio: z
     .string()
     .min(15, "Bio must be at least 15 characters")
