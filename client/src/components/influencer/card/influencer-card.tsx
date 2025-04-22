@@ -41,17 +41,22 @@ export default function InfluencerCard({
     <Link to={`/influencers/${handle}`}>
       <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
         <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
-          <div className="absolute top-5 right-5">
-            <InfluencerAvgRating
-              avg_review_score={avg_review_score}
-              size="4"
-              style="text-sm"
-              isTitle={false}
-            />
-          </div>
+          {/* Average rating */}
+
+          {avg_review_score > 0 && (
+            <div className="absolute top-5 right-5">
+              <InfluencerAvgRating
+                avg_review_score={avg_review_score}
+                size="4"
+                style="text-sm"
+                isTitle={false}
+              />
+            </div>
+          )}
 
           {/* Profile Image */}
           <ProfileImage
+            isInfluencer={true}
             style="w-25 h-25 shadow-2xl"
             fullname={fullname}
             src={profile_image}
@@ -88,7 +93,7 @@ export default function InfluencerCard({
               <Badge
                 key={idx}
                 variant="outline"
-                className="text-xs px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
+                className="text-[11px] px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
               >
                 {category.category_name}
               </Badge>

@@ -9,9 +9,6 @@ function InfluencerBanner() {
         className="w-full h-full object-cover"
         alt="impluencer banner"
       />
-      <Button className="absolute bottom-3 right-3 shadow-2xl">
-        Add Influencer
-      </Button>
     </div>
   );
 }

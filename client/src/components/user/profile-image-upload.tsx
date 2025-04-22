@@ -8,11 +8,15 @@ export function ProfileImageUpload({
   defaultName,
   defaultImage,
   onImageSelect,
+  isUser,
+  isInfluencer,
 }: {
   style: string;
   defaultName: string | undefined;
   defaultImage: string | File | null | undefined;
   onImageSelect: (file: File) => void;
+  isUser: boolean | undefined;
+  isInfluencer: boolean | undefined;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<
@@ -37,6 +41,8 @@ export function ProfileImageUpload({
         onClick={() => fileInputRef.current?.click()}
       >
         <ProfileImage
+          isUser={isUser}
+          isInfluencer={isInfluencer}
           style="w-full h-full shadow-2xl"
           fullname={defaultName}
           src={previewUrl}
@@ -72,7 +78,7 @@ export function ProfileImageUpload({
       />
 
       <Label className="justify-center mt-3 text-center text-xs text-muted-foreground">
-        Click to update picture
+        Click to upload picture
       </Label>
     </div>
   );

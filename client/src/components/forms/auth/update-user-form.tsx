@@ -91,6 +91,7 @@ export default function UpdateUserForm({
               </div>
 
               <ProfileImageUpload
+                isUser={true}
                 defaultName={user?.fullname}
                 defaultImage={user?.profile_image}
                 onImageSelect={onImageSelect}

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
 import { Pencil } from "lucide-react";
-import InfluencerProfileImage from "./add-influencer-profile-image";
+import AddInfluencerProfileImage from "./add-influencer-profile-image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +38,7 @@ function AddInfluencerPrimaryInfo({
 
   return (
     <div className="flex-1">
-      <InfluencerProfileImage
+      <AddInfluencerProfileImage
         profile_image={profile_image}
         fullname={fullname}
         onImageSelect={onImageSelect}

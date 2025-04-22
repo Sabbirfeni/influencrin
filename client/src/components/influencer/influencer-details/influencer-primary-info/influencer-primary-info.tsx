@@ -15,7 +15,10 @@ interface InfluencerPrimaryInfoProps {
   influencer: Influencer;
 }
 
-function InfluencerPrimaryInfo({ influencer }: InfluencerPrimaryInfoProps) {
+function InfluencerPrimaryInfo({
+  influencer,
+  setIsInfluencerPrimaryInfoFormOpen,
+}: InfluencerPrimaryInfoProps) {
   const { profile_image, fullname, handle, bio, location } = influencer;
   return (
     <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl">
@@ -35,7 +38,10 @@ function InfluencerPrimaryInfo({ influencer }: InfluencerPrimaryInfoProps) {
         </div>
       </div>
 
-      <Button className="absolute right-6 md:right-16 w-10 h-8 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
+      <Button
+        onClick={() => setIsInfluencerPrimaryInfoFormOpen(true)}
+        className="absolute right-6 md:right-16 w-10 h-8 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg"
+      >
         <Pencil className="w-4 h-4" />
       </Button>
     </div>

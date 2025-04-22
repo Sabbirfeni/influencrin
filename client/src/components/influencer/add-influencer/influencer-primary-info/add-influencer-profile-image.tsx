@@ -14,13 +14,8 @@ function AddInfluencerProfileImage({
 }: InfluencerProfileImageProps) {
   return (
     <div className="absolute -top-26 md:-top-32">
-      {/* <ProfileImage
-        style="w-35 h-35 md:w-45 md:h-45 shadow-2xl"
-        fullname={fullname}
-        src={profile_image}
-        backgroundColor="bg-gray-200"
-      /> */}
       <ProfileImageUpload
+        isInfluencer={true}
         style="w-35 h-35 md:w-45 md:h-45 shadow-2xl"
         defaultName={fullname}
         defaultImage={profile_image}

@@ -21,6 +21,7 @@ function InfluencerReviewCard({ review }: Props) {
       <div className="flex justify-between">
         <div className="flex items-center gap-3">
           <ProfileImage
+            isUser={true}
             style="w-12 h-12"
             fullname={review.author.fullname} // Replace if you have user data later
             src={review.author.profile_image || ""}

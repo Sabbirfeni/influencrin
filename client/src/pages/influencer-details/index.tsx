@@ -11,8 +11,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import InfluencerDetailsSkeleton from "@/components/skeletons/influencer/influencer-details-skeleton";
 import ErrorSection from "@/components/error/error-section";
+import InfluencerPrimaryInfoForm from "@/components/forms/influencer/influencer-primary-info-form";
 
 function InfluencerDetailsPage() {
+  const [isInfluencerPrimaryInfoFormOpen, setIsInfluencerPrimaryInfoFormOpen] =
+    useState(false);
   const { handle } = useParams();
   const [influencer, setInfluencer] = useState(null);
   const { request, loading, errorMessage } = useApi(
@@ -29,7 +32,6 @@ function InfluencerDetailsPage() {
     loadInfluencer();
   }, [handle]);
 
-  console.log(influencer);
   return (
     <SectionWrappers style="pt-2 md:pt-6">
       {/* Loading State */}
@@ -48,7 +50,26 @@ function InfluencerDetailsPage() {
         <div className="flex flex-col gap-3 md:gap-4">
           <div className="border border-gray-200 rounded-xl overflow-hidden">
             <InfluencerBanner />
-            <InfluencerPrimaryInfo influencer={influencer} />
+
+            {/* Influencer primary info section */}
+            {!isInfluencerPrimaryInfoFormOpen ? (
+              <InfluencerPrimaryInfo
+                influencer={influencer}
+                setIsInfluencerPrimaryInfoFormOpen={
+                  setIsInfluencerPrimaryInfoFormOpen
+                }
+              />
+            ) : (
+              <InfluencerPrimaryInfoForm
+                initialData={influencer}
+                setInfluencer={setInfluencer}
+                errors={{}}
+                onInputChange={() => {}}
+                setIsInfluencerPrimaryInfoFormOpen={
+                  setIsInfluencerPrimaryInfoFormOpen
+                }
+              />
+            )}
           </div>
 
           <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">

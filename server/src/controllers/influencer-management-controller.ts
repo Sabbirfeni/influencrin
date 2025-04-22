@@ -12,7 +12,7 @@ const updateInfluencer = async (req: Request, res: Response): Promise<void> => {
 
   try {
     const { influencer_id } = req.params;
-    const userId = req.body?.user?.id;
+    const userId = req?.user?.id;
     const { fullname, bio, location } = req.body;
 
     if (!influencer_id) {
@@ -101,7 +101,7 @@ const deleteInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
   try {
     const { influencer_id } = req.params;
-    const user_id = req.body?.user?.id;
+    const user_id = req.user?.id;
 
     if (!influencer_id) {
       res.status(400).json({ message: "Handle is required." });

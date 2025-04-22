@@ -23,6 +23,7 @@ function RelatedInfluencerCard({ influencer }: RelatedInfluencerCardProps) {
     <div className="flex items-center justify-between flex-wrap gap-4 bg-gray-100 px-3 py-4 rounded-xl">
       <div className="flex items-center gap-2 md:gap-3">
         <ProfileImage
+          isInfluencer={true}
           style="w-9 h-9 md:w-12 md:h-12"
           fullname={influencer.fullname}
           src={influencer.profile_image || ""}

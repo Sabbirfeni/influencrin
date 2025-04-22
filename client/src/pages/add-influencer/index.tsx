@@ -9,8 +9,9 @@ import influencerApiService from "@/api/endpoints/influencer-api-service";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
 import ToastDescription from "@/components/toast/toast-description";
+
+import { z } from "zod";
 
 const influencerSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
