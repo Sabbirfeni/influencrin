@@ -50,15 +50,17 @@ export default function UpdateUserForm({
       formData.append("profile_image", selectedImage);
     }
 
-    const updateResponse = await request(formData);
-    if (updateResponse?.user) {
+    const { data: updateUserResponse, error: updateUserError } = await request(
+      formData
+    );
+    if (updateUserResponse?.user) {
       setUser((prevUser) => ({
         ...prevUser,
-        ...updateResponse.user,
+        ...updateUserResponse.user,
       }));
-      toast.success(updateResponse.message);
-    } else if (errorMessage) {
-      toast.error(errorMessage);
+      toast.success(updateUserResponse.message);
+    } else if (updateUserError) {
+      toast.error(updateUserError.message);
     }
   };
 

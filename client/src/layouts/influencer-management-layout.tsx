@@ -2,12 +2,10 @@ import InfluencerManagementSidebar from "@/components/influencer/influencer-mana
 import Footer from "@/components/ui/footer/footer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
-import { Toaster } from "sonner";
 
 export default function InfluencerManagementLayout() {
   return (
     <SidebarProvider>
-      <Toaster />
       <div className="flex h-screen max-w-full overflow-hidden">
         <InfluencerManagementSidebar />
 

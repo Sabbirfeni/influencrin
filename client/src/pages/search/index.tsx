@@ -18,7 +18,7 @@ function SearchPage() {
 
   useEffect(() => {
     const loadInfluencers = async () => {
-      const data = await request(params);
+      const { data } = await request(params);
       if (data) setInfluencers(data.influencers);
     };
 

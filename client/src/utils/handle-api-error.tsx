@@ -1,25 +1,36 @@
 type ApiError = {
   response?: {
-    data: {
+    data?: {
       message?: string;
+      description?: string;
     };
   };
   message?: string;
   error?: string;
 };
 
+type ParsedApiError = {
+  message: string;
+  description?: string;
+};
+
 const handlApiError = (
-  error: ApiError,
+  requestError: ApiError,
   fallbackMessage: string = "Something went wrong"
-): string => {
-  console.log(error);
+): ParsedApiError => {
   const message =
-    error?.response?.data?.message ||
-    error?.message ||
-    error?.error ||
+    requestError?.response?.data?.message ||
+    requestError?.message ||
+    requestError?.error ||
     fallbackMessage;
 
-  return message;
+  const description = requestError?.response?.data?.description;
+
+  if (!message) {
+    return null;
+  }
+
+  return { message, ...(description && { description }) };
 };
 
 export default handlApiError;

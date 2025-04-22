@@ -22,7 +22,7 @@ function InfluencerDetailsPage() {
   useEffect(() => {
     if (!handle) return;
     const loadInfluencer = async () => {
-      const data = await request(handle);
+      const { data } = await request(handle);
       if (data) setInfluencer(data.influencer);
     };
 

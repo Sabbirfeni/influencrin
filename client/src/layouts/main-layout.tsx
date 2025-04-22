@@ -7,7 +7,6 @@ import Footer from "@/components/ui/footer/footer";
 const MainLayout = () => {
   return (
     <div>
-      <Toaster />
       <header>
         <Header />
       </header>

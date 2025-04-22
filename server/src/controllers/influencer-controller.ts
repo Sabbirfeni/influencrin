@@ -137,7 +137,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
     await transaction.commit();
 
     res.status(201).json({
-      message: "Influencer created successfully.",
+      message: "Welcome aboard! Influencer is now live on InfluencrIn.",
       influencer,
     });
   } catch (error: any) {
@@ -170,7 +170,7 @@ const createInfluencer = async (req: Request, res: Response): Promise<void> => {
         res.status(400).json({
           message: uniqueError.message,
           field: "platform_profile_link",
-          platform_profile_link: uniqueError.value,
+          description: uniqueError.value,
         });
         return;
       }

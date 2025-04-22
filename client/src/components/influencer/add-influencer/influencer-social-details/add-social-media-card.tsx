@@ -18,39 +18,104 @@ import {
 } from "@/components/ui/select";
 import { useApi } from "@/hooks";
 import socialMediaPlatformApiServices from "@/api/endpoints/influencer-social-platforms-api-service";
+import { z } from "zod";
+import { Label } from "@/components/ui/label";
 
-function AddSocialMediaCard({ setSocialPlatforms }) {
+const platformSchema = z.object({
+  platform_id: z.string({ required_error: "Platform is required" }),
+  platform_icon_url: z.string(),
+  platform_profile_link: z
+    .string()
+    .url("Profile link must be a valid URL")
+    .min(1, "Profile link is required"),
+  follower_count: z
+    .number({ invalid_type_error: "Follower count must be a number" })
+    .min(1, "Follower count must be at least 1"),
+});
+
+function AddSocialMediaCard({
+  socialPlatforms, // influencer social platforms
+  setSocialPlatforms,
+  setErrors,
+  influencerSchema,
+}) {
   const [open, setOpen] = useState(false);
+  const [platforms, setPlatforms] = useState([]); // the platforms that are stored in the db.
+  const nonSelectedPlatforms = platforms.filter(
+    (platform) => !socialPlatforms.some((sp) => sp.platform_id === platform.id)
+  );
   const [platformInfo, setPlatformInfo] = useState(null);
   const [profileLink, setProfileLink] = useState("");
   const [followerCount, setFollowerCount] = useState("");
+  const [platformErrors, setPlatformErrors] = useState({});
 
   const handleAdd = () => {
     const newPlatform = {
-      platform_id: platformInfo.id,
-      platform_icon_url: platformInfo.platform_icon_url,
-      platform_profile_link: profileLink,
+      platform_id: platformInfo?.id,
+      platform_icon_url: platformInfo?.platform_icon_url || "",
+      platform_profile_link: profileLink.trim(),
       follower_count: Number(followerCount),
     };
-    setSocialPlatforms((prevPlatforms) => [...prevPlatforms, newPlatform]);
-    console.log("New Social Platform:", newPlatform);
 
-    // Reset and close
-    setPlatformInfo(null);
-    setProfileLink("");
-    setFollowerCount("");
-    setOpen(false);
+    try {
+      if (
+        profileLink &&
+        platformInfo &&
+        !profileLink.includes(platformInfo.domain_name)
+      ) {
+        setPlatformErrors((prevError) => ({
+          ...prevError,
+          platform_profile_link:
+            "This link is not valid with the selected platform",
+        }));
+        return;
+      }
+      platformSchema.parse(newPlatform); // Validate individual platform
+
+      const updatedPlatforms = [...socialPlatforms, newPlatform];
+      setSocialPlatforms(updatedPlatforms);
+
+      // Reset all
+      setPlatformInfo(null);
+      setProfileLink("");
+      setFollowerCount("");
+      setOpen(false);
+      setPlatformErrors({});
+
+      // Validate full socialPlatforms array against main schema
+      try {
+        influencerSchema
+          .pick({ socialPlatforms: true })
+          .parse({ socialPlatforms: updatedPlatforms });
+
+        setErrors((prevErrors) => {
+          const updated = { ...prevErrors };
+          delete updated["socialPlatforms"];
+          return updated;
+        });
+      } catch (error) {
+        // Optional: handle
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors = {};
+        error.errors.forEach((err) => {
+          fieldErrors[err.path[0]] = err.message;
+        });
+        setPlatformErrors(fieldErrors);
+      }
+    }
   };
 
-  const [platforms, setPlatforms] = useState(null);
-  const { request, loading, errorMessage } = useApi(
+  const { request, loading } = useApi(
     socialMediaPlatformApiServices.getAllSocialMediaPlatforms
   );
+
   useEffect(() => {
     const loadSocialPlatforms = async () => {
-      const data = await request();
-      if (data) {
-        setPlatforms(data.socialMediaPlatforms);
+      const { data: socialPlatformsResponse } = await request();
+      if (socialPlatformsResponse) {
+        setPlatforms(socialPlatformsResponse.socialMediaPlatforms);
       }
     };
     loadSocialPlatforms();
@@ -73,51 +138,90 @@ function AddSocialMediaCard({ setSocialPlatforms }) {
           </DialogHeader>
 
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Platform</label>
+            <div className="space-y-2">
+              <Label htmlFor="">Platform</Label>
               {loading && <div>Platforms loading...</div>}
               {platforms && (
-                <Select value={platformInfo} onValueChange={setPlatformInfo}>
+                <Select
+                  value={platformInfo}
+                  id="platorm"
+                  onValueChange={(value) => {
+                    setPlatformInfo(value);
+                    setPlatformErrors((prev) => ({
+                      ...prev,
+                      platform_id: undefined,
+                    }));
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select platform" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={null}>Select platform</SelectItem>
-                    {platforms.map((platform) => (
+                    {nonSelectedPlatforms.map((platform) => (
                       <SelectItem
                         value={platform}
                         className="cursor-pointer hover:bg-gray-100"
                       >
+                        <img
+                          src={platform.platform_icon_url}
+                          className="w-4 h-4"
+                          alt=""
+                        />
                         {platform.platform_name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
+              {platformErrors?.platform_id && (
+                <p className="text-red-500 text-sm mt-1">
+                  {platformErrors?.platform_id}
+                </p>
+              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Profile Link
-              </label>
+            <div className="space-y-2">
+              <Label>Profile Link</Label>
               <Input
                 type="text"
                 value={profileLink}
-                onChange={(e) => setProfileLink(e.target.value)}
-                placeholder="https://socialmedia.com/username"
+                onChange={(e) => {
+                  setProfileLink(e.target.value);
+                  setPlatformErrors((prev) => ({
+                    ...prev,
+                    platform_profile_link: undefined,
+                  }));
+                }}
+                className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
+
+              {platformErrors.platform_profile_link && (
+                <p className="text-red-500 text-sm mt-1">
+                  {platformErrors.platform_profile_link}
+                </p>
+              )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Follower Count
-              </label>
+            <div className="space-y-2">
+              <Label>Follower Count</Label>
               <Input
                 type="number"
                 value={followerCount}
-                onChange={(e) => setFollowerCount(e.target.value)}
-                placeholder="1000"
+                onChange={(e) => {
+                  setFollowerCount(e.target.value);
+                  setPlatformErrors((prev) => ({
+                    ...prev,
+                    follower_count: undefined,
+                  }));
+                }}
+                className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
+              {platformErrors.follower_count && (
+                <p className="text-red-500 text-sm mt-1">
+                  {platformErrors.follower_count}
+                </p>
+              )}
             </div>
           </div>
 

@@ -9,6 +9,25 @@ import influencerApiService from "@/api/endpoints/influencer-api-service";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import ToastDescription from "@/components/toast/toast-description";
+
+const influencerSchema = z.object({
+  fullname: z.string().min(1, "Full name is required"),
+  handle: z.string().min(1, "Handle is required"),
+  bio: z
+    .string()
+    .min(15, "Bio must be at least 15 characters")
+    .max(300, "Bio must be at most 300 characters"),
+  location: z.string().min(1, "Location is required"),
+  profile_image: z.any().refine((file) => file instanceof File, {
+    message: "Profile image is required",
+  }),
+  socialPlatforms: z
+    .array(z.any())
+    .min(1, "At least one social platform is required"),
+  categories: z.array(z.any()).min(1, "At least one category is required"),
+});
 
 function AddInfluencerPage() {
   const navigate = useNavigate();
@@ -22,16 +41,30 @@ function AddInfluencerPage() {
 
   const [socialPlatforms, setSocialPlatforms] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Handle input change
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    // Update form state
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Live validate this single field against schema
+    try {
+      influencerSchema.pick({ [name]: true }).parse({ [name]: value });
+
+      // If valid, clear error for this field
+      setErrors((prevErrors) => {
+        const updated = { ...prevErrors };
+        delete updated[name];
+        return updated;
+      });
+    } catch (error) {
+      // You could optionally re-validate and set the error here, but it's not needed for "clear-on-valid"
+    }
   };
 
   const { request, loading, errorMessage } = useApi(
@@ -39,49 +72,71 @@ function AddInfluencerPage() {
   );
   // Handle form submission
   const handleFormSubmit = async () => {
-    if (socialPlatforms.length > 0 && categories.length > 0) {
-      // Add dynamic fields to your object
-      formData.socialPlatforms = socialPlatforms;
-      formData.categories = categories;
+    const toValidate = {
+      ...formData,
+      socialPlatforms,
+      categories,
+    };
 
-      // Convert the JS object to a FormData instance
-      const formDataToSend = new FormData();
+    const result = influencerSchema.safeParse(toValidate);
 
-      // Loop through the object and append fields
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === "socialPlatforms" || key === "categories") {
-          formDataToSend.append(key, JSON.stringify(value));
-        } else if (key === "profile_image" && value instanceof File) {
-          formDataToSend.append(key, value); // file
-        } else if (typeof value !== "undefined" && value !== null) {
-          formDataToSend.append(key, value as string);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
         }
       });
+      setErrors(fieldErrors);
+      return;
+    }
 
-      // Debug
-      // for (let [key, value] of formDataToSend.entries()) {
-      //   console.log(key, value);
-      // }
+    setErrors({});
 
-      const data = await request(formDataToSend);
+    // Add dynamic fields to your object
+    formData.socialPlatforms = socialPlatforms;
+    formData.categories = categories;
 
-      if (data) {
-        toast.success("Influencer added.");
-        navigate(`/influencers/${formData.handle}`);
-      } else if (errorMessage) {
-        toast.error(errorMessage);
+    // Convert the JS object to a FormData instance
+    const formDataToSend = new FormData();
+
+    // Loop through the object and append fields
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === "socialPlatforms" || key === "categories") {
+        formDataToSend.append(key, JSON.stringify(value));
+      } else if (key === "profile_image" && value instanceof File) {
+        formDataToSend.append(key, value); // file
+      } else if (typeof value !== "undefined" && value !== null) {
+        formDataToSend.append(key, value as string);
       }
+    });
+
+    // Debug
+
+    const { data: addInfluencerResponse, error: addInfluencerError } =
+      await request(formDataToSend);
+
+    if (addInfluencerResponse) {
+      toast.success(addInfluencerResponse.message);
+      setFormData({
+        fullname: "",
+        handle: "",
+        bio: "",
+        location: "",
+        profile_image: "",
+      });
+      setSocialPlatforms([]);
+      setCategories([]);
+      navigate(`/influencers/${formData.handle}`);
+    } else if (addInfluencerError) {
+      console.log(addInfluencerError);
+      toast.error(addInfluencerError.message, {
+        description: (
+          <ToastDescription description={addInfluencerError.description} />
+        ),
+      });
     }
   };
-
-  // const socialPlatforms = [
-  //   {
-  //     platform_icon_url: "",
-  //     platform_id: "",
-  //     platform_profile_link: "",
-  //     follower_count: 0,
-  //   },
-  // ];
 
   return (
     <InfluencerManagementWrapper>
@@ -93,6 +148,7 @@ function AddInfluencerPage() {
             <AddInfluencerPrimaryInfo
               influencerPrimaryInfo={formData}
               onInputChange={handleInputChange}
+              errors={errors}
             />
 
             <div className="flex-1 flex flex-col gap-3 md:gap-4 justify-between">
@@ -100,10 +156,16 @@ function AddInfluencerPage() {
                 <AddInfluencerSocialList
                   socialPlatforms={socialPlatforms}
                   setSocialPlatforms={setSocialPlatforms}
+                  influencerSchema={influencerSchema}
+                  error={errors.socialPlatforms}
+                  setErrors={setErrors}
                 />
                 <AddInfluencerCategoryList
                   categories={categories}
                   setCategories={setCategories}
+                  influencerSchema={influencerSchema}
+                  error={errors.categories}
+                  setErrors={setErrors}
                   style="flex"
                 />
               </div>
@@ -112,8 +174,9 @@ function AddInfluencerPage() {
                 <Button
                   onClick={handleFormSubmit}
                   className="w-[fit-content] float-end shadow-2xl"
+                  disabled={loading}
                 >
-                  Add Influencer
+                  {loading ? "Adding Influencer..." : "Add Influencer"}
                 </Button>
               </div>
             </div>

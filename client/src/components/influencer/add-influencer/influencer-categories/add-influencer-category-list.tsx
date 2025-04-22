@@ -1,3 +1,4 @@
+import InputFieldError from "@/components/error/input-field-error";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,14 +28,29 @@ function AddInfluencerCategoryList({
   style,
   categories,
   setCategories,
+  error,
+  influencerSchema,
+  setErrors,
 }: InfluencerCategoryListProps) {
   const [category, setCategory] = useState("");
+  const [categoryError, setCategoryError] = useState("");
   // const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   // const [showDropdown, setShowDropdown] = useState(false);
   const [selected, setSelected] = useState(null);
+
   const handleChange = (e) => {
     const value = e.target.value;
     setCategory(value);
+    const isCategoryExist = categories.some(
+      (cat) => cat.toLowerCase() === value.toLowerCase()
+    );
+
+    if (isCategoryExist) {
+      setCategoryError("This category already included");
+    } else {
+      setCategoryError("");
+    }
+
     if (value.trim() === "") {
       // setFilteredSuggestions([]);
       // setShowDropdown(false);
@@ -56,11 +72,36 @@ function AddInfluencerCategoryList({
 
   const handleAdd = () => {
     const categoryToAdd = selected || category;
-    if (categoryToAdd.trim() !== "") {
-      setCategories((prevCategories) => [...prevCategories, categoryToAdd]);
+    const isCategoryExist = categories.some(
+      (cat) => cat.toLowerCase() === categoryToAdd.toLowerCase()
+    );
+    if (categoryToAdd.trim() !== "" && !isCategoryExist) {
+      setCategoryError("");
+      const updatedCategories = [...categories, categoryToAdd];
+
+      setCategories(updatedCategories);
       setCategory("");
       // setFilteredSuggestions([]);
       // setShowDropdown(false);
+      try {
+        influencerSchema
+          .pick({ categories: true })
+          .parse({ categories: updatedCategories });
+
+        // If valid, clear the error
+        setErrors((prevErrors) => {
+          const updated = { ...prevErrors };
+          delete updated["categories"];
+          return updated;
+        });
+      } catch (error) {
+        // Optional: handle validation error if needed
+      }
+    } else if (categoryToAdd.trim() == "") {
+      setCategoryError("Please write a category");
+    } else if (isCategoryExist) {
+      setCategoryError("This category already included");
+      return;
     }
   };
 
@@ -73,17 +114,16 @@ function AddInfluencerCategoryList({
   };
   return (
     <div
-      className={`p-4 ${style} flex-col gap-4 border border-gray-200 rounded-xl`}
+      className={`p-4 ${style} flex-col space-y-2 border border-gray-200 rounded-xl`}
     >
       {/* Categories card header */}
 
-      <div className="flex items-start justify-between">
-        <h4 className="text-sm font-semibold">Categories</h4>
-        {/* <Button className="w-10 h-8 flex items-center justify-center shadow-none text-primary bg-white hover:bg-primary hover:text-white hover:shadow-lg"></Button> */}
-        {/* <Button className="w-7 h-7 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
+      <h4 className="text-sm font-semibold">Categories</h4>
+      {/* <Button className="w-10 h-8 flex items-center justify-center shadow-none text-primary bg-white hover:bg-primary hover:text-white hover:shadow-lg"></Button> */}
+      {/* <Button className="w-7 h-7 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
           <Plus className="w-3 h-3" />
         </Button> */}
-      </div>
+
       {/* Category list */}
       {categories.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -110,15 +150,15 @@ function AddInfluencerCategoryList({
           <Input
             value={category}
             onChange={handleChange}
-            className="flex-1 text-xs"
+            className="flex-1 text-xs md:text-sm border-none shadow-none bg-gray-100"
           />
 
           <Button
             onClick={handleAdd}
             variant="outline"
-            className="h-full border border-gray-300 hover:bg-primary hover:border-primary hover:text-white"
+            className="group h-full border border-gray-300 bg-white hover:border-gray-400"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
           </Button>
         </div>
 
@@ -138,6 +178,9 @@ function AddInfluencerCategoryList({
           </ul>
         )} */}
       </div>
+
+      {error && <InputFieldError errMessage={error} />}
+      {categoryError && <InputFieldError errMessage={categoryError} />}
     </div>
   );
 }

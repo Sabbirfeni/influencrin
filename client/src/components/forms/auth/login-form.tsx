@@ -31,7 +31,7 @@ export default function LoginForm({
 
   const onSubmit = async (data: LoginSchemaType) => {
     await login(data, from);
-    reset();
+    // reset();
   };
 
   return (

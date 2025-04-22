@@ -11,8 +11,8 @@ type UseApiReturn<T> = {
   errorMessage: string | null; // Still keeping state version if needed
 };
 
-const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
-  const [loading, setLoading] = useState(false);
+const useOnloadApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const request = async (
@@ -24,7 +24,7 @@ const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
       const result = await apiFunc(...args);
       return { data: result };
     } catch (err) {
-      const error = handlApiError(err as ApiError);
+      const error = handlApiError(err);
       setErrorMessage(error);
       return { error };
     } finally {
@@ -35,4 +35,4 @@ const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
   return { request, loading, errorMessage };
 };
 
-export default useApi;
+export default useOnloadApi;

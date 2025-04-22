@@ -1,3 +1,4 @@
+import InputFieldError from "@/components/error/input-field-error";
 import AddSocialMediaCard from "./add-social-media-card";
 import InfluencerSocialCard from "./added-influencer-social-card";
 
@@ -15,20 +16,31 @@ interface InfluencerSocialListProps {
 function InfluencerSocialList({
   socialPlatforms,
   setSocialPlatforms,
+  error,
+  setErrors,
+  influencerSchema,
 }: InfluencerSocialListProps) {
   return (
-    <div className="mt-5">
+    <div className="mt-5 space-y-2">
       <h4 className="text-sm font-semibold">Add social media</h4>
-      <div className="h-[fit-content] grid grid-cols-2 gap-3 md:gap-4 mt-2">
+      <div className="h-[fit-content] grid grid-cols-2 gap-3 md:gap-4">
         {socialPlatforms.map((socialPlatformInfo, index) => (
           <InfluencerSocialCard
             key={index}
             socialPlatformInfo={socialPlatformInfo}
+            socialPlatforms={socialPlatforms}
+            setSocialPlatforms={setSocialPlatforms}
           />
         ))}
 
-        <AddSocialMediaCard setSocialPlatforms={setSocialPlatforms} />
+        <AddSocialMediaCard
+          socialPlatforms={socialPlatforms}
+          setSocialPlatforms={setSocialPlatforms}
+          setErrors={setErrors}
+          influencerSchema={influencerSchema}
+        />
       </div>
+      {error && <InputFieldError errMessage={error} />}
     </div>
   );
 }

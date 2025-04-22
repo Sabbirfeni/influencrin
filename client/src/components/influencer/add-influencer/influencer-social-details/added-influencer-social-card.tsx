@@ -1,5 +1,5 @@
 import formatFollowers from "@/utils/format-follwers";
-import { ExternalLink } from "lucide-react";
+import { Delete, ExternalLink, Trash2 } from "lucide-react";
 import { Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -16,6 +16,8 @@ interface InfluencerSocialCardProps {
 
 function InfluencerSocialCard({
   socialPlatformInfo,
+  socialPlatforms,
+  setSocialPlatforms,
 }: InfluencerSocialCardProps) {
   const {
     platform_id,
@@ -23,6 +25,16 @@ function InfluencerSocialCard({
     follower_count,
     platform_profile_link,
   } = socialPlatformInfo;
+
+  const removePlatform = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSocialPlatforms((prev) =>
+      prev.filter(
+        (platform) => platform.platform_id !== socialPlatformInfo.platform_id
+      )
+    );
+  };
   return (
     <a
       href={platform_profile_link}
@@ -31,7 +43,10 @@ function InfluencerSocialCard({
       className="group relative flex items-center p-3 overflow-hidden hover:shadow-md transition duration-300 rounded-xl border border-gray-200 cursor-pointer"
     >
       {/* <SocialMediaDeleteBtn /> */}
-      <Edit className="w-4 h-4 absolute top-2 left-2 md:top-3 md:left-3 opacity-100 md:opacity-0 transform scale-90 hover:scale-140 text-primary transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+      <Trash2
+        onClick={removePlatform}
+        className="w-4 h-4 absolute top-2 left-2 md:top-3 md:left-3 opacity-100 md:opacity-0 transform scale-90 hover:scale-140 text-gray-500 hover:text-red-500 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"
+      />
       <ExternalLink className="w-4 h-4 absolute top-2 right-2 md:top-3 md:right-3 opacity-100 md:opacity-0 transform scale-90 hover:scale-140 text-primary transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
       <div className="flex-1 p-3 flex justify-center border-r border-gray-200 bg-white transition">
         <img

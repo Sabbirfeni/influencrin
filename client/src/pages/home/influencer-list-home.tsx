@@ -17,7 +17,7 @@ function InfluencerListHome() {
   );
   useEffect(() => {
     const loadInfluencers = async () => {
-      const data = await request();
+      const { data } = await request();
       if (data) setInfluencers(data.influencers);
     };
     loadInfluencers();
