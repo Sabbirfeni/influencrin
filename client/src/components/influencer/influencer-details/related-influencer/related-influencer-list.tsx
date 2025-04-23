@@ -1,10 +1,10 @@
+import ErrorSection from "@/components/error/error-section";
+import RelatedInfluencerListSkeleton from "@/components/skeletons/influencer/related-influencer-list-skeleton";
+import RelatedInfluencerCard from "./related-influencer-card";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import RelatedInfluencerCard from "./related-influencer-card";
-import { useApi } from "@/hooks";
 import influencerApiService from "@/api/endpoints/influencer-api-service";
-import RelatedInfluencerListSkeleton from "@/components/skeletons/influencer/related-influencer-list-skeleton";
-import ErrorSection from "@/components/error/error-section";
+import { useApi } from "@/hooks";
 
 interface Category {
   id: string;
@@ -40,11 +40,7 @@ function RelatedInfluencerList({ categories }: RelatedInfluencerListProps) {
   }, [categories]);
 
   return (
-    <div className="p-3 md:p-4 mt-6 md:mt-0 flex flex-col gap-4 border border-gray-200 rounded-xl">
-      <p className="text-center mt-1 md:mt-0 md:text-left text-sm font-semibold">
-        Influencers in similar categories
-      </p>
-
+    <>
       {loading && <RelatedInfluencerListSkeleton />}
 
       {errorMessage && (
@@ -56,20 +52,26 @@ function RelatedInfluencerList({ categories }: RelatedInfluencerListProps) {
       )}
 
       {!loading && influencers && (
-        <div className="flex flex-col gap-2">
-          {influencers.slice(0, 7).map((influencer, idx) => (
-            <RelatedInfluencerCard key={idx} influencer={influencer} />
-          ))}
+        <div className="p-3 md:p-4 mt-6 md:mt-0 flex flex-col gap-4 border border-gray-200 rounded-xl">
+          <p className="text-center mt-1 md:mt-0 md:text-left text-sm font-semibold">
+            Influencers in similar categories
+          </p>
 
-          <Link
-            to="/"
-            className="text-center text-sm font-semibold mt-3 text-primary"
-          >
-            See All Influencers
-          </Link>
+          <div className="flex flex-col gap-2">
+            {influencers.slice(0, 7).map((influencer, idx) => (
+              <RelatedInfluencerCard key={idx} influencer={influencer} />
+            ))}
+
+            <Link
+              to="/"
+              className="text-center text-sm font-semibold mt-3 text-primary"
+            >
+              See All Influencers
+            </Link>
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -44,7 +44,7 @@ const createCategoryForInfluencer = async (
 ): Promise<void> => {
   try {
     const { influencer_id } = req.params;
-    const userId = req.user?.id;
+    const userId = req?.user?.id;
     const { category } = req.body;
 
     if (!influencer_id) {
@@ -110,7 +110,7 @@ const deleteCategoryForInfluencer = async (
 ): Promise<void> => {
   try {
     const { influencer_id } = req.params;
-    const userId = req.body?.user?.id;
+    const userId = req?.user?.id;
     const { category_id } = req.body;
 
     if (!influencer_id || !category_id) {
@@ -147,7 +147,7 @@ const deleteCategoryForInfluencer = async (
       return;
     }
 
-    res.status(200).json({ message: "Category deleted successfully." });
+    res.status(200).json({ message: "Category removed from the list." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error." });

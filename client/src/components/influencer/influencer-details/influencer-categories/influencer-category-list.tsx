@@ -7,6 +7,7 @@ import { useApi } from "@/hooks";
 import { LoaderIcon, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import CategoryBadge from "./category-badge";
 
 type Category = {
   id: string;
@@ -71,10 +72,7 @@ function InfluencerCategoryList({
         await categoryAddRequest(influencer.id, categoryToAdd);
 
       if (categoryAddResponse) {
-        const updatedCategories = [
-          ...categories,
-          { category_name: categoryToAdd },
-        ];
+        const updatedCategories = [...categories, categoryAddResponse.category];
         setCategories(updatedCategories);
         toast.success(categoryAddResponse.message);
         setCategory("");
@@ -91,15 +89,6 @@ function InfluencerCategoryList({
     }
   };
 
-  // const handleRemove = (categoryToRemove) => {
-  //   const filteredCategories = categories.filter(
-  //     (cat) => cat.category_name !== categoryToRemove
-  //   );
-  //   setInfluencer((prevInfluencer) => ({
-  //     ...prevInfluencer,
-  //     categories: filteredCategories,
-  //   }));
-  // };
   return (
     <div
       className={`p-4 ${style} flex-col gap-4 border border-gray-200 rounded-xl`}
@@ -107,27 +96,21 @@ function InfluencerCategoryList({
       {/* Categories card header */}
       <div className="flex items-start justify-between">
         <h4 className="text-sm font-semibold">Categories</h4>
-        {/* <Button className="w-10 h-8 flex items-center justify-center shadow-none text-primary bg-white hover:bg-primary hover:text-white hover:shadow-lg"></Button> */}
-        <Button className="w-7 h-7 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
-          <Plus className="w-3 h-3" />
-        </Button>
       </div>
       {/* Category list */}
-      <div className="flex flex-wrap gap-2">
-        {categories.map((cat) => (
-          <Badge
-            key={cat.id}
-            variant="outline"
-            className="group cursor-pointer flex items-center gap-1 text-xs px-3 py-1 rounded-full transition duration-300 bg-white text-primary border border-primary"
-          >
-            {cat.category_name}
-            <X
-              className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
-              strokeWidth={3}
+
+      {categories.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => (
+            <CategoryBadge
+              category={cat}
+              influencerId={influencer.id}
+              categories={categories}
+              setCategories={setCategories}
             />
-          </Badge>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Add category */}
       <div className="relative max-w-md">
@@ -139,6 +122,7 @@ function InfluencerCategoryList({
           />
 
           <Button
+            disabled={categoryAddLoading}
             onClick={handleAdd}
             variant="outline"
             className="group h-full border border-gray-300 bg-white hover:border-gray-400"

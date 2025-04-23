@@ -43,7 +43,7 @@ const influencerCategoryApiService = {
     categoryId: string
   ): Promise<ApiMessage> => {
     const res = await axios.delete<ApiMessage>(
-      `/influencers/${influencerId}/categories`,
+      `/influencers/categories/${influencerId}`,
       {
         data: { category_id: categoryId },
       }
