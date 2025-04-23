@@ -1,6 +1,12 @@
+import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
+import InputFieldError from "@/components/error/input-field-error";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useApi } from "@/hooks";
+import { LoaderIcon, Plus, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type Category = {
   id: string;
@@ -11,12 +17,89 @@ type Category = {
 type InfluencerCategoryListProps = {
   style?: string;
   categories: Category[];
+  setInfluencer: () => void;
 };
 
 function InfluencerCategoryList({
   style,
-  categories,
+  influencer,
+  setInfluencer,
 }: InfluencerCategoryListProps) {
+  const [categories, setCategories] = useState(influencer.categories);
+  const [category, setCategory] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setCategory(value);
+    const isCategoryExist = categories.some(
+      (cat) => cat.category_name.toLowerCase() === value.toLowerCase()
+    );
+
+    if (isCategoryExist) {
+      setCategoryError("This category already included");
+    } else {
+      setCategoryError("");
+    }
+
+    if (value.trim() === "") {
+      // setFilteredSuggestions([]);
+      // setShowDropdown(false);
+    } else {
+      // const filtered = suggestionsList.filter((s) =>
+      //   s.toLowerCase().includes(value.toLowerCase())
+      // );
+      // setFilteredSuggestions(filtered);
+      // setShowDropdown(true);
+    }
+    setSelected(null); // Clear previous selection
+  };
+
+  const { request: categoryAddRequest, loading: categoryAddLoading } = useApi(
+    influencerCategoryApiService.createCategory
+  );
+  const handleAdd = async () => {
+    const categoryToAdd = selected || category;
+    const isCategoryExist = categories.some(
+      (cat) => cat.category_name.toLowerCase() === categoryToAdd.toLowerCase()
+    );
+    if (categoryToAdd.trim() !== "" && !isCategoryExist) {
+      setCategoryError("");
+
+      const { data: categoryAddResponse, error: categoryAddError } =
+        await categoryAddRequest(influencer.id, categoryToAdd);
+
+      if (categoryAddResponse) {
+        const updatedCategories = [
+          ...categories,
+          { category_name: categoryToAdd },
+        ];
+        setCategories(updatedCategories);
+        toast.success(categoryAddResponse.message);
+        setCategory("");
+        // setFilteredSuggestions([]);
+        // setShowDropdown(false);
+      } else if (categoryAddError) {
+        toast.error(categoryAddError.message);
+      }
+    } else if (categoryToAdd.trim() == "") {
+      setCategoryError("Please write a category");
+    } else if (isCategoryExist) {
+      setCategoryError("This category already included");
+      return;
+    }
+  };
+
+  // const handleRemove = (categoryToRemove) => {
+  //   const filteredCategories = categories.filter(
+  //     (cat) => cat.category_name !== categoryToRemove
+  //   );
+  //   setInfluencer((prevInfluencer) => ({
+  //     ...prevInfluencer,
+  //     categories: filteredCategories,
+  //   }));
+  // };
   return (
     <div
       className={`p-4 ${style} flex-col gap-4 border border-gray-200 rounded-xl`}
@@ -45,6 +128,48 @@ function InfluencerCategoryList({
           </Badge>
         ))}
       </div>
+
+      {/* Add category */}
+      <div className="relative max-w-md">
+        <div className="flex gap-2">
+          <Input
+            value={category}
+            onChange={handleChange}
+            className="flex-1 text-xs md:text-sm border-none shadow-none bg-gray-100"
+          />
+
+          <Button
+            onClick={handleAdd}
+            variant="outline"
+            className="group h-full border border-gray-300 bg-white hover:border-gray-400"
+          >
+            {categoryAddLoading ? (
+              <LoaderIcon className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
+            ) : (
+              <Plus className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
+            )}
+          </Button>
+        </div>
+
+        {/* {showDropdown && filteredSuggestions.length > 0 && (
+          <ul className="absolute z-50 mt-1 w-full rounded-md border bg-white shadow-md">
+            {filteredSuggestions.map((suggestion, idx) => (
+              <li
+                key={idx}
+                onClick={() => handleSelect(suggestion)}
+                className={cn(
+                  "px-4 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                )}
+              >
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )} */}
+      </div>
+
+      {/* {error && <InputFieldError errMessage={error} />} */}
+      {categoryError && <InputFieldError errMessage={categoryError} />}
     </div>
   );
 }

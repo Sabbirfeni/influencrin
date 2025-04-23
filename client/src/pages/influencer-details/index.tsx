@@ -79,7 +79,8 @@ function InfluencerDetailsPage() {
               />
               <InfluencerCategoryList
                 style="flex md:hidden"
-                categories={influencer.categories}
+                influencer={influencer}
+                setInfluencer={setInfluencer}
               />
               <InfluencerReviewsContainer reviews={influencer.reviews} />
             </div>
@@ -87,7 +88,8 @@ function InfluencerDetailsPage() {
             <div className="w-full md:w-1/3 flex flex-col gap-4">
               <InfluencerCategoryList
                 style="hidden md:flex"
-                categories={influencer.categories}
+                influencer={influencer}
+                setInfluencer={setInfluencer}
               />
               <RelatedInfluencerList categories={influencer.categories} />
             </div>

@@ -112,6 +112,7 @@ function AddInfluencerCategoryList({
 
     setCategories(filteredCategories);
   };
+
   return (
     <div
       className={`p-4 ${style} flex-col space-y-2 border border-gray-200 rounded-xl`}

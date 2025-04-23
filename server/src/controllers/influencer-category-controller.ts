@@ -44,7 +44,7 @@ const createCategoryForInfluencer = async (
 ): Promise<void> => {
   try {
     const { influencer_id } = req.params;
-    const userId = req.body?.user?.id;
+    const userId = req.user?.id;
     const { category } = req.body;
 
     if (!influencer_id) {
@@ -81,6 +81,7 @@ const createCategoryForInfluencer = async (
     });
 
     if (existingCategory) {
+      console.log(existingCategory);
       res.status(409).json({
         message: "Category already exists for this influencer.",
       });
@@ -94,7 +95,7 @@ const createCategoryForInfluencer = async (
     });
 
     res.status(201).json({
-      message: "Category created successfully.",
+      message: "New category added.",
       category: createdCategory,
     });
   } catch (error) {
