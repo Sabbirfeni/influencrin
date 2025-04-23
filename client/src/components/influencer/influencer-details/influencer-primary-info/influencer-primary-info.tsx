@@ -23,7 +23,7 @@ function InfluencerPrimaryInfo({
   const { user } = useAuth();
   const { user_id, profile_image, fullname, handle, bio, location } =
     influencer;
-  const isMe = user.id == user_id;
+  const isMe = user?.id == user_id;
 
   return (
     <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl">

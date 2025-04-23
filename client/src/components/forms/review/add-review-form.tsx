@@ -18,26 +18,43 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Star } from "lucide-react";
 import clsx from "clsx";
+import { useApi } from "@/hooks";
+import reviewApiService from "@/api/endpoints/influencer-review-api-service";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 const FormSchema = z.object({
-  bio: z
-    .string()
-    .min(10, { message: "Bio must be at least 10 characters." })
-    .max(300, { message: "Bio must not be longer than 300 characters." }),
-  rating: z.number().min(1, "Rating must be at least 1").max(5),
+  comment: z
+    .string({ message: "Write a comment please" })
+    .min(10, { message: "Comment must be at least 10 characters." })
+    .max(300, { message: "Comment must not be longer than 300 characters." }),
+  rating: z.number().min(1, "Select at least 1").max(5),
 });
 
-export default function AddReviewForm() {
+export default function AddReviewForm({ setReviews, influencer }) {
+  const { user } = useAuth();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      comment: "",
       rating: 0,
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("Submitted", data);
-  }
+  const { request: addReviewRequest, loading: addReviewLoading } = useApi(
+    reviewApiService.createReview
+  );
+  const onSubmit = async (review: z.infer<typeof FormSchema>) => {
+    const { data: reviewAddResponse, error: reviewAddError } =
+      await addReviewRequest(influencer.id, review);
+    if (reviewAddResponse) {
+      const newReview = { ...reviewAddResponse.review, author: user };
+      setReviews((prevReviews) => [newReview, ...prevReviews]);
+      toast.success(reviewAddResponse.message);
+    } else if (reviewAddError) {
+      toast.error(reviewAddError.message);
+    }
+  };
 
   return (
     <div className="w-full md:w-2/3 mt-12 md:mt-0">
@@ -55,7 +72,9 @@ export default function AddReviewForm() {
             name="rating"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-center md:justify-start">
-                <FormLabel>Rating</FormLabel>
+                <FormLabel>
+                  <span className="text-black">Rating</span>
+                </FormLabel>
                 <FormControl>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -73,21 +92,21 @@ export default function AddReviewForm() {
                     ))}
                   </div>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs text-red-500" />
               </FormItem>
             )}
           />
           {/* Comment Field */}
           <FormField
             control={form.control}
-            name="bio"
+            name="comment"
             render={({ field }) => (
               <FormItem className="flex flex-col items-center md:items-start justify-center md:justify-start">
                 <FormLabel>
-                  <div>
+                  <div className="text-black">
                     What you think about{" "}
                     <span className="text-primary font-semibold">
-                      Influencer Name
+                      {influencer.fullname}
                     </span>{" "}
                     ?
                   </div>
@@ -95,16 +114,19 @@ export default function AddReviewForm() {
                 <FormControl>
                   <Textarea
                     placeholder="start writing here..."
-                    className="h-32 resize-none text-sm md:text-md"
+                    className="h-32 resize-none border-gray-200 focus-visible:border-gray-200 text-sm md:text-md"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs text-red-500" />
               </FormItem>
             )}
           />
           <div className="flex justify-center md:justify-start">
-            <Button type="submit">Add Review</Button>
+            <Button type="submit" disabled={addReviewLoading}>
+              {" "}
+              {addReviewLoading ? "Adding Review..." : "Add Review"}
+            </Button>
           </div>
         </form>
       </Form>

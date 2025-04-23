@@ -37,10 +37,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const hasToken = localStorage.getItem("token");
-    if (hasToken) {
-      fetchUser();
-    }
+    fetchUser();
   }, []);
 
   // User registration api call

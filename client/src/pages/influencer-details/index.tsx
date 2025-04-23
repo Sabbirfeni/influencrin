@@ -82,7 +82,10 @@ function InfluencerDetailsPage() {
                 influencer={influencer}
                 setInfluencer={setInfluencer}
               />
-              <InfluencerReviewsContainer reviews={influencer.reviews} />
+              <InfluencerReviewsContainer
+                reviews={influencer.reviews}
+                influencer={influencer}
+              />
             </div>
 
             <div className="w-full md:w-1/3 flex flex-col gap-4">

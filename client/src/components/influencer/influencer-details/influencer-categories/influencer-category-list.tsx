@@ -32,7 +32,7 @@ function InfluencerCategoryList({
   const [category, setCategory] = useState("");
   const [categoryError, setCategoryError] = useState("");
   const [selected, setSelected] = useState(null);
-  const isMe = user.id == influencer.user_id;
+  const isMe = user?.id == influencer.user_id;
 
   const handleChange = (e) => {
     const value = e.target.value;

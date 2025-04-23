@@ -53,7 +53,7 @@ const createReviewForInfluencer = async (
 ): Promise<void> => {
   try {
     const { influencer_id } = req.params;
-    const user_id = req.body?.user?.id;
+    const user_id = req?.user?.id;
     const { rating, comment } = req.body;
 
     if (!influencer_id || !user_id) {

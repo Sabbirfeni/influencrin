@@ -36,7 +36,7 @@ function InfluencerReviewCard({ review }: Props) {
         {/* Review time */}
         <p className="text-xs text-gray-400">{formatDate(review.createdAt)}</p>
       </div>
-      <p className="mt-4 text-[13px] text-muted-foreground leading-5 select-none">
+      <p className="mt-4 text-[13px] text-muted-foreground leading-5 select-none max-h-20 overflow-y-auto break-words">
         {review.comment}
       </p>
     </div>

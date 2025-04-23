@@ -433,7 +433,7 @@ const getInfluencerByHandle = async (
             {
               model: User,
               as: "author",
-              attributes: ["fullname", "profile_image"],
+              attributes: ["id", "fullname", "profile_image"],
             },
           ],
         },
