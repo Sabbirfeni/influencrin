@@ -43,7 +43,7 @@ const influencerApiService = {
 
   // Get influencers created by a specific user
   getInfluencersByUser: async () => {
-    const res = await axios.get("/influencers/user");
+    const res = await axios.get("/influencers/me");
     return res.data;
   },
 };

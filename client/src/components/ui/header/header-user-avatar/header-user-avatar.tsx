@@ -38,6 +38,7 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
                   import.meta.env.VITE_SERVER_BASE_URL
                 }/images/uploads/user-profiles/${profile_image}`}
                 alt="User"
+                className="object-cover"
               />
               <AvatarFallback className="text-muted-foreground">
                 {firstLetterOfUsername}

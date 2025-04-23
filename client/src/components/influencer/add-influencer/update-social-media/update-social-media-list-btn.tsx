@@ -20,7 +20,10 @@ import { useApi } from "@/hooks";
 import socialMediaPlatformApiServices from "@/api/endpoints/influencer-social-platforms-api-service";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
+import influencerSocialPlatformApiService from "@/api/endpoints/influencer-social-platforms-api-service";
+import { toast } from "sonner";
 import InputFieldError from "@/components/error/input-field-error";
+import ToastDescription from "@/components/toast/toast-description";
 
 const platformSchema = z.object({
   platform_id: z.string({ required_error: "Select a platform" }),
@@ -34,23 +37,28 @@ const platformSchema = z.object({
     .min(1, "Follower count must be added"),
 });
 
-function AddSocialMediaCard({
-  socialPlatforms, // influencer social platforms
-  setSocialPlatforms,
-  setErrors,
-  influencerSchema,
+function UpdateSocialMediaListBtn({
+  influencer,
+  influencerSocialPlatforms,
+  setInfluencerSocialPlatforms,
 }) {
   const [open, setOpen] = useState(false);
   const [platforms, setPlatforms] = useState([]); // the platforms that are stored in the db.
   const nonSelectedPlatforms = platforms.filter(
-    (platform) => !socialPlatforms.some((sp) => sp.platform_id === platform.id)
+    (platform) =>
+      !influencerSocialPlatforms.some((sp) => sp.platform_id === platform.id)
   );
   const [platformInfo, setPlatformInfo] = useState(null);
   const [profileLink, setProfileLink] = useState("");
   const [followerCount, setFollowerCount] = useState("");
   const [platformErrors, setPlatformErrors] = useState({});
 
-  const handleAdd = () => {
+  const {
+    request: socialMediaCreateRequest,
+    loading: socialMediaCreateLoading,
+  } = useApi(influencerSocialPlatformApiService.createPlatform);
+
+  const handleAdd = async () => {
     const newPlatform = {
       platform_id: platformInfo?.id,
       platform_icon_url: platformInfo?.platform_icon_url || "",
@@ -59,6 +67,7 @@ function AddSocialMediaCard({
     };
 
     try {
+      // Check is the platform profile link is valid with the selected social platform
       if (
         profileLink &&
         platformInfo &&
@@ -73,29 +82,36 @@ function AddSocialMediaCard({
       }
       platformSchema.parse(newPlatform); // Validate individual platform
 
-      const updatedPlatforms = [...socialPlatforms, newPlatform];
-      setSocialPlatforms(updatedPlatforms);
+      const { data: socialMediaCreateResponse, error: socialMediaCreateError } =
+        await socialMediaCreateRequest(influencer.id, newPlatform);
+      console.log(socialMediaCreateError);
 
-      // Reset all
-      setPlatformInfo(null);
-      setProfileLink("");
-      setFollowerCount("");
-      setOpen(false);
-      setPlatformErrors({});
+      if (socialMediaCreateResponse) {
+        const newSocialPlatform = {
+          ...socialMediaCreateResponse.influencerSocialPlatform,
+          platform: platformInfo,
+        };
+        const updatedPlatforms = [
+          ...influencerSocialPlatforms,
+          newSocialPlatform,
+        ];
+        setInfluencerSocialPlatforms(updatedPlatforms);
+        toast.success(socialMediaCreateResponse.message);
 
-      // Validate full socialPlatforms array against main schema
-      try {
-        influencerSchema
-          .pick({ socialPlatforms: true })
-          .parse({ socialPlatforms: updatedPlatforms });
-
-        setErrors((prevErrors) => {
-          const updated = { ...prevErrors };
-          delete updated["socialPlatforms"];
-          return updated;
+        // Reset all
+        setPlatformInfo(null);
+        setProfileLink("");
+        setFollowerCount("");
+        setOpen(false);
+        setPlatformErrors({});
+      } else if (socialMediaCreateError) {
+        toast.error(socialMediaCreateError.message, {
+          description: (
+            <ToastDescription
+              description={socialMediaCreateError.description}
+            />
+          ),
         });
-      } catch (error) {
-        // Optional: handle
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -197,7 +213,7 @@ function AddSocialMediaCard({
 
               {platformErrors.platform_profile_link && (
                 <InputFieldError
-                  errMessage={platformErrors?.platform_profile_link}
+                  errMessage={platformErrors.platform_profile_link}
                 />
               )}
             </div>
@@ -217,14 +233,14 @@ function AddSocialMediaCard({
                 className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
               {platformErrors.follower_count && (
-                <InputFieldError errMessage={platformErrors?.follower_count} />
+                <InputFieldError errMessage={platformErrors.follower_count} />
               )}
             </div>
           </div>
 
           <DialogFooter className="pt-4">
             <Button type="button" onClick={handleAdd}>
-              Add
+              {socialMediaCreateLoading ? "Adding..." : "Add"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -233,4 +249,4 @@ function AddSocialMediaCard({
   );
 }
 
-export default AddSocialMediaCard;
+export default UpdateSocialMediaListBtn;

@@ -20,6 +20,15 @@ function InfluencerFilterSection() {
           Filter
         </Button>
         <FilterList searchParams={searchParams} />
+        <Button
+          variant="outline"
+          onClick={() => {
+            navigate("/search");
+          }}
+          className="ml-4 hover:bg-primary hover:text-white"
+        >
+          Reset
+        </Button>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ const createInfluencerSocialPlatform = async (
 
   try {
     const { influencer_id } = req.params;
-    const user_id = req.body?.user?.id;
+    const user_id = req?.user?.id;
 
     const { platform_id, platform_profile_link, follower_count } = req.body;
 
@@ -65,22 +65,22 @@ const createInfluencerSocialPlatform = async (
     }
 
     // Check if the platform already exists for this influencer
-    const existingPlatform = await InfluencerSocialPlatform.findOne({
-      where: {
-        influencer_id,
-        platform_id,
-      },
-      transaction,
-    });
+    // const existingPlatform = await InfluencerSocialPlatform.findOne({
+    //   where: {
+    //     influencer_id,
+    //     platform_id,
+    //   },
+    //   transaction,
+    // });
 
-    if (existingPlatform) {
-      res.status(400).json({
-        message: "This platform is already linked to the influencer.",
-        field: "platform_id",
-        platform_id,
-      });
-      return;
-    }
+    // if (existingPlatform) {
+    //   res.status(400).json({
+    //     message: "This platform is already linked to the influencer.",
+    //     field: "platform_id",
+    //     platform_id,
+    //   });
+    //   return;
+    // }
 
     // Create the new social platform for the influencer
     const newSocialPlatform = await InfluencerSocialPlatform.create(
@@ -108,17 +108,19 @@ const createInfluencerSocialPlatform = async (
           err.type === "unique violation" &&
           err.path === "platform_profile_link"
       );
-
+      console.log(uniqueError);
       if (uniqueError) {
         res.status(400).json({
           message: uniqueError.message,
           field: "platform_profile_link",
-          platform_profile_link: uniqueError.value,
+          description: uniqueError.value,
         });
         return;
       }
     }
-    res.status(500).json({ message: "Internal server error." });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server error." });
   }
 };
 
@@ -130,7 +132,7 @@ const updateInfluencerSocialPlatform = async (
 
   try {
     const { influencer_id } = req.params;
-    const user_id = req.body?.user?.id;
+    const user_id = req?.user?.id;
 
     const { platform_id, platform_profile_link, follower_count } = req.body;
 
@@ -211,7 +213,9 @@ const updateInfluencerSocialPlatform = async (
       }
     }
 
-    res.status(500).json({ message: "Internal server error." });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server error." });
   }
 };
 
@@ -224,7 +228,7 @@ const deleteInfluencerSocialPlatform = async (
   try {
     const { influencer_id } = req.params;
     const { platform_id } = req.body;
-    const user_id = req.body?.user?.id;
+    const user_id = req?.user?.id;
 
     if (!influencer_id || !platform_id) {
       res
@@ -247,10 +251,12 @@ const deleteInfluencerSocialPlatform = async (
     }
 
     // Check if the platform exists for this influencer
+    console.log(influencer_id);
+    console.log(platform_id);
     const existingPlatform = await InfluencerSocialPlatform.findOne({
       where: {
         influencer_id,
-        platform_id,
+        id: platform_id,
       },
       transaction,
     });
@@ -271,7 +277,9 @@ const deleteInfluencerSocialPlatform = async (
     });
   } catch (error: any) {
     await transaction.rollback();
-    res.status(500).json({ message: "Internal server error." });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server error." });
   }
 };
 

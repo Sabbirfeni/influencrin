@@ -56,25 +56,23 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     <div>
       <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Filter courses..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Find by name..."
+          value={
+            (table.getColumn("fullname")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("fullname")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        {/* <Link href="/dashboard/courses/add"> */}
-        <Button>
-          <PlusCircle className="h-4 w-4 mr-2" />
-          New Course
-        </Button>
+
         {/* </Link> */}
       </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+            {table.getHeaderGroups().map((headerGroup, idx) => (
+              <TableRow key={`${headerGroup.id}-${idx}`}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
@@ -94,6 +92,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

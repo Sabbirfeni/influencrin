@@ -47,7 +47,7 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
 const getReviewsByUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { user_id } = req.params;
-    const loggedInUserId = req.body?.user?.id;
+    const loggedInUserId = req.user?.id;
 
     if (user_id !== loggedInUserId) {
       res.status(403).json({ message: "Unauthorized access to reviews." });

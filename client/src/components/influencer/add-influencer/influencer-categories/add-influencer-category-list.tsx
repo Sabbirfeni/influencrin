@@ -159,7 +159,7 @@ function AddInfluencerCategoryList({
             variant="outline"
             className="group h-full border border-gray-300 bg-white hover:border-gray-400"
           >
-            <Plus className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
+            <Plus className="w-5 h-5 text-gray-400 group-hover:text-gray-500" />
           </Button>
         </div>
 

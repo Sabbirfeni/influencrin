@@ -64,7 +64,6 @@ function InfluencerDetailsPage() {
                 initialData={influencer}
                 setInfluencer={setInfluencer}
                 errors={{}}
-                onInputChange={() => {}}
                 setIsInfluencerPrimaryInfoFormOpen={
                   setIsInfluencerPrimaryInfoFormOpen
                 }
@@ -74,9 +73,7 @@ function InfluencerDetailsPage() {
 
           <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
             <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
-              <InfluencerSocialList
-                socialPlatformList={influencer.socialPlatforms}
-              />
+              <InfluencerSocialList influencer={influencer} />
               <InfluencerCategoryList
                 style="flex md:hidden"
                 influencer={influencer}

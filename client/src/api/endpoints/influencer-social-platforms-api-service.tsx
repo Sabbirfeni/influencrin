@@ -1,6 +1,5 @@
 import axios from "../axios";
 
-// Define the structure of a single platform.
 export interface SocialMediaPlatform {
   id: string;
   platform_name: string;
@@ -8,21 +7,80 @@ export interface SocialMediaPlatform {
   domain_name: string;
 }
 
-// Define the structure of the API response.
-export interface GetAllSocialMediaPlatformsResponse {
+export interface InfluencerSocialPlatform {
+  id: string;
+  influencer_id: string;
+  platform_id: string;
+  platform_profile_link: string;
+  follower_count: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetAllPlatformsResponse {
   message: string;
   socialMediaPlatforms: SocialMediaPlatform[];
 }
 
-// API service for fetching all social media platforms
-const socialMediaPlatformApiServices = {
-  getAllSocialMediaPlatforms:
-    async (): Promise<GetAllSocialMediaPlatformsResponse> => {
-      const res = await axios.get<GetAllSocialMediaPlatformsResponse>(
-        "/influencers/social-platforms"
-      );
-      return res.data;
-    },
+export interface CreateOrUpdatePlatformResponse {
+  message: string;
+  influencerSocialPlatform: InfluencerSocialPlatform;
+}
+
+export interface DeletePlatformResponse {
+  message: string;
+}
+
+const influencerSocialPlatformApiService = {
+  getAllSocialMediaPlatforms: async (): Promise<GetAllPlatformsResponse> => {
+    const res = await axios.get<GetAllPlatformsResponse>(
+      "/influencers/social-platforms"
+    );
+    return res.data;
+  },
+
+  createPlatform: async (
+    influencer_id: string,
+    data: {
+      platform_id: string;
+      platform_profile_link: string;
+      follower_count: number;
+    }
+  ): Promise<CreateOrUpdatePlatformResponse> => {
+    const res = await axios.post<CreateOrUpdatePlatformResponse>(
+      `/influencers/social-platforms/${influencer_id}`,
+      data
+    );
+    return res.data;
+  },
+
+  updatePlatform: async (
+    influencer_id: string,
+    data: {
+      platform_id: string;
+      platform_profile_link: string;
+      follower_count: number;
+    }
+  ): Promise<CreateOrUpdatePlatformResponse> => {
+    const res = await axios.put<CreateOrUpdatePlatformResponse>(
+      `/influencers/social-platforms/${influencer_id}`,
+      data
+    );
+    return res.data;
+  },
+
+  deletePlatform: async (
+    influencer_id: string,
+    data: {
+      platform_id: string;
+    }
+  ): Promise<DeletePlatformResponse> => {
+    const res = await axios.delete<DeletePlatformResponse>(
+      `/influencers/social-platforms/${influencer_id}`,
+      { data }
+    );
+    return res.data;
+  },
 };
 
-export default socialMediaPlatformApiServices;
+export default influencerSocialPlatformApiService;

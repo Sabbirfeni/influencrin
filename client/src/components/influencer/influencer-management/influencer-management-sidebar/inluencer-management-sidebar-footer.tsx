@@ -31,6 +31,7 @@ function InluencerManagementSidebarFooter() {
                         import.meta.env.VITE_SERVER_BASE_URL
                       }/images/uploads/user-profiles/${user?.profile_image}`}
                       alt="User"
+                      className="object-cover"
                     />
                     <AvatarFallback className="text-muted-foreground">
                       {firstLetterOfUsername}

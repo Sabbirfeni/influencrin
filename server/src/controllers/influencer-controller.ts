@@ -464,7 +464,7 @@ const getInfluencersByUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = req.body?.user?.id; // or req.user?.id depending on your middleware
+    const userId = req.user?.id;
 
     if (!userId) {
       res.status(401).json({ message: "Unauthorized. User ID missing." });
@@ -473,24 +473,45 @@ const getInfluencersByUser = async (
 
     const influencers = await Influencer.findAll({
       where: { user_id: userId },
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(
+              'CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'
+            ),
+            "avg_rating_score",
+          ],
+        ],
+      },
       include: [
         {
           model: InfluencerSocialPlatform,
-          as: "InfluencerSocialPlatforms",
-          include: [{ model: SocialMediaPlatform, as: "SocialMediaPlatform" }],
+          as: "socialPlatforms",
+          include: [
+            {
+              model: SocialMediaPlatform,
+              as: "platform",
+            },
+          ],
         },
         {
           model: InfluencerCategory,
-          as: "InfluencerCategories",
+          as: "categories",
         },
+        {
+          model: InfluencerReview,
+          as: "reviews",
+          attributes: [], // no need to include reviews here, just for aggregation
+        },
+      ],
+      group: [
+        "Influencer.id",
+        "socialPlatforms.id",
+        "socialPlatforms->platform.id",
+        "categories.id",
       ],
       order: [["createdAt", "DESC"]],
     });
-
-    if (influencers.length === 0) {
-      res.status(404).json({ message: "No influencers found." });
-      return;
-    }
 
     res.status(200).json({
       message: "Influencers fetched successfully.",

@@ -1,6 +1,7 @@
 import InputFieldError from "@/components/error/input-field-error";
 import AddSocialMediaCard from "./add-social-media-card";
 import InfluencerSocialCard from "./added-influencer-social-card";
+import AddInfluencerSocialCard from "./added-influencer-social-card";
 
 type SocialPlatformList = {
   platform_icon_url: string;
@@ -13,7 +14,7 @@ interface InfluencerSocialListProps {
   socialPlatforms: SocialPlatformList;
 }
 
-function InfluencerSocialList({
+function AddInfluencerSocialList({
   socialPlatforms,
   setSocialPlatforms,
   error,
@@ -25,7 +26,7 @@ function InfluencerSocialList({
       <h4 className="text-sm font-semibold">Add social media</h4>
       <div className="h-[fit-content] grid grid-cols-2 gap-3 md:gap-4">
         {socialPlatforms.map((socialPlatformInfo, index) => (
-          <InfluencerSocialCard
+          <AddInfluencerSocialCard
             key={index}
             socialPlatformInfo={socialPlatformInfo}
             socialPlatforms={socialPlatforms}
@@ -45,4 +46,4 @@ function InfluencerSocialList({
   );
 }
 
-export default InfluencerSocialList;
+export default AddInfluencerSocialList;

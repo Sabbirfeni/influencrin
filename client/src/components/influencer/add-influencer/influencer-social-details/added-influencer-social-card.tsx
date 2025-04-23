@@ -14,7 +14,7 @@ interface InfluencerSocialCardProps {
   socialPlatformInfo: SocialPlatformCard;
 }
 
-function InfluencerSocialCard({
+function AddInfluencerSocialCard({
   socialPlatformInfo,
   socialPlatforms,
   setSocialPlatforms,
@@ -69,4 +69,4 @@ function InfluencerSocialCard({
   );
 }
 
-export default InfluencerSocialCard;
+export default AddInfluencerSocialCard;

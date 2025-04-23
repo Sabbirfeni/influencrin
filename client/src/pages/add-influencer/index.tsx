@@ -176,6 +176,7 @@ function AddInfluencerPage() {
                   setErrors={setErrors}
                 />
                 <AddInfluencerCategoryList
+                  categories={categories}
                   setCategories={setCategories}
                   influencerSchema={influencerSchema}
                   error={errors.categories}
