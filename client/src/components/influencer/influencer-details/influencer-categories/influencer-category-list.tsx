@@ -8,6 +8,7 @@ import { LoaderIcon, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import CategoryBadge from "./category-badge";
+import { useAuth } from "@/hooks/use-auth";
 
 type Category = {
   id: string;
@@ -26,10 +27,12 @@ function InfluencerCategoryList({
   influencer,
   setInfluencer,
 }: InfluencerCategoryListProps) {
+  const { user } = useAuth();
   const [categories, setCategories] = useState(influencer.categories);
   const [category, setCategory] = useState("");
   const [categoryError, setCategoryError] = useState("");
   const [selected, setSelected] = useState(null);
+  const isMe = user.id == influencer.user_id;
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -113,29 +116,30 @@ function InfluencerCategoryList({
       )}
 
       {/* Add category */}
-      <div className="relative max-w-md">
-        <div className="flex gap-2">
-          <Input
-            value={category}
-            onChange={handleChange}
-            className="flex-1 text-xs md:text-sm border-none shadow-none bg-gray-100"
-          />
+      {isMe && (
+        <div className="relative max-w-md">
+          <div className="flex gap-2">
+            <Input
+              value={category}
+              onChange={handleChange}
+              className="flex-1 text-xs md:text-sm border-none shadow-none bg-gray-100"
+            />
 
-          <Button
-            disabled={categoryAddLoading}
-            onClick={handleAdd}
-            variant="outline"
-            className="group h-full border border-gray-300 bg-white hover:border-gray-400"
-          >
-            {categoryAddLoading ? (
-              <LoaderIcon className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
-            ) : (
-              <Plus className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
-            )}
-          </Button>
-        </div>
+            <Button
+              disabled={categoryAddLoading}
+              onClick={handleAdd}
+              variant="outline"
+              className="group h-full border border-gray-300 bg-white hover:border-gray-400"
+            >
+              {categoryAddLoading ? (
+                <LoaderIcon className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
+              ) : (
+                <Plus className="w-5 h-5 text-gray-300 group-hover:text-gray-500" />
+              )}
+            </Button>
+          </div>
 
-        {/* {showDropdown && filteredSuggestions.length > 0 && (
+          {/* {showDropdown && filteredSuggestions.length > 0 && (
           <ul className="absolute z-50 mt-1 w-full rounded-md border bg-white shadow-md">
             {filteredSuggestions.map((suggestion, idx) => (
               <li
@@ -150,7 +154,8 @@ function InfluencerCategoryList({
             ))}
           </ul>
         )} */}
-      </div>
+        </div>
+      )}
 
       {/* {error && <InputFieldError errMessage={error} />} */}
       {categoryError && <InputFieldError errMessage={categoryError} />}

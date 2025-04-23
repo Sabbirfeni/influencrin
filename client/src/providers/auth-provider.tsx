@@ -87,6 +87,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const isMe = (userId) => {
+    return user.id == userId;
+  };
+
   // User logout api call
   const logout = async () => {
     localStorage.removeItem("token");
@@ -101,6 +105,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         userLoading,
         setUser,
+        isMe,
         login,
         registerUser,
         logout,
