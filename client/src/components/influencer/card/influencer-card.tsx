@@ -66,7 +66,7 @@ export default function InfluencerCard({
           {/* Name & Handle */}
           <div className="mb-5">
             <h3 className="text-lg font-semibold">{fullname}</h3>
-            <p className="text-sm text-muted-foreground">@{handle}</p>
+            <p className="text-xs text-gray-400">@{handle}</p>
           </div>
 
           {/* Platforms */}
