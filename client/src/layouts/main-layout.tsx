@@ -1,21 +1,16 @@
-import { Toaster } from "@/components/ui/sonner";
+import ScrollToTop from "@/components/scrolling/scroll-to-top";
+import AuthProvider from "@/providers/auth-provider";
 import { Outlet } from "react-router-dom";
 
-import Header from "@/components/ui/header/header";
-import Footer from "@/components/ui/footer/footer";
-
-const MainLayout = () => {
+function MainLayout() {
   return (
-    <div>
-      <header>
-        <Header />
-      </header>
-      <main>
+    <>
+      <ScrollToTop />
+      <AuthProvider>
         <Outlet />
-      </main>
-      <Footer />
-    </div>
+      </AuthProvider>
+    </>
   );
-};
+}
 
 export default MainLayout;
