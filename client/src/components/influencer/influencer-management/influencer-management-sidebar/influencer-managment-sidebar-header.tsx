@@ -19,8 +19,12 @@ function InfluencerManagmentSidebarHeader() {
   return (
     <SidebarHeader>
       <SidebarMenu>
-        <SidebarMenuItem>
-          <DropdownMenu>
+        <SidebarMenuItem className="pl-2 mt-3">
+          <Link to="/">
+            <Logo />
+          </Link>
+
+          {/* <DropdownMenu>
             <DropdownMenuTrigger
               asChild
               className="mt-3 focus-visible:ring-0 cursor-pointer select-none"
@@ -47,7 +51,7 @@ function InfluencerManagmentSidebarHeader() {
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>
