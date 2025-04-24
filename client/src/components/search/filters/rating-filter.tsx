@@ -15,7 +15,7 @@ type RatingFilterProps = {
   searchParams: URLSearchParams;
 };
 
-export function RatingFilter({ searchParams }: RatingFilterProps) {
+export function RatingFilter({ searchParams, setParams }: RatingFilterProps) {
   const current = searchParams.get("min_rating");
   const rating = current || null;
   const [open, setOpen] = React.useState(false);
@@ -25,8 +25,10 @@ export function RatingFilter({ searchParams }: RatingFilterProps) {
 
   const handleSelect = (rating: number) => {
     searchParams.set("min_rating", rating.toString());
+
     setSelected(rating);
     setOpen(false); // auto close after selection
+    setParams(searchParams);
   };
 
   return (

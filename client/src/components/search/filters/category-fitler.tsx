@@ -61,7 +61,10 @@ type CategoryFilterProps = {
   searchParams: URLSearchParams;
 };
 
-export function CategoryFilter({ searchParams }: CategoryFilterProps) {
+export function CategoryFilter({
+  searchParams,
+  setParams,
+}: CategoryFilterProps) {
   const current = searchParams.get("category_names");
   let categories = current ? current.split(",") : [];
   const [open, setOpen] = React.useState(false);
@@ -78,13 +81,16 @@ export function CategoryFilter({ searchParams }: CategoryFilterProps) {
     // Update searchParams with the new list
     if (categories.length > 0) {
       searchParams.set("category_names", categories.join(","));
+      setParams(searchParams);
     } else {
       searchParams.delete("category_names");
+      setParams(searchParams);
     }
 
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
+    setOpen(false);
   };
 
   return (

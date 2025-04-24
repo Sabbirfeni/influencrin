@@ -63,11 +63,13 @@ type SocialPlatformFilterProps = {
 
 export function SocialPlatformFilter({
   searchParams,
+  setParams,
 }: SocialPlatformFilterProps) {
   const current = searchParams.get("platform_names");
   let platforms = current ? current.split(",") : [];
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>(platforms);
+  const [selectedSocialPlatforms, setSelectedSocialPlatforms] =
+    React.useState<string[]>(platforms);
 
   const toggleSelection = (value: string) => {
     // Toggle the selected value
@@ -80,12 +82,15 @@ export function SocialPlatformFilter({
     // Update searchParams with the new list
     if (platforms.length > 0) {
       searchParams.set("platform_names", platforms.join(","));
+      setParams(searchParams);
     } else {
       searchParams.delete("platform_names");
+      setParams(searchParams);
     }
-    setSelected((prev) =>
+    setSelectedSocialPlatforms((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
+    setOpen(false);
   };
 
   return (
@@ -97,8 +102,8 @@ export function SocialPlatformFilter({
           aria-expanded={open}
           className="w-[180px] justify-between overflow-hidden"
         >
-          {selected.length > 0
-            ? selected
+          {selectedSocialPlatforms.length > 0
+            ? selectedSocialPlatforms
                 .map((val) => options.find((opt) => opt.value === val)?.label)
                 .join(", ")
             : "Select platforms"}
@@ -117,12 +122,12 @@ export function SocialPlatformFilter({
                 <div
                   className={cn(
                     "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                    selected.includes(option.value)
+                    selectedSocialPlatforms.includes(option.value)
                       ? "bg-primary text-primary-foreground"
                       : "opacity-50"
                   )}
                 >
-                  {selected.includes(option.value) && (
+                  {selectedSocialPlatforms.includes(option.value) && (
                     <Check className="h-4 w-4 text-white" />
                   )}
                 </div>

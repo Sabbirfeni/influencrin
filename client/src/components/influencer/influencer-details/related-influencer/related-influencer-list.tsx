@@ -1,10 +1,11 @@
 import ErrorSection from "@/components/error/error-section";
 import RelatedInfluencerListSkeleton from "@/components/skeletons/influencer/related-influencer-list-skeleton";
 import RelatedInfluencerCard from "./related-influencer-card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import influencerApiService from "@/api/endpoints/influencer-api-service";
 import { useApi } from "@/hooks";
+import { Button } from "@/components/ui/button";
 
 interface Category {
   id: string;
@@ -24,21 +25,40 @@ interface RelatedInfluencerListProps {
   categories: Category[];
 }
 
-function RelatedInfluencerList({ categories }: RelatedInfluencerListProps) {
+function RelatedInfluencerList({
+  influencerId,
+  categories,
+}: RelatedInfluencerListProps) {
   const [influencers, setInfluencers] = useState<Influencer[] | null>(null);
   const { request, loading, errorMessage } = useApi(
     influencerApiService.searchInfluencers
   );
+  console.log(influencers);
+  const category_names = categories.map((c) => c.category_name).join(",");
 
   useEffect(() => {
     const loadInfluencers = async () => {
-      const data = await request();
-      if (data) setInfluencers(data.influencers);
+      const { data: influencerResponse } = await request({ category_names });
+
+      if (influencerResponse) {
+        const influencersWithoutCurrent =
+          influencerResponse.influencers?.filter(
+            (influencer) => influencer.id !== influencerId
+          );
+        console.log(influencersWithoutCurrent);
+        setInfluencers(influencersWithoutCurrent);
+      }
     };
 
     loadInfluencers();
   }, [categories]);
 
+  const searchParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
+  const navigateToSearchWithCategories = () => {
+    searchParams.set("category_names", category_names);
+    navigate(`/search?${searchParams.toString()}`, { replace: false });
+  };
   return (
     <>
       {loading && <RelatedInfluencerListSkeleton />}
@@ -51,7 +71,7 @@ function RelatedInfluencerList({ categories }: RelatedInfluencerListProps) {
         />
       )}
 
-      {!loading && influencers && (
+      {!loading && influencers?.length > 0 && (
         <div className="p-3 md:p-4 mt-6 md:mt-0 flex flex-col gap-4 border border-gray-200 rounded-xl">
           <p className="text-center mt-1 md:mt-0 md:text-left text-sm font-semibold">
             Influencers in similar categories
@@ -62,12 +82,13 @@ function RelatedInfluencerList({ categories }: RelatedInfluencerListProps) {
               <RelatedInfluencerCard key={idx} influencer={influencer} />
             ))}
 
-            <Link
-              to="/"
-              className="text-center text-sm font-semibold mt-3 text-primary"
+            <Button
+              variant="outline"
+              onClick={navigateToSearchWithCategories}
+              className="text-center text-primary text-sm font-semibold shadow-none"
             >
               See All Influencers
-            </Link>
+            </Button>
           </div>
         </div>
       )}

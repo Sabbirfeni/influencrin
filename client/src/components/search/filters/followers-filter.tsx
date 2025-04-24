@@ -11,6 +11,7 @@ type FollowersFilterProps = {
 export function FollowersFilter({
   searchParams,
   className,
+  setParams,
   ...props
 }: FollowersFilterProps) {
   const currentMinFollowers = searchParams.get("min_followers");
@@ -44,6 +45,7 @@ export function FollowersFilter({
     searchParams.set("max_followers", max.toString());
 
     setValue([min, max]);
+    setParams(searchParams);
   };
 
   return (

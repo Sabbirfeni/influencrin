@@ -339,6 +339,7 @@ const searchInfluencers = async (
     // 🧮 Define all the necessary attributes & Include avg review score
 
     const attributes: any = [
+      "id",
       "fullname",
       "handle",
       "profile_image",

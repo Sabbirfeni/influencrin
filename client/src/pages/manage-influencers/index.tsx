@@ -38,7 +38,7 @@ function ManageInfluencerPage() {
         )}
 
         {!getInfluencerLoading && !getInfluencerError && (
-          <DataTable columns={columns} data={[]} />
+          <DataTable columns={columns} data={influencers} />
         )}
       </div>
     </InfluencerManagementWrapper>

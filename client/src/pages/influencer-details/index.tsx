@@ -91,7 +91,10 @@ function InfluencerDetailsPage() {
                 influencer={influencer}
                 setInfluencer={setInfluencer}
               />
-              <RelatedInfluencerList categories={influencer.categories} />
+              <RelatedInfluencerList
+                influencerId={influencer.id}
+                categories={influencer.categories}
+              />
             </div>
           </div>
         </div>
