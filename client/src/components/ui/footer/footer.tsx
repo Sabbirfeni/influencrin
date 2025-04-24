@@ -10,7 +10,8 @@ function Footer() {
           <div>
             <Logo />
             <p className="mt-4 text-sm text-muted-foreground">
-              Helping you connect with the best influencers in your niche.
+              Discover and connect with active people who truly align with your
+              niche.
             </p>
           </div>
 
@@ -57,8 +58,8 @@ function Footer() {
             <h4 className="text-md font-semibold mb-3">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Email: support@influencrin.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Location: New York, USA</li>
+              <li>Phone: +880 1843 676171</li>
+              <li>Location: Dhaka, Bangladesh</li>
             </ul>
           </div>
         </div>
