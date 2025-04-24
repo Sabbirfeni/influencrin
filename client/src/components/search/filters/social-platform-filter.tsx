@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
@@ -13,6 +12,10 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useApi } from "@/hooks";
+import influencerSocialPlatformApiService from "@/api/endpoints/influencer-social-platforms-api-service";
+import { useEffect, useRef, useState } from "react";
+import FilterInfputSkeleton from "@/components/skeletons/filter/filter-input-skeleton";
 
 type Option = {
   label: string;
@@ -65,33 +68,61 @@ export function SocialPlatformFilter({
   searchParams,
   setParams,
 }: SocialPlatformFilterProps) {
+  const [allPlatforms, setAllPlatforms] = useState([]);
   const current = searchParams.get("platform_names");
-  let platforms = current ? current.split(",") : [];
-  const [open, setOpen] = React.useState(false);
+  let currentPlatforms = current ? current.split(",") : [];
+  const [open, setOpen] = useState(false);
   const [selectedSocialPlatforms, setSelectedSocialPlatforms] =
-    React.useState<string[]>(platforms);
+    useState<string[]>(currentPlatforms);
+
+  const { request, loading } = useApi(
+    influencerSocialPlatformApiService.getAllSocialMediaPlatforms
+  );
+
+  useEffect(() => {
+    const loadSocialPlatforms = async () => {
+      const { data: socialPlatformsResponse } = await request();
+      if (socialPlatformsResponse) {
+        setAllPlatforms(socialPlatformsResponse.socialMediaPlatforms);
+      }
+    };
+    loadSocialPlatforms();
+  }, []);
+
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const toggleSelection = (value: string) => {
-    // Toggle the selected value
-    if (platforms.includes(value)) {
-      platforms = platforms.filter((item) => item !== value);
+    if (currentPlatforms.includes(value)) {
+      currentPlatforms = currentPlatforms.filter((item) => item !== value);
     } else {
-      platforms = [...platforms, value];
+      currentPlatforms = [...currentPlatforms, value];
     }
 
-    // Update searchParams with the new list
-    if (platforms.length > 0) {
-      searchParams.set("platform_names", platforms.join(","));
+    if (currentPlatforms.length > 0) {
+      searchParams.set("platform_names", currentPlatforms.join(","));
       setParams(searchParams);
     } else {
       searchParams.delete("platform_names");
       setParams(searchParams);
     }
+
     setSelectedSocialPlatforms((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
-    setOpen(false);
+
+    // Clear any previous timeout
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+
+    // Set a new timeout to close the dropdown after 1s of inactivity
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 1000);
   };
+
+  // Render loading skeleton if fetching
+  if (loading) return <FilterInfputSkeleton />;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -104,7 +135,11 @@ export function SocialPlatformFilter({
         >
           {selectedSocialPlatforms.length > 0
             ? selectedSocialPlatforms
-                .map((val) => options.find((opt) => opt.value === val)?.label)
+                .map(
+                  (val) =>
+                    allPlatforms.find((opt) => opt.platform_name === val)
+                      ?.platform_name
+                )
                 .join(", ")
             : "Select platforms"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -112,26 +147,26 @@ export function SocialPlatformFilter({
       </PopoverTrigger>
       <PopoverContent className="w-[180px] p-0 max-h-60 overflow-y-auto">
         <Command>
-          <CommandInput placeholder="Search fruits..." className="h-9" />
+          <CommandInput placeholder="Search platforms..." className="h-9" />
           <CommandGroup>
-            {options.map((option) => (
+            {allPlatforms.map((platform) => (
               <CommandItem
-                key={option.value}
-                onSelect={() => toggleSelection(option.value)}
+                key={platform.platform_name}
+                onSelect={() => toggleSelection(platform.platform_name)}
               >
                 <div
                   className={cn(
                     "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                    selectedSocialPlatforms.includes(option.value)
+                    selectedSocialPlatforms.includes(platform.platform_name)
                       ? "bg-primary text-primary-foreground"
                       : "opacity-50"
                   )}
                 >
-                  {selectedSocialPlatforms.includes(option.value) && (
+                  {selectedSocialPlatforms.includes(platform.platform_name) && (
                     <Check className="h-4 w-4 text-white" />
                   )}
                 </div>
-                {option.label}
+                {platform.platform_name}
               </CommandItem>
             ))}
           </CommandGroup>

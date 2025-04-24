@@ -43,7 +43,10 @@ export function RatingFilter({ searchParams, setParams }: RatingFilterProps) {
           {selected ? (
             <span className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-primary text-primary" />
-              {selected} Star{selected > 1 ? "s" : ""}
+              <span>
+                {" "}
+                {selected} Star{selected > 1 ? "s" : ""}+
+              </span>
             </span>
           ) : (
             "Min Rating"

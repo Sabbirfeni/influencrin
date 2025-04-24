@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
@@ -13,49 +13,9 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-type Option = {
-  label: string;
-  value: string;
-};
-
-const options: Option[] = [
-  { label: "Fashion", value: "fashion" },
-  { label: "Beauty", value: "beauty" },
-  { label: "Fitness", value: "fitness" },
-  { label: "Health & Wellness", value: "health_wellness" },
-  { label: "Travel", value: "travel" },
-  { label: "Food & Beverage", value: "food_beverage" },
-  { label: "Lifestyle", value: "lifestyle" },
-  { label: "Parenting", value: "parenting" },
-  { label: "Technology", value: "technology" },
-  { label: "Gaming", value: "gaming" },
-  { label: "Music", value: "music" },
-  { label: "Photography", value: "photography" },
-  { label: "Art & Design", value: "art_design" },
-  { label: "DIY & Crafts", value: "diy_crafts" },
-  { label: "Home Decor", value: "home_decor" },
-  { label: "Education", value: "education" },
-  { label: "Finance", value: "finance" },
-  { label: "Business", value: "business" },
-  { label: "Motivational", value: "motivational" },
-  { label: "Spirituality", value: "spirituality" },
-  { label: "Books & Literature", value: "books_literature" },
-  { label: "Pets & Animals", value: "pets_animals" },
-  { label: "Automotive", value: "automotive" },
-  { label: "Luxury", value: "luxury" },
-  { label: "Sustainability", value: "sustainability" },
-  { label: "Politics", value: "politics" },
-  { label: "Comedy", value: "comedy" },
-  { label: "Real Estate", value: "real_estate" },
-  { label: "Film & TV", value: "film_tv" },
-  { label: "Sports", value: "sports" },
-  { label: "Outdoors & Adventure", value: "outdoors_adventure" },
-  { label: "Skincare", value: "skincare" },
-  { label: "Makeup", value: "makeup" },
-  { label: "Men’s Style", value: "mens_style" },
-  { label: "Women’s Style", value: "womens_style" },
-];
+import { useApi } from "@/hooks";
+import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
+import FilterInfputSkeleton from "@/components/skeletons/filter/filter-input-skeleton";
 
 type CategoryFilterProps = {
   searchParams: URLSearchParams;
@@ -65,22 +25,25 @@ export function CategoryFilter({
   searchParams,
   setParams,
 }: CategoryFilterProps) {
+  const [allCategories, setAllCategories] = useState([]);
   const current = searchParams.get("category_names");
-  let categories = current ? current.split(",") : [];
-  const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>(categories);
+  let currentCategories = current ? current.split(",") : [];
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<string[]>(currentCategories);
+
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const toggleSelection = (value: string) => {
     // Toggle the selected value
-    if (categories.includes(value)) {
-      categories = categories.filter((item) => item !== value);
+    if (currentCategories.includes(value)) {
+      currentCategories = currentCategories.filter((item) => item !== value);
     } else {
-      categories = [...categories, value];
+      currentCategories = [...currentCategories, value];
     }
 
     // Update searchParams with the new list
-    if (categories.length > 0) {
-      searchParams.set("category_names", categories.join(","));
+    if (currentCategories.length > 0) {
+      searchParams.set("category_names", currentCategories.join(","));
       setParams(searchParams);
     } else {
       searchParams.delete("category_names");
@@ -90,8 +53,42 @@ export function CategoryFilter({
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
-    setOpen(false);
+
+    // Debounce setOpen(false) - only call after user stops interacting
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 1000);
   };
+
+  const { request, loading } = useApi(
+    influencerCategoryApiService.getAllCategories
+  );
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const { data: categoriesResponse } = await request();
+      if (categoriesResponse) {
+        const capitalizeWords = (input: string) => {
+          return input
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+        };
+        setAllCategories(
+          categoriesResponse.categories.map((category: string) =>
+            capitalizeWords(category)
+          )
+        );
+      }
+    };
+    loadCategories();
+  }, []);
+
+  if (loading) return <FilterInfputSkeleton />;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -104,7 +101,7 @@ export function CategoryFilter({
         >
           {selected.length > 0
             ? selected
-                .map((val) => options.find((opt) => opt.value === val)?.label)
+                .map((val) => allCategories.find((opt) => opt === val))
                 .join(", ")
             : "Select categories"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -114,26 +111,28 @@ export function CategoryFilter({
         <Command>
           <CommandInput placeholder="Search fruits..." className="h-9" />
           <CommandGroup>
-            {options.map((option) => (
-              <CommandItem
-                key={option.value}
-                onSelect={() => toggleSelection(option.value)}
-              >
-                <div
-                  className={cn(
-                    "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                    selected.includes(option.value)
-                      ? "bg-primary text-primary-foreground"
-                      : "opacity-50"
-                  )}
+            {allCategories.map((category) => {
+              return (
+                <CommandItem
+                  key={category}
+                  onSelect={() => toggleSelection(category)}
                 >
-                  {selected.includes(option.value) && (
-                    <Check className="h-4 w-4 text-white" />
-                  )}
-                </div>
-                {option.label}
-              </CommandItem>
-            ))}
+                  <div
+                    className={cn(
+                      "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                      selected.includes(category)
+                        ? "bg-primary text-primary-foreground"
+                        : "opacity-50"
+                    )}
+                  >
+                    {selected.includes(category) && (
+                      <Check className="h-4 w-4 text-white" />
+                    )}
+                  </div>
+                  {category}
+                </CommandItem>
+              );
+            })}
           </CommandGroup>
         </Command>
       </PopoverContent>
