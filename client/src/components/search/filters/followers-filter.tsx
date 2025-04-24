@@ -1,76 +1,94 @@
+import influencerSocialPlatformApiService from "@/api/endpoints/influencer-social-platforms-api-service";
 import { Slider } from "@/components/ui/slider";
+import { useApi } from "@/hooks";
 import { cn } from "@/lib/utils";
 import formatFollowers from "@/utils/format-follwers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type FollowersFilterProps = {
   searchParams: URLSearchParams;
+  setParams: (params: URLSearchParams) => void;
   className?: string;
 } & React.ComponentProps<typeof Slider>;
 
 export function FollowersFilter({
   searchParams,
-  className,
   setParams,
+  className,
   ...props
 }: FollowersFilterProps) {
-  const currentMinFollowers = searchParams.get("min_followers");
-  const currentMaxFollowers = searchParams.get("max_followers");
-  const minFollowers = Number(currentMinFollowers) || 0;
-  const maxFollowers = Number(currentMaxFollowers) || 300000;
-  const [value, setValue] = useState<[number, number]>([
-    minFollowers,
-    maxFollowers,
-  ]);
-  const minGap = 5000; // Minimum allowed gap
+  const [highestFollowers, setHighestFollowers] = useState(0);
+  const [value, setValue] = useState<[number, number] | null>(null);
+  const minGap = 5000;
+
+  const { request } = useApi(
+    influencerSocialPlatformApiService.getHighestFollowerCount
+  );
+
+  useEffect(() => {
+    const loadHighestFollowers = async () => {
+      const { data } = await request();
+      const highest = data.higest_followers.follower_count;
+
+      setHighestFollowers(highest);
+
+      const currentMin = Number(searchParams.get("min_followers")) || 0;
+      const currentMax =
+        Number(searchParams.get("max_followers")) || Math.round(highest / 2);
+
+      setValue([currentMin, currentMax]);
+    };
+
+    loadHighestFollowers();
+  }, []);
+
   const handleSliderChange = (newValue: [number, number]) => {
     let [min, max] = newValue;
 
-    // Enforce minimum gap between min and max
-    if (max - min < minGap) {
-      if (min === value[0]) {
-        // Adjust max if min thumb is being moved
-        max = min + minGap;
-      } else {
-        // Adjust min if max thumb is being moved
-        min = max - minGap;
+    if (value) {
+      if (max - min < minGap) {
+        if (min === value[0]) {
+          max = min + minGap;
+        } else {
+          min = max - minGap;
+        }
       }
-    }
 
-    if (min) {
-      searchParams.set("min_followers", min.toString());
-    } else {
-      searchParams.delete("min_followers");
-    }
-    searchParams.set("max_followers", max.toString());
+      if (min) {
+        searchParams.set("min_followers", min.toString());
+      } else {
+        searchParams.delete("min_followers");
+      }
 
-    setValue([min, max]);
-    setParams(searchParams);
+      searchParams.set("max_followers", max.toString());
+
+      setValue([min, max]);
+      setParams(searchParams);
+    }
   };
+
+  if (!value) return null; // Or show a loading spinner or skeleton
 
   return (
     <div className="flex items-center gap-4 ml-3">
-      {/* <p className="text-sm font-medium text-muted-foreground">Followers</p> */}
       <div className={cn("relative w-[200px]", className)}>
-        {/* Tooltip labels */}
         <div className="flex justify-between px-1 mb-2 text-sm font-medium">
           <div>
-            {formatFollowers(value[0])}{" "}
-            <span className="text-gray-400 text-xs">to</span>{" "}
+            {formatFollowers(value[0])}
+            <span className="text-gray-400 text-xs"> to</span>
           </div>
           <div>
-            {formatFollowers(value[1])}{" "}
-            <span className="text-gray-400 text-xs">followers</span>{" "}
+            {formatFollowers(value[1])}
+            <span className="text-gray-400 text-xs"> followers</span>
           </div>
         </div>
 
-        {/* Slider */}
         <Slider
           value={value}
           onValueChange={handleSliderChange}
           min={0}
-          max={1000000}
-          step={500}
+          max={highestFollowers}
+          step={1000}
           {...props}
         />
       </div>

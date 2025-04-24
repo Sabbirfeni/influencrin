@@ -17,6 +17,11 @@ influencerSocialPlatformRoutes.get(
   InfluencerSocialPlatformController.getAllSocialMediaPlatforms
 );
 
+influencerSocialPlatformRoutes.get(
+  "/highest-followers",
+  InfluencerSocialPlatformController.getHighestFollowerCount
+);
+
 /**
  * @route   POST /api/influencers/social-platforms/:influencer_id
  * @desc    Create a social media platform entry for a specific influencer

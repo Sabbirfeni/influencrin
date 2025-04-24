@@ -31,6 +31,13 @@ export interface DeletePlatformResponse {
   message: string;
 }
 
+export interface HighestFollowerResponse {
+  message: string;
+  higest_followers: {
+    follower_count: number;
+  };
+}
+
 const influencerSocialPlatformApiService = {
   getAllSocialMediaPlatforms: async (): Promise<GetAllPlatformsResponse> => {
     const res = await axios.get<GetAllPlatformsResponse>(
@@ -78,6 +85,13 @@ const influencerSocialPlatformApiService = {
     const res = await axios.delete<DeletePlatformResponse>(
       `/influencers/social-platforms/${influencer_id}`,
       { data }
+    );
+    return res.data;
+  },
+
+  getHighestFollowerCount: async (): Promise<HighestFollowerResponse> => {
+    const res = await axios.get<HighestFollowerResponse>(
+      "/influencers/social-platforms/highest-followers"
     );
     return res.data;
   },

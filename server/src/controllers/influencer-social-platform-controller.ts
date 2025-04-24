@@ -5,7 +5,7 @@ import InfluencerSocialPlatform from "../models/influencer-social-platform-model
 import { ValidationError } from "sequelize";
 import SocialMediaPlatform from "../models/social-media-platform-model";
 
-export const getAllSocialMediaPlatforms = async (
+const getAllSocialMediaPlatforms = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -23,6 +23,32 @@ export const getAllSocialMediaPlatforms = async (
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",
+    });
+  }
+};
+
+const getHighestFollowerCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const topPlatform = await InfluencerSocialPlatform.findOne({
+      order: [["follower_count", "DESC"]],
+      attributes: ["follower_count"],
+    });
+
+    if (!topPlatform) {
+      res.status(404).json({ message: "No social platform records found." });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Highest global follower count retrieved successfully.",
+      higest_followers: topPlatform,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message || "Internal server error.",
     });
   }
 };
@@ -251,8 +277,6 @@ const deleteInfluencerSocialPlatform = async (
     }
 
     // Check if the platform exists for this influencer
-    console.log(influencer_id);
-    console.log(platform_id);
     const existingPlatform = await InfluencerSocialPlatform.findOne({
       where: {
         influencer_id,
@@ -284,6 +308,8 @@ const deleteInfluencerSocialPlatform = async (
 };
 
 export {
+  getAllSocialMediaPlatforms,
+  getHighestFollowerCount,
   createInfluencerSocialPlatform,
   updateInfluencerSocialPlatform,
   deleteInfluencerSocialPlatform,
