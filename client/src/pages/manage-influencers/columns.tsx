@@ -9,14 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  GraduationCap,
-  Star,
-  ArrowUpDown,
-  MoreHorizontal,
-  Pencil,
-  Upload,
-} from "lucide-react";
+import { Star, ArrowUpDown, MoreHorizontal, Pencil, Edit } from "lucide-react";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,12 +32,13 @@ export const columns: ColumnDef<Influencer>[] = [
       const fullname = row.original.fullname;
 
       return (
-        <Avatar className="w-10 h-10">
+        <Avatar className="w-10 h-10 border border-primary p-0.5">
           <AvatarImage
             src={`${
               import.meta.env.VITE_SERVER_BASE_URL
             }/images/uploads/influencer-profiles/${image}`}
             alt={fullname}
+            className="rounded-full"
           />
           <AvatarFallback className="text-xs">
             {fullname
@@ -69,7 +63,13 @@ export const columns: ColumnDef<Influencer>[] = [
         Full Name <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => (
+      <span className="text-xs font-semibold text-gray-800">
+        {row.original.fullname}
+      </span>
+    ),
   },
+
   {
     accessorKey: "avg_rating_score",
     header: ({ column }) => (
@@ -84,14 +84,14 @@ export const columns: ColumnDef<Influencer>[] = [
     cell: ({ row }) => {
       const score = row.original.avg_rating_score;
       return (
-        <span className="flex items-center">
+        <span className="flex items-center text-xs">
           {" "}
           {score ? (
             <>
               <Star className="w-3 h-3 " fill="#0a66c2" stroke="none" /> {score}
             </>
           ) : (
-            <span className="text-gray-400 text-xs">NA</span>
+            <span className="text-gray-400">NA</span>
           )}
         </span>
       );
@@ -122,22 +122,24 @@ export const columns: ColumnDef<Influencer>[] = [
       const handle = row.original.handle;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="p-4">
-              <span className="sr-only">Open Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Link to={`/influencers/${handle}`}>
-              <DropdownMenuItem className="cursor-pointer">
-                <Pencil className="h-4 w-4 mr-2" />
-                Edit
-              </DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Edit className="w-4 h-4 text-gray-400 hover:text-primary" />
+
+        // <DropdownMenu>
+        //   <DropdownMenuTrigger asChild>
+        //     <Button variant="ghost" className="p-4">
+        //       <span className="sr-only">Open Menu</span>
+        //       <MoreHorizontal className="h-4 w-4" />
+        //     </Button>
+        //   </DropdownMenuTrigger>
+        //   <DropdownMenuContent align="end">
+        //     <Link to={`/influencers/${handle}`}>
+        //       <DropdownMenuItem className="cursor-pointer">
+        //         <Pencil className="h-4 w-4 mr-2" />
+        //         Edit
+        //       </DropdownMenuItem>
+        //     </Link>
+        //   </DropdownMenuContent>
+        // </DropdownMenu>
       );
     },
   },

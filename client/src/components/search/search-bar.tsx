@@ -32,7 +32,7 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
-    if (debouncedQuery) {
+    if (debouncedQuery || location.pathname == "/search") {
       performSearch(debouncedQuery);
     }
   }, [debouncedQuery]);
