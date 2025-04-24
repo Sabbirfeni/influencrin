@@ -78,7 +78,7 @@ function RelatedInfluencerList({
           </p>
 
           <div className="flex flex-col gap-2">
-            {influencers.slice(0, 7).map((influencer, idx) => (
+            {influencers.slice(0, 5).map((influencer, idx) => (
               <RelatedInfluencerCard key={idx} influencer={influencer} />
             ))}
 

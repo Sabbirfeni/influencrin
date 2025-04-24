@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 function InluencerManagementSidebarFooter() {
   const { user, logout } = useAuth();
@@ -47,6 +47,7 @@ function InluencerManagementSidebarFooter() {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" className="">
               <DropdownMenuItem onClick={logout}>
+                <LogOut />
                 <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

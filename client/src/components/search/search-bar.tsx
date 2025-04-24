@@ -32,7 +32,9 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
-    performSearch(debouncedQuery);
+    if (debouncedQuery) {
+      performSearch(debouncedQuery);
+    }
   }, [debouncedQuery]);
 
   useEffect(() => {

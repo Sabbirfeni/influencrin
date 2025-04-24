@@ -22,7 +22,7 @@ interface RelatedInfluencerCardProps {
 function RelatedInfluencerCard({ influencer }: RelatedInfluencerCardProps) {
   return (
     <Link to={`/influencers/${influencer.handle}`}>
-      <div className="flex items-center justify-between flex-wrap gap-4 bg-gray-100 px-3 py-4 rounded-xl">
+      <div className="flex items-center justify-between flex-wrap gap-4 bg-gray-100 p-3 rounded-xl">
         <div className="flex items-center gap-2 md:gap-3">
           <ProfileImage
             isInfluencer={true}

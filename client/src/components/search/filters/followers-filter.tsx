@@ -1,5 +1,6 @@
 import influencerSocialPlatformApiService from "@/api/endpoints/influencer-social-platforms-api-service";
 import { Slider } from "@/components/ui/slider";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/hooks";
 import { cn } from "@/lib/utils";
 import formatFollowers from "@/utils/format-follwers";
@@ -21,7 +22,7 @@ export function FollowersFilter({
   const [value, setValue] = useState<[number, number] | null>(null);
   const minGap = 5000;
 
-  const { request } = useApi(
+  const { request, loading } = useApi(
     influencerSocialPlatformApiService.getHighestFollowerCount
   );
 
@@ -67,30 +68,37 @@ export function FollowersFilter({
     }
   };
 
-  if (!value) return null; // Or show a loading spinner or skeleton
-
   return (
     <div className="flex items-center gap-4 ml-3">
       <div className={cn("relative w-[200px]", className)}>
-        <div className="flex justify-between px-1 mb-2 text-sm font-medium">
-          <div>
-            {formatFollowers(value[0])}
-            <span className="text-gray-400 text-xs"> to</span>
-          </div>
-          <div>
-            {formatFollowers(value[1])}
-            <span className="text-gray-400 text-xs"> followers</span>
-          </div>
-        </div>
+        {loading || !value ? (
+          <>
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-2.5 w-full rounded-lg" />
+          </>
+        ) : (
+          <>
+            <div className="flex justify-between px-1 mb-2 text-sm font-medium">
+              <div>
+                {formatFollowers(value[0])}
+                <span className="text-gray-400 text-xs"> to</span>
+              </div>
+              <div>
+                {formatFollowers(value[1])}
+                <span className="text-gray-400 text-xs"> followers</span>
+              </div>
+            </div>
 
-        <Slider
-          value={value}
-          onValueChange={handleSliderChange}
-          min={0}
-          max={highestFollowers}
-          step={1000}
-          {...props}
-        />
+            <Slider
+              value={value}
+              onValueChange={handleSliderChange}
+              min={0}
+              max={highestFollowers}
+              step={1000}
+              {...props}
+            />
+          </>
+        )}
       </div>
     </div>
   );
