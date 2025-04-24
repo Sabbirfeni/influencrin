@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 
 export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
@@ -9,9 +10,10 @@ export default function SearchBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState("");
+  const [debouncedQuery] = useDebounce(query, 500); // Debounce delay in ms
 
-  const performSearch = () => {
-    const trimmedQuery = query.trim();
+  const performSearch = (search: string) => {
+    const trimmedQuery = search.trim();
     const searchParams = new URLSearchParams(location.search);
 
     if (trimmedQuery) {
@@ -25,9 +27,13 @@ export default function SearchBar() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      performSearch();
+      performSearch(query);
     }
   };
+
+  useEffect(() => {
+    performSearch(debouncedQuery);
+  }, [debouncedQuery]);
 
   useEffect(() => {
     if (isFocused && inputRef.current) {
@@ -45,7 +51,7 @@ export default function SearchBar() {
         }`}
       />
 
-      {/* Input: Initially hidden, expands when the icon is clicked */}
+      {/* Input */}
       <Input
         onChange={(e) => setQuery(e.target.value)}
         ref={inputRef}
@@ -56,16 +62,18 @@ export default function SearchBar() {
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         onKeyDown={handleKeyDown}
+        value={query}
       />
 
-      <Search
-        onClick={performSearch}
+      {/* Debounced Search Icon */}
+      {/* <Search
+        onClick={() => performSearch(query)}
         className={`absolute cursor-pointer right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-all duration-300 ease-in-out ${
           isFocused
             ? "opacity-100 z-20"
             : "opacity-0 translate-x-12 md:translate-x-6 -z-20"
         }`}
-      />
+      /> */}
     </div>
   );
 }
