@@ -45,7 +45,7 @@ export function RatingFilter({ searchParams, setParams }: RatingFilterProps) {
               <Star className="h-4 w-4 fill-primary text-primary" />
               <span>
                 {" "}
-                {selected} Star{selected > 1 ? "s" : ""}+
+                {selected} Star{selected > 1 ? "s" : ""} {selected !== 5 && "+"}
               </span>
             </span>
           ) : (

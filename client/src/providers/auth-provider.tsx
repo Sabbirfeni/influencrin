@@ -9,7 +9,6 @@ import { useApi } from "@/hooks";
 import { useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import useUserApi from "@/hooks/use-onload-api";
 import useOnloadApi from "@/hooks/use-onload-api";
 
 export interface User {
@@ -79,7 +78,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
     } else if (error) {
       toast.error("Login failed", {
-        description: error.message,
+        description: <ToastDescription description={error.message} />,
       });
     }
   };

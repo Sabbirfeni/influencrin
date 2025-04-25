@@ -16,7 +16,7 @@ function SearchPage() {
   const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 300ms
   const isStale = params.toString() !== debouncedParamsString[0];
 
-  const { request, loading, errorMessage } = useApi(
+  const { request, loading, error } = useApi(
     influencerApiService.searchInfluencers
   );
 
@@ -36,15 +36,15 @@ function SearchPage() {
 
       {(loading || isStale) && <InfluencerListSkeleton length={15} />}
 
-      {!loading && errorMessage && (
+      {!loading && error && (
         <ErrorSection
           sectionHeight="50vh"
           errorHeading="Failed to load influencers"
-          errorMessage={errorMessage}
+          errorMessage={error.message}
         />
       )}
 
-      {!loading && !errorMessage && influencers && (
+      {!loading && !error && influencers && (
         <>
           {debouncedParamsString && (
             <div className="font-semibold flex items-center gap-1 text-sm">

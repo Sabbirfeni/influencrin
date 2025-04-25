@@ -163,9 +163,14 @@ export function SocialPlatformFilter({
                   )}
                 >
                   {selectedSocialPlatforms.includes(platform.platform_name) && (
-                    <Check className="h-4 w-4 text-white" />
+                    <Check className="h-3 w-3 text-white" />
                   )}
                 </div>
+                <img
+                  src={platform.platform_icon_url}
+                  className="w-3.5 h-3.5"
+                  alt=""
+                />
                 {platform.platform_name}
               </CommandItem>
             ))}

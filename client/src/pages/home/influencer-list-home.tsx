@@ -12,7 +12,7 @@ import ErrorSection from "@/components/error/error-section";
 
 function InfluencerListHome() {
   const [influencers, setInfluencers] = useState([]);
-  const { request, loading, errorMessage } = useApi(
+  const { request, loading, error } = useApi(
     influencerApiService.searchInfluencers
   );
   useEffect(() => {
@@ -31,22 +31,22 @@ function InfluencerListHome() {
         </h1>
 
         {loading && <InfluencerListSkeleton length={15} />}
-        {errorMessage && (
+        {error && (
           <ErrorSection
             errorHeading="Faild to load influencer list"
-            errorMessage={errorMessage}
+            errorMessage={error.message}
           />
         )}
 
         {/* No Results */}
-        {!loading && !errorMessage && influencers.length === 0 && (
+        {!loading && !error && influencers.length === 0 && (
           <div className="text-center py-4 text-gray-500">
             No Influencer found.
           </div>
         )}
 
         {/* Influencer List */}
-        {!loading && !errorMessage && influencers.length > 0 && (
+        {!loading && !error && influencers.length > 0 && (
           <>
             <InfluencerList influencers={influencers.slice(0, 15)} />
 
