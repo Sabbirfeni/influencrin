@@ -8,10 +8,11 @@ import InfluencerFilterSection from "@/components/search/filters/influencer-filt
 import InfluencerListSkeleton from "@/components/skeletons/influencer/influencer-list-skeleton";
 import SectionWrappers from "@/components/wrappers/section-wrapper";
 import { useApi } from "@/hooks";
+import InfluencersNotFound from "@/components/not-found/influencers-not-found";
 
 function SearchPage() {
   const [params, setParams] = useSearchParams();
-  const [influencers, setInfluencers] = useState(null);
+  const [influencers, setInfluencers] = useState([]);
 
   const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 300ms
   const isStale = params.toString() !== debouncedParamsString[0];
@@ -44,7 +45,11 @@ function SearchPage() {
         />
       )}
 
-      {!loading && !error && influencers && (
+      {!loading && !error && influencers.length == 0 && (
+        <InfluencersNotFound message="No influnecer found." />
+      )}
+
+      {!loading && !error && influencers.length > 0 && (
         <>
           {debouncedParamsString && (
             <div className="font-semibold flex items-center gap-1 text-sm">

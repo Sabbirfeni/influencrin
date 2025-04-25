@@ -33,7 +33,7 @@ function RelatedInfluencerList({
   const { request, loading, errorMessage } = useApi(
     influencerApiService.searchInfluencers
   );
-  console.log(influencers);
+
   const category_names = categories.map((c) => c.category_name).join(",");
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function RelatedInfluencerList({
           influencerResponse.influencers?.filter(
             (influencer) => influencer.id !== influencerId
           );
-        console.log(influencersWithoutCurrent);
+
         setInfluencers(influencersWithoutCurrent);
       }
     };

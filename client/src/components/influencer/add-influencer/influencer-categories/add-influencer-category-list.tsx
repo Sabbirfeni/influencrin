@@ -36,7 +36,7 @@ function AddInfluencerCategoryList({
   const [categoryError, setCategoryError] = useState("");
   // const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   // const [showDropdown, setShowDropdown] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -71,11 +71,11 @@ function AddInfluencerCategoryList({
   // };
 
   const handleAdd = () => {
-    const categoryToAdd = selected || category;
+    const categoryToAdd = selected?.trim() || category.trim();
     const isCategoryExist = categories.some(
       (cat) => cat.toLowerCase() === categoryToAdd.toLowerCase()
     );
-    if (categoryToAdd.trim() !== "" && !isCategoryExist) {
+    if (categoryToAdd !== "" && !isCategoryExist) {
       setCategoryError("");
       const updatedCategories = [...categories, categoryToAdd];
 

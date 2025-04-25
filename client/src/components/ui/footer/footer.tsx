@@ -4,7 +4,7 @@ import Logo from "../logo/logo";
 function Footer() {
   return (
     <SectionWrappers style="bg-gray-50 mt-14">
-      <footer className="pt-12 md:pt-24 px-4">
+      <footer className="pt-12 md:pt-24">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {/* Column 1 */}
           <div>

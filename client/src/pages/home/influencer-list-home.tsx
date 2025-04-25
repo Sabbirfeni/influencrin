@@ -9,6 +9,7 @@ import influencerApiService from "@/api/endpoints/influencer-api-service";
 import InfluencerList from "@/components/influencer/influencer-list";
 import InfluencerListSkeleton from "@/components/skeletons/influencer/influencer-list-skeleton";
 import ErrorSection from "@/components/error/error-section";
+import InfluencersNotFound from "@/components/not-found/influencers-not-found";
 
 function InfluencerListHome() {
   const [influencers, setInfluencers] = useState([]);
@@ -26,8 +27,8 @@ function InfluencerListHome() {
   return (
     <SectionWrappers style="bg-gradient-to-t to-[#ffe6e6] from-white">
       <div>
-        <h1 className="text-[30px] md:text-[52px] mb-6 md:mb-12 text-center font-bold leading-tight">
-          Rising Voices
+        <h1 className="text-[28px] md:text-[45px] mb-6 md:mb-12 text-center font-bold leading-tight">
+          Active Voices
         </h1>
 
         {loading && <InfluencerListSkeleton length={15} />}
@@ -40,9 +41,7 @@ function InfluencerListHome() {
 
         {/* No Results */}
         {!loading && !error && influencers.length === 0 && (
-          <div className="text-center py-4 text-gray-500">
-            No Influencer found.
-          </div>
+          <InfluencersNotFound message="No influencer found." />
         )}
 
         {/* Influencer List */}

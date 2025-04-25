@@ -30,7 +30,7 @@ function InfluencerSocialList({ influencer }: InfluencerSocialListProps) {
       {influencerSocialPlatforms.map((socialPlatformInfo, index) => (
         <InfluencerSocialCard
           key={index}
-          influencerId={influencer.id}
+          influencer={influencer}
           socialPlatformInfo={socialPlatformInfo}
           setInfluencerSocialPlatforms={setInfluencerSocialPlatforms}
         />

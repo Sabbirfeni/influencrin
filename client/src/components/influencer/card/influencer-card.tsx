@@ -81,15 +81,14 @@ export default function InfluencerCard({
                   src={influencerSocialMedia.platform.platform_icon_url}
                   alt=""
                 />
-
-                {formatFollowers(influencerSocialMedia.follower_count)}
+                {formatFollowers(influencerSocialMedia.follower_count)}+
               </div>
             ))}
           </div>
 
           {/* Categories */}
           <div className="flex flex-wrap gap-1 justify-center mt-2">
-            {categories.map((category, idx) => (
+            {categories.slice(0, 1).map((category, idx) => (
               <Badge
                 key={idx}
                 variant="outline"

@@ -28,7 +28,8 @@ function InfluencerSocialCard({
   setInfluencerSocialPlatforms,
 }: InfluencerSocialCardProps) {
   const { user } = useAuth();
-  const isMe = user?.id == influencer?.id;
+  const isMe = user?.id == influencer?.user_id;
+
   const {
     platform: { platform_icon_url },
     follower_count,
@@ -43,8 +44,7 @@ function InfluencerSocialCard({
   const removePlatform = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(influencerId);
-    console.log(socialPlatformInfo.id);
+
     const {
       data: socialPlatformDeleteResponse,
       error: socialPlatformDeleteError,
@@ -78,11 +78,11 @@ function InfluencerSocialCard({
       {isMe && (
         <Trash2
           onClick={removePlatform}
-          className={`w-4 h-4 absolute top-2 left-2 md:top-3 md:left-3 opacity-100 transform scale-90 hover:scale-140 text-gray-400 hover:text-red-500 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100`}
+          className={`w-4 h-4 absolute top-2 left-2 md:top-3 md:left-3 opacity-100 transform scale-90 hover:scale-140 text-gray-400 hover:text-red-500 transition-all duration-300`}
         />
       )}
 
-      <ExternalLink className="w-4 h-4 absolute top-2 right-2 md:top-3 md:right-3 opacity-100 md:opacity-0 transform scale-90 hover:scale-140 text-primary transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
+      <ExternalLink className="w-4 h-4 absolute top-2 right-2 md:top-3 md:right-3 opacity-100 transform scale-90 group-hover:scale-140 text-primary transition-all duration-300" />
       <div className="flex-1 p-3 flex justify-center border-r border-gray-200 bg-white transition">
         <img
           src={platform_icon_url}
@@ -95,7 +95,7 @@ function InfluencerSocialCard({
       <div className="flex-1 p-3 flex flex-row items-center justify-center gap-4">
         <div className="text-center">
           <h1 className="text-md md:text-2xl font-semibold">
-            {formatFollowers(follower_count)}
+            {formatFollowers(follower_count)}+
           </h1>
           <p className="text-xs md:text-sm text-muted-foreground">Followers</p>
         </div>

@@ -28,16 +28,28 @@ export function FollowersFilter({
 
   useEffect(() => {
     const loadHighestFollowers = async () => {
-      const { data } = await request();
-      const highest = data.higest_followers.follower_count;
+      try {
+        const { data } = await request();
 
-      setHighestFollowers(highest);
+        const highest =
+          data?.higest_followers?.follower_count &&
+          data.higest_followers.follower_count > 0
+            ? data.higest_followers.follower_count
+            : 100000; // fallback if no valid data
 
-      const currentMin = Number(searchParams.get("min_followers")) || 0;
-      const currentMax =
-        Number(searchParams.get("max_followers")) || Math.round(highest / 2);
+        setHighestFollowers(highest);
 
-      setValue([currentMin, currentMax]);
+        const currentMin = Number(searchParams.get("min_followers")) || 0;
+        const currentMax =
+          Number(searchParams.get("max_followers")) || Math.round(highest / 2);
+
+        setValue([currentMin, currentMax]);
+      } catch (error) {
+        console.warn("Failed to fetch highest followers. Using fallback.");
+        const fallback = 100000;
+        setHighestFollowers(fallback);
+        setValue([0, Math.round(fallback / 2)]);
+      }
     };
 
     loadHighestFollowers();
@@ -71,7 +83,7 @@ export function FollowersFilter({
   return (
     <div className="flex items-center gap-4 ml-3">
       <div className={cn("relative w-[200px]", className)}>
-        {loading || !value ? (
+        {!value ? (
           <>
             <Skeleton className="h-4 w-full mb-2" />
             <Skeleton className="h-2.5 w-full rounded-lg" />

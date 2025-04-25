@@ -60,7 +60,7 @@ function AddInfluencerSocialCard({
       <div className="flex-1 p-3 flex flex-row items-center justify-center gap-4">
         <div className="text-center">
           <h1 className="text-md md:text-2xl font-semibold">
-            {formatFollowers(follower_count)}
+            {formatFollowers(follower_count)}+
           </h1>
           <p className="text-xs md:text-sm text-muted-foreground">Followers</p>
         </div>

@@ -31,14 +31,14 @@ function InfluencerCategoryList({
   const [categories, setCategories] = useState(influencer.categories);
   const [category, setCategory] = useState("");
   const [categoryError, setCategoryError] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   const isMe = user?.id == influencer.user_id;
 
   const handleChange = (e) => {
     const value = e.target.value;
     setCategory(value);
     const isCategoryExist = categories.some(
-      (cat) => cat.category_name.toLowerCase() === value.toLowerCase()
+      (cat) => cat.category_name.toLowerCase() === value.trim().toLowerCase()
     );
 
     if (isCategoryExist) {
@@ -66,13 +66,14 @@ function InfluencerCategoryList({
   const handleAdd = async () => {
     const categoryToAdd = selected || category;
     const isCategoryExist = categories.some(
-      (cat) => cat.category_name.toLowerCase() === categoryToAdd.toLowerCase()
+      (cat) =>
+        cat.category_name.toLowerCase() === categoryToAdd.trim().toLowerCase()
     );
     if (categoryToAdd.trim() !== "" && !isCategoryExist) {
       setCategoryError("");
 
       const { data: categoryAddResponse, error: categoryAddError } =
-        await categoryAddRequest(influencer.id, categoryToAdd);
+        await categoryAddRequest(influencer.id, categoryToAdd.trim());
 
       if (categoryAddResponse) {
         const updatedCategories = [...categories, categoryAddResponse.category];

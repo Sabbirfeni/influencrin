@@ -33,6 +33,8 @@ type InfluencerListProps = {
 function InfluencerList({ influencers }: InfluencerListProps) {
   return (
     <div className="min-h-[65vh] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+      {influencers.length == 0 && <div>no</div>}
+
       {influencers.map((influencer) => (
         <InfluencerCard
           key={influencer.handle}

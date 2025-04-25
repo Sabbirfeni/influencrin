@@ -30,7 +30,7 @@ export default function JoinInfluencrInForm({
   const { registerUser } = useAuth();
 
   const onSubmit = async (registrationData: RegistrationSchemaSchemaType) => {
-    registerUser(registrationData);
+    await registerUser(registrationData);
   };
 
   return (

@@ -68,6 +68,8 @@ export function CategoryFilter({
     influencerCategoryApiService.getAllCategories
   );
 
+  console.log(allCategories);
+
   useEffect(() => {
     const loadCategories = async () => {
       const { data: categoriesResponse } = await request();
@@ -107,7 +109,7 @@ export function CategoryFilter({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[180px] p-0 max-h-60 overflow-y-auto">
+      <PopoverContent className="w-[fit-content] p-0 max-h-60 overflow-y-auto">
         <Command>
           <CommandInput placeholder="Search fruits..." className="h-9" />
           <CommandGroup>
