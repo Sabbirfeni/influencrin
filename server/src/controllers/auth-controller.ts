@@ -23,16 +23,16 @@ const register = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  // const passwordRegex =
-  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  // if (!passwordRegex.test(password)) {
-  //   res.status(400).json({
-  //     message:
-  //       "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
-  //   });
-  //   return;
-  // }
+  if (!passwordRegex.test(password)) {
+    res.status(400).json({
+      message:
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+    });
+    return;
+  }
 
   try {
     const userDataToSave: any = {
@@ -88,7 +88,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
 const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     res.status(400).json({ error: "Email and password are required." });
     return;
@@ -109,6 +108,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       userData.password_hash
     );
     if (!isPasswordValid) {
+      console.log(isPasswordValid);
       res.status(401).json({ message: "Invalid email or password." });
       return;
     }
