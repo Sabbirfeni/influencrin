@@ -4,12 +4,10 @@ import cookieParser from "cookie-parser";
 import routes from "./routes";
 import "./models"; // Make sure models are initialized
 
-import { connectToDatabase, syncDatabase } from "./db/sequelize";
-import { seedInfluencers } from "./db/seeders/influencers-seed";
-import { seedInfluencerCategories } from "./db/seeders/influencer-categories-seed";
-import { seedInfluencerSocialPlatforms } from "./db/seeders/influencer-social-platforms-seed";
-import { seedReviews } from "./db/seeders/influencer-reviews-seed";
+import { connectToDatabase } from "./db/sequelize";
+
 import path from "path";
+import runSeeds from "./db/seeds";
 
 const app = express();
 const port = 3000;
@@ -33,11 +31,8 @@ app.use(express.static(path.join(__dirname, "../public")));
 const startServer = async () => {
   try {
     await connectToDatabase();
-    // await syncDatabase(); // only alter: true or force: true in dev
-    // await seedInfluencers();
-    // await seedInfluencerCategories();
-    // await seedInfluencerSocialPlatforms();
-    // await seedReviews();
+
+    // await runSeeds();
 
     app.listen(port, () => {
       console.log(`✅ Server is running at http://localhost:${port}`);
