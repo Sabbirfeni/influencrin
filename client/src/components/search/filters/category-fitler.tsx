@@ -68,8 +68,6 @@ export function CategoryFilter({
     influencerCategoryApiService.getAllCategories
   );
 
-  console.log(allCategories);
-
   useEffect(() => {
     const loadCategories = async () => {
       const { data: categoriesResponse } = await request();
