@@ -107,6 +107,7 @@ function InfluencerCategoryList({
         <div className="flex flex-wrap gap-2">
           {categories.map((cat) => (
             <CategoryBadge
+              isMe={isMe}
               category={cat}
               influencerId={influencer.id}
               categories={categories}

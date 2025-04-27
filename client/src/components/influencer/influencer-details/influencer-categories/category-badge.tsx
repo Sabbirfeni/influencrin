@@ -4,7 +4,13 @@ import { useApi } from "@/hooks";
 import { LoaderIcon, X } from "lucide-react";
 import { toast } from "sonner";
 
-function CategoryBadge({ category, influencerId, categories, setCategories }) {
+function CategoryBadge({
+  isMe,
+  category,
+  influencerId,
+  categories,
+  setCategories,
+}) {
   const { request: categoryRemoveRequest, loading: categoryRemoveLoading } =
     useApi(influencerCategoryApiService.deleteCategory);
 
@@ -25,7 +31,7 @@ function CategoryBadge({ category, influencerId, categories, setCategories }) {
 
   return (
     <Badge
-      onClick={() => handleRemove(category)}
+      onClick={() => isMe && handleRemove(category)}
       key={category.id}
       variant="outline"
       className={`group cursor-pointer flex items-center gap-1 text-xs px-3 py-1 rounded-full transition duration-300 bg-white border  ${
@@ -35,15 +41,15 @@ function CategoryBadge({ category, influencerId, categories, setCategories }) {
       }`}
     >
       {category.category_name}
-
-      {categoryRemoveLoading ? (
-        <LoaderIcon className="z-50 w-3 h-3 text-gray-300 " />
-      ) : (
-        <X
-          className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
-          strokeWidth={3}
-        />
-      )}
+      {isMe &&
+        (categoryRemoveLoading ? (
+          <LoaderIcon className="z-50 w-3 h-3 text-gray-300 " />
+        ) : (
+          <X
+            className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
+            strokeWidth={3}
+          />
+        ))}
     </Badge>
   );
 }
