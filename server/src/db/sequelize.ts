@@ -11,6 +11,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL!, {
       rejectUnauthorized: false, // for development only. change it to 'true' for production.
     },
   },
+  logging: false,
 });
 
 const connectToDatabase = async () => {

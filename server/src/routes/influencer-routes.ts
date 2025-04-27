@@ -34,6 +34,11 @@ const searchRoutes = express.Router();
  */
 influencerRoutes.get("/search", InfluencerController.searchInfluencers);
 
+influencerRoutes.get(
+  "/search-elastic",
+  InfluencerController.searchInfluencersElastic
+);
+
 /**
  * @route   GET /api/influencers/me
  * @desc    Get influencers created by the authenticated user
@@ -53,6 +58,10 @@ influencerRoutes.get(
  * @body    None
  */
 influencerRoutes.get("/:handle", InfluencerController.getInfluencerByHandle);
+influencerRoutes.get(
+  "/elastic/:handle",
+  InfluencerController.getInfluencerByHandleElastic
+);
 
 /**
  * @route   POST /api/influencers

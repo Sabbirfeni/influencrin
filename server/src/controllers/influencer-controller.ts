@@ -10,6 +10,7 @@ import path from "path";
 import fs from "fs";
 import { InfluencerReviewAttributes } from "../types/influencer-review";
 import User from "../models/user-model";
+import { ESClient } from "../db/elastic-search-connection";
 
 const createInfluencer = async (req: Request, res: Response): Promise<void> => {
   const transaction = await sequelize.transaction();
@@ -392,6 +393,178 @@ const searchInfluencers = async (
   }
 };
 
+const searchInfluencersElastic = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      q,
+      platform_names,
+      category_names,
+      min_followers,
+      max_followers,
+      min_rating,
+    } = req.query;
+
+    const must: any[] = [];
+    const filter: any[] = [];
+
+    // 🔍 Search by fullname (text) or handle (keyword)
+    if (q && typeof q === "string") {
+      const normalizedQuery = q.toLowerCase().replace(/\s+/g, "");
+      must.push({
+        bool: {
+          should: [
+            {
+              wildcard: {
+                fullname: `*${normalizedQuery}*`,
+              },
+            },
+            {
+              wildcard: {
+                handle: `*${q.toLowerCase()}*`,
+              },
+            },
+          ],
+        },
+      });
+    }
+
+    // 🎯 Filter by platform names
+    if (platform_names) {
+      const platformList =
+        typeof platform_names === "string"
+          ? platform_names.split(",").map((name) => name.trim())
+          : Array.isArray(platform_names)
+          ? platform_names.map((p) => String(p).trim())
+          : [];
+
+      filter.push({
+        nested: {
+          path: "social_profiles",
+          query: {
+            bool: {
+              should: platformList.map((platformIdOrName) => ({
+                wildcard: {
+                  "social_profiles.platform_id": `*${platformIdOrName.toLowerCase()}*`,
+                },
+              })),
+            },
+          },
+        },
+      });
+    }
+
+    // 🎯 Filter by categories
+    if (category_names) {
+      const categoryList =
+        typeof category_names === "string"
+          ? category_names.split(",").map((name) => name.trim())
+          : Array.isArray(category_names)
+          ? category_names.map((c) => String(c).trim())
+          : [];
+
+      filter.push({
+        terms: {
+          categories: categoryList,
+        },
+      });
+    }
+
+    // 🎯 Filter by follower count range
+    if (min_followers || max_followers) {
+      const followerRange: any = {};
+      if (min_followers) followerRange.gte = Number(min_followers);
+      if (max_followers) followerRange.lte = Number(max_followers);
+
+      filter.push({
+        nested: {
+          path: "social_profiles",
+          query: {
+            range: {
+              "social_profiles.follower_count": followerRange,
+            },
+          },
+        },
+      });
+    }
+
+    const body: any = {
+      query: {
+        bool: {
+          must,
+          filter,
+        },
+      },
+      size: 10000, // or whatever limit you want
+    };
+
+    // ⭐️ If min_rating is requested, add a scripted field to compute avg rating
+    if (min_rating) {
+      body.script_fields = {
+        avg_rating: {
+          script: {
+            lang: "painless",
+            source: `
+              if (params._source.reviews != null && params._source.reviews.size() > 0) {
+                double total = 0;
+                for (r in params._source.reviews) {
+                  total += r.rating;
+                }
+                return total / params._source.reviews.size();
+              } else {
+                return null;
+              }
+            `,
+          },
+        },
+      };
+
+      body.query.bool.filter.push({
+        script: {
+          script: {
+            lang: "painless",
+            source: `
+              if (doc['reviews.rating'].size() == 0) return false;
+              double avg = 0;
+              for (r in params._source.reviews) {
+                avg += r.rating;
+              }
+              avg = avg / params._source.reviews.length;
+              return avg >= params.min_rating;
+            `,
+            params: {
+              min_rating: Number(min_rating),
+            },
+          },
+        },
+      });
+    }
+
+    const { hits } = await ESClient.search({
+      index: "influencers",
+      body,
+    });
+
+    const influencers = hits.hits.map((hit: any) => ({
+      id: hit._id,
+      ...hit._source,
+      avg_review_score: hit.fields?.avg_rating?.[0] ?? null,
+    }));
+
+    res.status(200).json({
+      message: "Influencers fetched successfully.",
+      influencers,
+    });
+  } catch (error: any) {
+    console.error("Error fetching influencers from ElasticSearch:", error);
+    res.status(500).json({
+      message: error.message || "Internal server error.",
+    });
+  }
+};
+
 const getInfluencerByHandle = async (
   req: Request<{ handle: string }, any, any, any>,
   res: Response
@@ -454,6 +627,54 @@ const getInfluencerByHandle = async (
       influencer,
     });
   } catch (error: any) {
+    res.status(500).json({
+      message: error.message || "Internal server error.",
+    });
+  }
+};
+
+const getInfluencerByHandleElastic = async (
+  req: Request<{ handle: string }, any, any, any>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { handle } = req.params;
+
+    if (!handle) {
+      res.status(400).json({ message: "Handle is required." });
+      return;
+    }
+
+    // Perform a search in Elasticsearch
+    const result = await ESClient.search({
+      index: "influencers",
+      query: {
+        match: {
+          handle: {
+            query: handle,
+            operator: "and", // stricter matching
+            fuzziness: "AUTO", // allow minor typos
+          },
+        },
+      },
+    });
+
+    if (result.hits.hits.length === 0) {
+      res
+        .status(404)
+        .json({ message: `Influencer not found with handle "${handle}".` });
+      return;
+    }
+
+    // Assuming handle is unique, pick the first one
+    const influencer = result.hits.hits[0]._source;
+
+    res.status(200).json({
+      message: "Influencer fetched successfully.",
+      influencer,
+    });
+  } catch (error: any) {
+    console.error("Error fetching influencer from Elastic:", error);
     res.status(500).json({
       message: error.message || "Internal server error.",
     });
@@ -529,6 +750,8 @@ export {
   createInfluencer,
   getAllInfluencers,
   searchInfluencers,
+  searchInfluencersElastic,
+  getInfluencerByHandleElastic,
   getInfluencerByHandle,
   getInfluencersByUser,
 };

@@ -8,6 +8,7 @@ import { connectToDatabase } from "./db/sequelize";
 
 import path from "path";
 import runSeeds from "./db/seeds";
+import { connectToES } from "./db/elastic-search-connection";
 
 const app = express();
 const port = 3000;
@@ -30,8 +31,10 @@ app.use(express.static(path.join(__dirname, "../public")));
 // Start server only after DB is ready
 const startServer = async () => {
   try {
+    // Connect postgre database
     await connectToDatabase();
-
+    // Connect to elastic search database
+    // await connectToES();
     // await runSeeds();
 
     app.listen(port, () => {
