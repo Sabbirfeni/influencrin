@@ -4,7 +4,7 @@ import SearchBar from "@/components/search/search-bar";
 import Logo from "../logo/logo";
 import HeaderUserAvatar from "./header-user-avatar/header-user-avatar";
 import { Button } from "../button";
-import { Plus, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,24 +13,28 @@ import HeaderUserAvatarSkeleton from "@/components/skeletons/user/header-user-av
 
 function Header() {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { user, userLoading } = useAuth();
 
   const navigateToJoinInfluencrInPage = () => {
-    setOpen(false);
+    setIsMobileMenuOpen(false);
     navigate("/join-influencrin");
   };
 
   const navigateToLoginPage = () => {
-    setOpen(false);
+    setIsMobileMenuOpen(false);
     navigate("/login");
   };
 
   return (
     <div className="z-50 flex items-center justify-between gap-0 md:gap-2 shadow-xs px-2 md:px-20 py-3 md:py-4">
-      <Logo />
+      <Logo isSearchFocused={isSearchFocused} />
 
-      <SearchBar />
+      <SearchBar
+        isFocused={isSearchFocused}
+        setIsFocused={setIsSearchFocused}
+      />
       {userLoading && <HeaderUserAvatarSkeleton />}
       {user && <HeaderUserAvatar user={user} />}
 
@@ -52,7 +56,7 @@ function Header() {
       {/* Mobile menu */}
       {!user && (
         <div className="md:hidden">
-          <Sheet open={open} onOpenChange={setOpen}>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" className="pr-0 !important">
                 <Menu

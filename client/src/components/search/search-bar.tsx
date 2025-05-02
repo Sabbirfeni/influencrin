@@ -4,8 +4,7 @@ import { Search } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
-export default function SearchBar() {
-  const [isFocused, setIsFocused] = useState(false);
+export default function SearchBar({ isFocused, setIsFocused }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,7 +58,7 @@ export default function SearchBar() {
         ref={inputRef}
         placeholder="influencer name or handle"
         className={`transition-all duration-300 ease-in-out text-sm md:text-md pl-10 w-0 md:w-[300px] placeholder:text-gray-300  ${
-          isFocused ? "w-full pl-3 pr-10" : "hidden md:flex"
+          isFocused ? "w-full px-3" : "hidden md:flex"
         }`}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

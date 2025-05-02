@@ -21,7 +21,7 @@ export default function JoinInfluencrInForm({
   const {
     register,
     handleSubmit,
-    reset,
+
     formState: { errors, isSubmitting },
   } = useForm<RegistrationSchemaSchemaType>({
     resolver: zodResolver(registrationSchema),
@@ -99,7 +99,7 @@ export default function JoinInfluencrInForm({
                 {isSubmitting ? "Joining" : "Join"}
               </Button>
 
-              <div className="text-center text-xs md:text-sm">
+              <div className="text-center text-xs">
                 Already have an account?
                 <Link to="/login" className="ml-2 font-semibold text-primary">
                   Log in

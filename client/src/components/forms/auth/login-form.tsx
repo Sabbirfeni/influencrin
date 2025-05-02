@@ -10,7 +10,7 @@ import LoginImage from "@/assets/images/login-influencrin-form-image.png";
 import { loginSchema, LoginSchemaType } from "../schemas/auth/log-in-schema";
 
 import { useAuth } from "@/hooks/use-auth";
-import { redirect, useLocation } from "react-router-dom";
+import { Link, redirect, useLocation } from "react-router-dom";
 
 export default function LoginForm({
   className,
@@ -25,7 +25,8 @@ export default function LoginForm({
     resolver: zodResolver(loginSchema),
   });
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/my-account";
+  const from =
+    location.state?.from?.pathname || location?.state?.from || "/my-account";
 
   const { login } = useAuth();
 
@@ -79,6 +80,15 @@ export default function LoginForm({
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Logging in..." : "Log in"}
               </Button>
+              <div className="text-center text-xs">
+                Don't have account?
+                <Link
+                  to="/join-influencrin"
+                  className="ml-2 font-semibold text-primary"
+                >
+                  Join
+                </Link>
+              </div>
               {/* Social buttons */}
               {/* <SocialMediaAuthButtons /> */}
             </div>

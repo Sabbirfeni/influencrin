@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react"; // Optional: Replace with your spinner icon
-import Logo from "@/components/ui/logo/logo";
 
 type PrivateRouteProps = {
   children?: React.ReactNode;

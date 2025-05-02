@@ -22,6 +22,7 @@ import { useApi } from "@/hooks";
 import reviewApiService from "@/api/endpoints/influencer-review-api-service";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
   comment: z
@@ -33,6 +34,9 @@ const FormSchema = z.object({
 
 export default function AddReviewForm({ setReviews, influencer }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -44,9 +48,17 @@ export default function AddReviewForm({ setReviews, influencer }) {
   const { request: addReviewRequest, loading: addReviewLoading } = useApi(
     reviewApiService.createReview
   );
+
   const onSubmit = async (review: z.infer<typeof FormSchema>) => {
+    if (!user) {
+      navigate("/login", { state: { from: location.pathname } });
+      toast.info("Please login to submit review.");
+      return;
+    }
+
     const { data: reviewAddResponse, error: reviewAddError } =
       await addReviewRequest(influencer.id, review);
+
     if (reviewAddResponse) {
       const newReview = { ...reviewAddResponse.review, author: user };
       setReviews((prevReviews) => [newReview, ...prevReviews]);

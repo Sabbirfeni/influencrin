@@ -47,7 +47,7 @@ function InfluencerListHome() {
         {/* Influencer List */}
         {!loading && !error && influencers.length > 0 && (
           <>
-            <InfluencerList influencers={influencers.slice(0, 15)} />
+            <InfluencerList influencers={influencers.slice(0, 10)} />
 
             <div className="flex justify-center mt-6 md:mt-12">
               <Link to="/search">
