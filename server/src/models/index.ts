@@ -7,6 +7,7 @@ import InfluencerCategory from "./influencer-category-model";
 
 // Import and run associations
 import { associateModels } from "./associate-models";
+import InfluencerAddRequest from "./influencer-add-request-model";
 associateModels();
 
 const models = {
@@ -16,6 +17,7 @@ const models = {
   Review,
   SocialMediaPlatform,
   InfluencerCategory,
+  InfluencerAddRequest,
 };
 
 export default models;
