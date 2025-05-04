@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import HeaderUserAvatarSkeleton from "@/components/skeletons/user/header-user-avatar-skeleton";
+import InfluencerAddRequestBtn from "@/components/influencer/add-request/influencer-add-request-btn";
 
 function Header() {
   const navigate = useNavigate();
@@ -42,11 +43,11 @@ function Header() {
 
       {!userLoading && !user && (
         <div className="hidden md:flex items-center gap-3">
-          <Link to="/join-influencrin">
+          {/* <Link to="/join-influencrin">
             {" "}
-            <Button>Add Request</Button>
-          </Link>
-
+            <Button>Join InfluencrIn</Button>
+          </Link> */}
+          <InfluencerAddRequestBtn />
           <Link to="/login">
             <Button>Log in</Button>
           </Link>
@@ -68,12 +69,13 @@ function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[260px] px-4 py-6">
               <div className="flex flex-col gap-3 mt-8">
-                <Button
+                {/* <Button
                   variant="default"
                   onClick={navigateToJoinInfluencrInPage}
                 >
                   Join InfluencrIn
-                </Button>
+                </Button> */}
+                <InfluencerAddRequestBtn />
 
                 <Button onClick={navigateToLoginPage}>Log in</Button>
               </div>

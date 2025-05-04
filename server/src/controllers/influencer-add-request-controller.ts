@@ -33,11 +33,11 @@ const createInfluencerAddRequest = async (
       createPayload.email = email;
     }
 
-    const createdCategory = await InfluencerAddRequest.create(createPayload);
+    await InfluencerAddRequest.create(createPayload);
 
     res.status(201).json({
-      message: "Request received. We'll update you soon.",
-      category: createdCategory,
+      message:
+        "Thanks! We've received your request and will get back to you soon.",
     });
   } catch (error) {
     console.log(error);

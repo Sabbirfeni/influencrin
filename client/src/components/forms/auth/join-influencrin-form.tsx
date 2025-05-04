@@ -55,7 +55,6 @@ export default function JoinInfluencrInForm({
                 <Label htmlFor="fullname">Full Name</Label>
                 <Input
                   id="fullname"
-                  placeholder="Your name"
                   className="text-xs md:text-sm"
                   {...register("fullname")}
                 />
@@ -71,7 +70,6 @@ export default function JoinInfluencrInForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
                   className="text-xs md:text-sm"
                   {...register("email")}
                 />

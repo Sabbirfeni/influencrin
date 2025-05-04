@@ -55,7 +55,6 @@ export default function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
                   className="text-xs md:text-sm"
                   {...register("email")}
                 />
