@@ -1,4 +1,4 @@
-# InfluencrIn 🎯
+# InfluencrIn
 
 InfluencrIn is a full-stack influencer discovery and review platform built with a modern tech stack. 
 It includes a **React (Vite)** client, **Node.js (Express)** server, and a **PostgreSQL** database. 
@@ -12,7 +12,7 @@ influencrin/
 client/ # Frontend (React)
 server/ # Backend (Node.js, Express)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -33,7 +33,7 @@ This will start the frontend development server, usually at http://localhost:517
 ### 3. Run the Backend (Server)
 Note: Backend setup instructions coming soon. Be sure to configure the database and environment variables.
 
-📦 Technologies Used
+Technologies Used
 Frontend: React, Vite, Tailwind CSS
 
 Backend: Node.js, Express, PostgreSQL (via Sequelize ORM)
