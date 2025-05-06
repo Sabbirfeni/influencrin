@@ -9,8 +9,8 @@ The app currently uses dummy data for testing and development purposes.
 When you clone this repository, you'll get the following directory structure:
 
 influencrin/
-├── client/ # Frontend (React)
-└── server/ # Backend (Node.js, Express)
+client/ # Frontend (React)
+server/ # Backend (Node.js, Express)
 
 ## 🚀 Getting Started
 
@@ -19,13 +19,15 @@ influencrin/
 ```bash
 git clone https://github.com/Sabbirfeni/influencrin.git
 cd influencrin
+```
+
 2. Run the Frontend (Client)
-bash
-Copy
-Edit
+```bash
 cd client
 npm install
 npm run dev
+```
+
 This will start the frontend development server, usually at http://localhost:5173.
 
 3. Run the Backend (Server)
@@ -39,12 +41,8 @@ Backend: Node.js, Express, PostgreSQL (via Sequelize ORM)
 Others: ShadCN UI, React Hook Form, Zod
 
 📌 Features
-Influencer profile management
-
-Social media linking
-
-Reviews and ratings system
-
-Admin dashboard for managing data
-
-Authentication (WIP)
+1. Influencer profile management
+2. Social media linking
+3. Reviews and ratings system
+4. Admin dashboard for managing data
+5. Authentication (WIP)
