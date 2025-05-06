@@ -21,7 +21,7 @@ git clone https://github.com/Sabbirfeni/influencrin.git
 cd influencrin
 ```
 
-2. Run the Frontend (Client)
+### 2. Run the Frontend (Client)
 ```bash
 cd client
 npm install
@@ -30,7 +30,7 @@ npm run dev
 
 This will start the frontend development server, usually at http://localhost:5173.
 
-3. Run the Backend (Server)
+### 3. Run the Backend (Server)
 Note: Backend setup instructions coming soon. Be sure to configure the database and environment variables.
 
 📦 Technologies Used
@@ -40,7 +40,7 @@ Backend: Node.js, Express, PostgreSQL (via Sequelize ORM)
 
 Others: ShadCN UI, React Hook Form, Zod
 
-📌 Features
+### 📌 Features
 1. Influencer profile management
 2. Social media linking
 3. Reviews and ratings system
