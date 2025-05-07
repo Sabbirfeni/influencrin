@@ -42,8 +42,7 @@ export default function InfluencerCard({
       <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
         <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
           {/* Average rating */}
-
-          {avg_review_score > 0 && (
+          {/* {avg_review_score > 0 && (
             <div className="absolute top-5 right-5">
               <InfluencerAvgRating
                 avg_review_score={avg_review_score}
@@ -52,7 +51,7 @@ export default function InfluencerCard({
                 isTitle={false}
               />
             </div>
-          )}
+          )} */}
 
           {/* Profile Image */}
           <ProfileImage
@@ -65,7 +64,9 @@ export default function InfluencerCard({
 
           {/* Name & Handle */}
           <div className="mb-5">
-            <h3 className="text-lg font-semibold">{fullname}</h3>
+            <h3 className="text-lg font-semibold">
+              {fullname.length > 15 ? fullname.slice(0, 13) + "..." : fullname}
+            </h3>
             <p className="text-xs text-gray-400">@{handle}</p>
           </div>
 

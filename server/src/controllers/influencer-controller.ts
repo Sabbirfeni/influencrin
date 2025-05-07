@@ -344,10 +344,10 @@ const searchInfluencers = async (
       "handle",
       "profile_image",
       "location",
-      [
-        Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
-        "avg_review_score",
-      ],
+      // [
+      //   Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
+      //   "avg_review_score",
+      // ],
     ];
 
     // 🔎 Filter by avg review score

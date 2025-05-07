@@ -22,7 +22,7 @@ function FilterList({ searchParams, setParams }: FilterListProps) {
     <>
       <SocialPlatformFilter searchParams={searchParams} setParams={setParams} />
       <CategoryFilter searchParams={searchParams} setParams={setParams} />
-      <RatingFilter searchParams={searchParams} setParams={setParams} />
+      {/* <RatingFilter searchParams={searchParams} setParams={setParams} /> */}
       <FollowersFilter searchParams={searchParams} setParams={setParams} />
       <Button
         variant="outline"

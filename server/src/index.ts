@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 const startServer = async () => {
   try {
     await connectToDatabase();
-    await syncDatabase(); // only alter: true or force: true in dev
+    // await syncDatabase(); // only alter: true or force: true in dev
     // await seedInfluencers();
     // await seedInfluencerCategories();
     // await seedInfluencerSocialPlatforms();
