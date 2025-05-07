@@ -4,6 +4,7 @@ import * as InfluencerController from "../controllers/influencer-controller";
 import * as InfluencerManagementController from "../controllers/influencer-management-controller";
 import authenticate from "../middleware/authenticate";
 import { multerInfluencerProfileImageUpload } from "../middleware/multer-influencer-profile-upload";
+import authorizeRoles from "../middleware/authorize-role";
 
 // Create a new router instance for influencer
 const influencerRoutes = express.Router();
@@ -73,6 +74,7 @@ influencerRoutes.post(
   "/",
   multerInfluencerProfileImageUpload.single("profile_image"),
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerController.createInfluencer
 );
 
@@ -91,6 +93,7 @@ influencerRoutes.put(
   "/:influencer_id",
   multerInfluencerProfileImageUpload.single("profile_image"),
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerManagementController.updateInfluencer
 );
 
@@ -103,6 +106,7 @@ influencerRoutes.put(
 influencerRoutes.delete(
   "/:influencer_id",
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerManagementController.deleteInfluencer
 );
 

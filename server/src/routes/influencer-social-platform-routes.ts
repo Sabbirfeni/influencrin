@@ -2,6 +2,7 @@
 import express from "express";
 import * as InfluencerSocialPlatformController from "../controllers/influencer-social-platform-controller";
 import authenticate from "../middleware/authenticate";
+import authorizeRoles from "../middleware/authorize-role";
 
 // Create router instance
 const influencerSocialPlatformRoutes = express.Router();
@@ -35,6 +36,7 @@ influencerSocialPlatformRoutes.get(
 influencerSocialPlatformRoutes.post(
   "/:influencer_id",
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerSocialPlatformController.createInfluencerSocialPlatform
 );
 
@@ -51,6 +53,7 @@ influencerSocialPlatformRoutes.post(
 influencerSocialPlatformRoutes.put(
   "/:influencer_id",
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerSocialPlatformController.updateInfluencerSocialPlatform
 );
 
@@ -65,6 +68,7 @@ influencerSocialPlatformRoutes.put(
 influencerSocialPlatformRoutes.delete(
   "/:influencer_id",
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerSocialPlatformController.deleteInfluencerSocialPlatform
 );
 

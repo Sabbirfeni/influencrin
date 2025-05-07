@@ -2,6 +2,7 @@
 import express from "express";
 import * as InfluencerCategoryController from "../controllers/influencer-category-controller";
 import authenticate from "../middleware/authenticate";
+import authorizeRoles from "../middleware/authorize-role";
 
 // Create a new router instance for influencer categories
 const influencerCategoryRoutes = express.Router();
@@ -42,6 +43,7 @@ influencerCategoryRoutes.post(
 influencerCategoryRoutes.delete(
   "/:influencer_id",
   authenticate,
+  authorizeRoles("super_admin"),
   InfluencerCategoryController.deleteCategoryForInfluencer
 );
 
