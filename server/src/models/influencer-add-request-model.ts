@@ -23,6 +23,11 @@ const InfluencerAddRequest = sequelize.define<
       type: DataTypes.STRING(100),
       allowNull: true,
     },
+    status: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: "pending",
+    },
   },
   {
     timestamps: true,

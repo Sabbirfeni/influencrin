@@ -36,8 +36,7 @@ const createInfluencerAddRequest = async (
     await InfluencerAddRequest.create(createPayload);
 
     res.status(201).json({
-      message:
-        "Thanks! We've received your request and will get back to you soon.",
+      message: "We will review the profile and upload the influencer soon.",
     });
   } catch (error) {
     console.log(error);

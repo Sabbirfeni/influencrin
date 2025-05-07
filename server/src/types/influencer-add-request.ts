@@ -2,6 +2,7 @@ export interface InfluencerAddRequestAttributes {
   id?: string;
   platform_profile_link: string;
   email?: string;
+  status: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
