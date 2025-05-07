@@ -120,6 +120,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
         fullname: userData.fullname,
         email: userData.email,
         profile_image: userData.profile_image,
+        role: userData.role,
       },
       JWT_SECRET,
       { expiresIn: "7d" }

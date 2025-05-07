@@ -38,6 +38,11 @@ const User = sequelize.define<Model<UserAttributes, UserCreationAttributes>>(
         },
       },
     },
+    role: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: "user",
+    },
     password_hash: {
       type: DataTypes.STRING(255),
       allowNull: false,

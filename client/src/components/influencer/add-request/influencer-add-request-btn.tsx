@@ -15,7 +15,7 @@ import { useApi } from "@/hooks";
 import { toast } from "sonner";
 import ToastDescription from "@/components/toast/toast-description";
 
-function InfluencerAddRequestBtn() {
+function InfluencerAddRequestBtn({ className }) {
   const { request, loading } = useApi(
     influencerAddRequestApiService.requestToAddInfluencer
   );
@@ -59,16 +59,18 @@ function InfluencerAddRequestBtn() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Join As Influencer</Button>
+        <Button className={className}>Add Influencer</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] border-none">
         <DialogHeader>
-          <DialogTitle className="text-sm">Send Join Request</DialogTitle>
+          <DialogTitle className="text-sm">
+            Request to Add Influencer
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 pb-4">
+        <div className="space-y-4">
           <div className="flex flex-col gap-1">
             <Label htmlFor="profileLink" className="text-right text-xs">
-              Social Profile Link
+              Social Media Profile Link
             </Label>
             <Input
               id="profileLink"
@@ -78,7 +80,8 @@ function InfluencerAddRequestBtn() {
               required
             />
           </div>
-          <div className="flex flex-col gap-1">
+          {/* email */}
+          {/* <div className="flex flex-col gap-1">
             <Label htmlFor="email" className="text-right text-xs">
               Email (optional) for request updates
             </Label>
@@ -88,7 +91,7 @@ function InfluencerAddRequestBtn() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
+          </div> */}
         </div>
         <DialogFooter>
           <Button onClick={sendRequest} disabled={loading}>

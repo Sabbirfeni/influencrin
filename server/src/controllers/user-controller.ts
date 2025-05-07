@@ -25,7 +25,7 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const { id, email, fullname, profile_image } = user.get();
+    const { id, email, fullname, profile_image, role } = user.get();
 
     res.status(200).json({
       message: "Your account details were retrieved successfully.",
@@ -34,6 +34,7 @@ const getMe = async (req: Request, res: Response): Promise<void> => {
         email,
         fullname,
         profile_image,
+        role,
       },
     });
   } catch (error) {

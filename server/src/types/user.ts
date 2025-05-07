@@ -2,6 +2,7 @@ export interface UserAttributes {
   id?: string; // optional because Sequelize will generate it
   fullname: string;
   email: string;
+  role: string;
   password_hash: string;
   profile_image?: string;
   createdAt?: Date;

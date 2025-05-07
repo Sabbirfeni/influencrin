@@ -7,7 +7,7 @@ function Footer() {
       <footer className="pt-12 md:pt-24">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {/* Column 1 */}
-          <div>
+          <div className="text-center md:text-left px-4 md:p-0">
             <Logo />
             <p className="mt-4 text-sm text-muted-foreground">
               Discover and connect with active people who truly align with your
@@ -16,7 +16,7 @@ function Footer() {
           </div>
 
           {/* Column 2 */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-md font-semibold mb-3">Company</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -35,7 +35,7 @@ function Footer() {
           </div>
 
           {/* Column 3 */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-md font-semibold mb-3">Support</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -54,7 +54,7 @@ function Footer() {
           </div>
 
           {/* Column 4 */}
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="text-md font-semibold mb-3">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>Email: support@influencrin.com</li>

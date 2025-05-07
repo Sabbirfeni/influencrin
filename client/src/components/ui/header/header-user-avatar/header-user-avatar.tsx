@@ -24,7 +24,9 @@ interface HeaderUserAvatarProps {
 }
 
 const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
-  const { fullname, email, profile_image } = user;
+  const { fullname, email, profile_image, role } = user;
+  const isSuperAdmin = role == "super_admin";
+
   const firstLetterOfUsername = fullname?.trim().charAt(0).toUpperCase();
   return (
     <div className="ml-3 md:ml-0">
@@ -65,18 +67,23 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
               Account
             </DropdownMenuItem>
           </Link>
-          <Link to="/add-influencer">
-            <DropdownMenuItem>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Influencer
-            </DropdownMenuItem>
-          </Link>
-          <Link to="/manage-influencers">
-            <DropdownMenuItem>
-              <Users className="mr-2 h-4 w-4" />
-              Manage Influencers
-            </DropdownMenuItem>
-          </Link>
+          {isSuperAdmin && (
+            <>
+              <Link to="/add-influencer">
+                <DropdownMenuItem>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Influencer
+                </DropdownMenuItem>
+              </Link>
+              <Link to="/manage-influencers">
+                <DropdownMenuItem>
+                  <Users className="mr-2 h-4 w-4" />
+                  Manage Influencers
+                </DropdownMenuItem>
+              </Link>
+            </>
+          )}
+
           <UserLogoutBut />
         </DropdownMenuContent>
       </DropdownMenu>

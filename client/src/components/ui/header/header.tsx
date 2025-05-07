@@ -29,7 +29,7 @@ function Header() {
   };
 
   return (
-    <div className="z-50 flex items-center justify-between gap-0 md:gap-2 shadow-xs px-2 md:px-20 py-3 md:py-4">
+    <div className="z-50 flex items-center justify-between gap-0 md:gap-2 shadow-xs px-3 md:px-20 py-3 md:py-4">
       <Logo isSearchFocused={isSearchFocused} />
 
       <SearchBar
