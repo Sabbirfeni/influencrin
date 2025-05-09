@@ -15,7 +15,7 @@ import { useApi } from "@/hooks";
 import { toast } from "sonner";
 import ToastDescription from "@/components/toast/toast-description";
 
-function InfluencerAddRequestBtn({ className }) {
+function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
   const { request, loading } = useApi(
     influencerAddRequestApiService.requestToAddInfluencer
   );
@@ -59,7 +59,7 @@ function InfluencerAddRequestBtn({ className }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={className}>Add Influencer</Button>
+        <Button className={className}>{title}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] border-none">
         <DialogHeader>
