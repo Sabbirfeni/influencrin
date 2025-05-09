@@ -12,17 +12,17 @@ function InfluecerAddRequestSection() {
             <span className="text-primary">Who</span>
           </h1>
           <div className="flex items-center flex-col md:flex-row gap-2 md:gap-4">
-            <div className="shadow-xl flex flex-col items-center justify-center gap-3 rounded-md p-8">
+            <div className="shadow-xl flex flex-col items-center justify-center border gap-3 rounded-md p-8">
               <UserCheck className="text-primary w-7 h-7" />
               <p className="font-bold text-[14px] text-primary">
                 Active Online
               </p>
             </div>
-            <div className="shadow-xl flex flex-col items-center justify-center gap-3 rounded-md p-8">
+            <div className="shadow-xl flex flex-col items-center justify-center border gap-3 rounded-md p-8">
               <Share2 className="text-primary w-7 h-7" />
               <p className="font-bold text-[14px] text-primary">Share Values</p>
             </div>
-            <div className="shadow-xl flex flex-col items-center justify-center gap-3 rounded-md p-8">
+            <div className="shadow-xl flex flex-col items-center justify-center border gap-3 rounded-md p-8">
               <HeartHandshake className="text-primary w-7 h-7" />
               <p className="font-bold text-[14px] text-primary">
                 Support Others

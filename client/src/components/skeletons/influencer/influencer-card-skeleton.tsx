@@ -21,16 +21,15 @@ export default function SkeletonCard() {
 
         {/* Social Platforms */}
         <div className="flex flex-wrap justify-center gap-2">
-          {[1, 2].map((_, idx) => (
-            <Skeleton key={idx} className="h-6 w-20 rounded-md bg-gray-200" />
-          ))}
+          <Skeleton className="h-6 w-20 rounded-md bg-gray-200" />
+          <Skeleton className="hidden md:flex h-6 w-20 rounded-md bg-gray-200" />
         </div>
 
         {/* Categories */}
         <div className="flex flex-wrap gap-2 justify-center mt-2">
-          {[1, 2, 3].map((_, idx) => (
-            <Skeleton key={idx} className="h-6 w-16 rounded-full bg-gray-200" />
-          ))}
+          <Skeleton className="h-6 w-16 rounded-full bg-gray-200" />
+          <Skeleton className="h-6 w-16 rounded-full bg-gray-200" />
+          <Skeleton className="hidden md:flex h-6 w-16 rounded-full bg-gray-200" />
         </div>
       </CardContent>
     </Card>

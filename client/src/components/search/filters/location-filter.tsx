@@ -17,7 +17,7 @@ import { useApi } from "@/hooks";
 import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
 import FilterInfputSkeleton from "@/components/skeletons/filter/filter-input-skeleton";
 import influencerApiService from "@/api/endpoints/influencer-api-service";
-import capitalizeWords from "@/utils/capitalize-words";
+import capitalizeWords from "@/utils/capitalize-word";
 
 type CategoryFilterProps = {
   searchParams: URLSearchParams;

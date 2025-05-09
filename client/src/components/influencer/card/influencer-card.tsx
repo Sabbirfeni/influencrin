@@ -39,8 +39,8 @@ export default function InfluencerCard({
 }: InfluencerCardProps) {
   return (
     <Link to={`/influencers/${handle}`}>
-      <Card className="relative rounded-xl py-4 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
-        <CardContent className="p-4 flex flex-col items-center text-center space-y-3">
+      <Card className="relative rounded-xl py-2 md:py-3 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
+        <CardContent className="p-3 md:p-4 flex flex-col items-center text-center space-y-3">
           {/* Average rating */}
           {/* {avg_review_score > 0 && (
             <div className="absolute top-5 right-5">
@@ -56,22 +56,22 @@ export default function InfluencerCard({
           {/* Profile Image */}
           <ProfileImage
             isInfluencer={true}
-            style="w-25 h-25 shadow-2xl"
+            style="w-18 h-18 md:w-25 md:h-25 shadow-2xl"
             fullname={fullname}
             src={profile_image}
             backgroundColor="bg-gray-200 text-xl"
           />
 
           {/* Name & Handle */}
-          <div className="mb-5">
-            <h3 className="text-lg font-semibold">
+          <div className="mb-3 md:mb-5">
+            <h3 className="text-sm md:text-lg font-semibold">
               {fullname.length > 15 ? fullname.slice(0, 13) + "..." : fullname}
             </h3>
             <p className="text-xs text-gray-400">@{handle}</p>
           </div>
 
           {/* Platforms */}
-          <div className="flex flex-row flex-wrap justify-center items-center gap-1 text-sm text-muted-foreground">
+          <div className="flex flex-row justify-center items-center gap-1 text-sm text-muted-foreground">
             {socialPlatforms.slice(0, 2).map((influencerSocialMedia, idx) => (
               <div
                 key={idx}
@@ -88,7 +88,7 @@ export default function InfluencerCard({
           </div>
 
           {/* Categories */}
-          <div className="flex flex-wrap gap-1 justify-center mt-2">
+          <div className="flex flex-wrap gap-1 justify-center mt-0 md:mt-2">
             {categories.slice(0, 1).map((category, idx) => (
               <Badge
                 key={idx}
