@@ -235,6 +235,7 @@ const searchInfluencers = async (
       min_followers,
       max_followers,
       min_rating,
+      locations,
     } = req.query;
 
     const whereClause: any = {};
@@ -264,7 +265,6 @@ const searchInfluencers = async (
     ];
 
     // 🔍 Search by fullname or handle
-
     if (q) {
       let normalizedQuery: string | undefined;
 
@@ -324,6 +324,20 @@ const searchInfluencers = async (
       include[1].required = true;
     }
 
+    // Filter by multiple locations
+    if (locations) {
+      const locationList =
+        typeof locations === "string"
+          ? locations.split(",").map((loc) => loc.trim())
+          : Array.isArray(locations)
+          ? locations.map((l) => String(l).trim())
+          : [];
+
+      whereClause[Op.or] = locationList.map((loc) => ({
+        location: { [Op.iLike]: loc },
+      }));
+    }
+
     // 🔎 Filter by follower count range
     if (min_followers || max_followers) {
       include[0].where = {
@@ -344,10 +358,10 @@ const searchInfluencers = async (
       "handle",
       "profile_image",
       "location",
-      // [
-      //   Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
-      //   "avg_review_score",
-      // ],
+      [
+        Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
+        "avg_review_score",
+      ],
     ];
 
     // 🔎 Filter by avg review score
@@ -525,10 +539,39 @@ const getInfluencersByUser = async (
   }
 };
 
+const getAllLocationsForInfluencers = async (req: Request, res: Response) => {
+  try {
+    const locations = await Influencer.findAll({
+      attributes: [
+        [Sequelize.fn("DISTINCT", Sequelize.col("location")), "location"],
+      ],
+      order: [["location", "ASC"]],
+    });
+
+    const locationList = locations
+      .map((loc) => loc.get("location"))
+      .filter(Boolean);
+
+    res.status(200).json({
+      success: true,
+      locations: locationList,
+    });
+  } catch (error) {
+    console.error("Error fetching influencer locations:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch influencer locations.",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 export {
   createInfluencer,
   getAllInfluencers,
   searchInfluencers,
   getInfluencerByHandle,
   getInfluencersByUser,
+  getAllLocationsForInfluencers,
 };

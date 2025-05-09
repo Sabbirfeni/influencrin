@@ -46,6 +46,12 @@ const influencerApiService = {
     const res = await axios.get("/influencers/me");
     return res.data;
   },
+
+  // Get influencer locations
+  getAllLocationsForInfluencers: async () => {
+    const res = await axios.get("/influencers/all-locations");
+    return res.data;
+  },
 };
 
 export default influencerApiService;

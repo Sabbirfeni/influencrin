@@ -35,6 +35,12 @@ const searchRoutes = express.Router();
  */
 influencerRoutes.get("/search", InfluencerController.searchInfluencers);
 
+// Get all locations for influencers
+influencerRoutes.get(
+  "/all-locations",
+  InfluencerController.getAllLocationsForInfluencers
+);
+
 /**
  * @route   GET /api/influencers/me
  * @desc    Get influencers created by the authenticated user

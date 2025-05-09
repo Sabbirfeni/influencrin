@@ -16,37 +16,39 @@ import { cn } from "@/lib/utils";
 import { useApi } from "@/hooks";
 import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
 import FilterInfputSkeleton from "@/components/skeletons/filter/filter-input-skeleton";
+import influencerApiService from "@/api/endpoints/influencer-api-service";
+import capitalizeWords from "@/utils/capitalize-words";
 
 type CategoryFilterProps = {
   searchParams: URLSearchParams;
 };
 
-export function CategoryFilter({
+export function LocationFilter({
   searchParams,
   setParams,
 }: CategoryFilterProps) {
-  const [allCategories, setAllCategories] = useState([]);
-  const current = searchParams.get("category_names");
-  let currentCategories = current ? current.split(",") : [];
+  const [allLocations, setLocations] = useState([]);
+  const current = searchParams.get("locations");
+  let currentLocations = current ? current.split(",") : [];
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<string[]>(currentCategories);
+  const [selected, setSelected] = useState<string[]>(currentLocations);
 
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const toggleSelection = (value: string) => {
     // Toggle the selected value
-    if (currentCategories.includes(value)) {
-      currentCategories = currentCategories.filter((item) => item !== value);
+    if (currentLocations.includes(value)) {
+      currentLocations = currentLocations.filter((item) => item !== value);
     } else {
-      currentCategories = [...currentCategories, value];
+      currentLocations = [...currentLocations, value];
     }
 
     // Update searchParams with the new list
-    if (currentCategories.length > 0) {
-      searchParams.set("category_names", currentCategories.join(","));
+    if (currentLocations.length > 0) {
+      searchParams.set("locations", currentLocations.join(","));
       setParams(searchParams);
     } else {
-      searchParams.delete("category_names");
+      searchParams.delete("locations");
       setParams(searchParams);
     }
 
@@ -65,27 +67,21 @@ export function CategoryFilter({
   };
 
   const { request, loading } = useApi(
-    influencerCategoryApiService.getAllCategories
+    influencerApiService.getAllLocationsForInfluencers
   );
 
   useEffect(() => {
-    const loadCategories = async () => {
-      const { data: categoriesResponse } = await request();
-      if (categoriesResponse) {
-        const capitalizeWords = (input: string) => {
-          return input
-            .split(" ")
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-        };
-        setAllCategories(
-          categoriesResponse.categories.map((category: string) =>
-            capitalizeWords(category)
+    const loadLocations = async () => {
+      const { data: locationResponse } = await request();
+      if (locationResponse) {
+        setLocations(
+          locationResponse.locations.map((location: string) =>
+            capitalizeWords(location)
           )
         );
       }
     };
-    loadCategories();
+    loadLocations();
   }, []);
 
   if (loading) return <FilterInfputSkeleton />;
@@ -101,9 +97,9 @@ export function CategoryFilter({
         >
           {selected.length > 0
             ? selected
-                .map((val) => allCategories.find((opt) => opt === val))
+                .map((val) => allLocations.find((opt) => opt === val))
                 .join(", ")
-            : "Select categories"}
+            : "Select Locations"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -111,7 +107,7 @@ export function CategoryFilter({
         <Command>
           <CommandInput className="h-9" />
           <CommandGroup>
-            {allCategories.map((category) => {
+            {allLocations.map((category) => {
               return (
                 <CommandItem
                   key={category}
@@ -140,4 +136,4 @@ export function CategoryFilter({
   );
 }
 
-export default CategoryFilter;
+export default LocationFilter;

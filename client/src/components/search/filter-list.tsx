@@ -4,6 +4,7 @@ import CategoryFilter from "./filters/category-fitler";
 import FollowersFilter from "./filters/followers-filter";
 import RatingFilter from "./filters/rating-filter";
 import SocialPlatformFilter from "./filters/social-platform-filter";
+import LocationFilter from "./filters/location-filter";
 
 type FilterListProps = {
   searchParams: URLSearchParams;
@@ -22,8 +23,9 @@ function FilterList({ searchParams, setParams }: FilterListProps) {
     <>
       <SocialPlatformFilter searchParams={searchParams} setParams={setParams} />
       <CategoryFilter searchParams={searchParams} setParams={setParams} />
+      <LocationFilter searchParams={searchParams} setParams={setParams} />
       {/* <RatingFilter searchParams={searchParams} setParams={setParams} /> */}
-      <FollowersFilter searchParams={searchParams} setParams={setParams} />
+      {/* <FollowersFilter searchParams={searchParams} setParams={setParams} /> */}
       <Button
         variant="outline"
         onClick={resetFilters}

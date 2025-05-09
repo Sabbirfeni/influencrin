@@ -70,7 +70,7 @@ function InfluencerAddRequestBtn({ className }) {
         <div className="space-y-4">
           <div className="flex flex-col gap-1">
             <Label htmlFor="profileLink" className="text-right text-xs">
-              Social Media Profile Link
+              Influencer's Profile Link
             </Label>
             <Input
               id="profileLink"

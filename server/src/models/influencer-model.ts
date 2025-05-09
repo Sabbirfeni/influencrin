@@ -45,12 +45,10 @@ const Influencer = sequelize.define<
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-
     bio: {
       type: DataTypes.TEXT(),
       allowNull: true,
     },
-
     location: {
       type: DataTypes.STRING(100),
       allowNull: false,
