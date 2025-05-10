@@ -4,10 +4,8 @@ import { UAParser } from "ua-parser-js";
 import geoip from "geoip-lite";
 import SiteVisitor from "../models/site-visitor-model";
 
-export const trackVisitor = async (req: Request, res: Response) => {
+const trackVisitor = async (req: Request, res: Response) => {
   try {
-    // Parse IP address
-
     const visitorId = req.headers["x-visitor-id"] as string;
 
     // Before creating a new entry, check if this visitor already exists
@@ -56,3 +54,19 @@ export const trackVisitor = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to track visitor" });
   }
 };
+
+const getVisitorCount = async (req: Request, res: Response) => {
+  try {
+    const count = await SiteVisitor.count();
+
+    res.status(200).json({
+      message: "Visitor count retrieved successfully",
+      count,
+    });
+  } catch (error) {
+    console.error("Error retrieving visitor count:", error);
+    res.status(500).json({ message: "Failed to retrieve visitor count" });
+  }
+};
+
+export { trackVisitor, getVisitorCount };

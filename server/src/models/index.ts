@@ -9,6 +9,7 @@ import InfluencerCategory from "./influencer-category-model";
 import { associateModels } from "./associate-models";
 import InfluencerAddRequest from "./influencer-add-request-model";
 import SiteVisitor from "./site-visitor-model";
+import InfluencerSearchCount from "./influencer-search/influencer-search-count";
 associateModels();
 
 const models = {
@@ -20,6 +21,7 @@ const models = {
   InfluencerCategory,
   InfluencerAddRequest,
   SiteVisitor,
+  InfluencerSearchCount,
 };
 
 export default models;
