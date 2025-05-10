@@ -1,4 +1,4 @@
-import { Plus, User, Users } from "lucide-react";
+import { ChartColumnIncreasing, Plus, User, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -24,10 +24,10 @@ export default function InfluencerManagementSidebar() {
   const isSuperAdmin = user?.role == "super_admin";
   const items = [
     {
-      title: "My Account",
-      url: "/my-account",
-      icon: User,
-      show: user,
+      title: "Analatics",
+      url: "/analsytics",
+      icon: ChartColumnIncreasing,
+      show: isSuperAdmin,
     },
     {
       title: "Add Influencer",
@@ -40,6 +40,12 @@ export default function InfluencerManagementSidebar() {
       url: "/manage-influencers",
       icon: Users,
       show: isSuperAdmin,
+    },
+    {
+      title: "My Account",
+      url: "/my-account",
+      icon: User,
+      show: user,
     },
   ];
   const location = useLocation();

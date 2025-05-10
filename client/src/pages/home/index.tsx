@@ -4,18 +4,19 @@ import InfluencerListHome from "./influencer-list-home";
 import ManageInfluencerSectionHome from "./manage-influencer-section-home";
 import InfluecerAddRequestSection from "./influecer-add-request-section";
 import { useEffect } from "react";
+import { useApi } from "@/hooks";
+import SiteVisitorApiServices from "@/api/endpoints/site-visitor-api-service";
 
 const Home = () => {
-  useEffect(() => {
-    const loadVisitor = async () => {
-      const response = await fetch("http://localhost:3000/api/visitors", {
-        method: "POST",
-      });
-      const data = await response.json();
-    };
+  const { request } = useApi(SiteVisitorApiServices.trackVisitor);
 
-    loadVisitor();
+  useEffect(() => {
+    const trackVisitor = async () => {
+      await request();
+    };
+    trackVisitor();
   }, []);
+
   return (
     <>
       <HeroSection />

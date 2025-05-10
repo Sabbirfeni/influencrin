@@ -11,6 +11,7 @@ import ManageInfluencersPage from "@/pages/manage-influencers";
 import AddInfluencerPage from "@/pages/add-influencer";
 import PrivateRoute from "./private-route";
 import MainLayout from "@/layouts/main-layout";
+import SuperAdminRoute from "./super-admin-route";
 
 export const router = createBrowserRouter([
   {
@@ -55,12 +56,17 @@ export const router = createBrowserRouter([
             element: <MyAccountPage />,
           },
           {
-            path: "/manage-influencers",
-            element: <ManageInfluencersPage />,
-          },
-          {
-            path: "/add-influencer",
-            element: <AddInfluencerPage />,
+            element: <SuperAdminRoute />,
+            children: [
+              {
+                path: "/add-influencer",
+                element: <AddInfluencerPage />,
+              },
+              {
+                path: "/manage-influencers",
+                element: <ManageInfluencersPage />,
+              },
+            ],
           },
         ],
       },
