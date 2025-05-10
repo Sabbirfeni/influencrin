@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import InfluencerSearchCount from "../../models/influencer-search/influencer-search-count";
 
-const incrementInfluencerSearchCount = async (req: Request, res: Response) => {
+const incrementInfluencerSearchCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const [record, created] = await InfluencerSearchCount.findOrCreate({
       where: {}, // single global count
@@ -26,15 +29,19 @@ const incrementInfluencerSearchCount = async (req: Request, res: Response) => {
   }
 };
 
-const getInfluencerSearchCount = async (req: Request, res: Response) => {
+const getInfluencerSearchCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const record = await InfluencerSearchCount.findOne({});
 
     if (!record) {
-      return res.status(200).json({
+      res.status(200).json({
         message: "No search count found yet",
         count: 0,
       });
+      return;
     }
 
     const count = record.getDataValue("count") as number;

@@ -14,7 +14,7 @@ interface SearchCountCreationAttributes {
 const InfluencerSearchCount = sequelize.define<
   Model<SearchCountAttributes, SearchCountCreationAttributes>
 >(
-  "SearchCount",
+  "InfluencerSearchCount",
   {
     id: {
       type: DataTypes.UUID,

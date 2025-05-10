@@ -5,6 +5,7 @@ import * as InfluencerManagementController from "../controllers/influencer-manag
 import authenticate from "../middleware/authenticate";
 import { multerInfluencerProfileImageUpload } from "../middleware/multer-influencer-profile-upload";
 import authorizeRoles from "../middleware/authorize-role";
+import influencerSearchRoutes from "./influencer-search/influencer-search-routes";
 
 // Create a new router instance for influencer
 const influencerRoutes = express.Router();
@@ -15,25 +16,6 @@ const influencerRoutes = express.Router();
  * @access  Public
  */
 influencerRoutes.get("/", InfluencerController.getAllInfluencers);
-
-// routes/search-routes.ts
-
-const searchRoutes = express.Router();
-
-/**
- * @route   GET /api/search
- * @desc    Search and filter influencers
- * @access  Public
- * @query   {
- *            q?: string,
- *            platform_names?: string,
- *            category_names?: string,
- *            min_followers?: number,
- *            max_followers?: number,
- *            min_rating?: number
- *          }
- */
-influencerRoutes.get("/search", InfluencerController.searchInfluencers);
 
 // Get all locations for influencers
 influencerRoutes.get(

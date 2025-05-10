@@ -9,6 +9,7 @@ import InfluencerListSkeleton from "@/components/skeletons/influencer/influencer
 import SectionWrappers from "@/components/wrappers/section-wrapper";
 import { useApi } from "@/hooks";
 import InfluencersNotFound from "@/components/not-found/influencers-not-found";
+import InfluencerSearchCountApiServices from "@/api/endpoints/influencer-search/influencer-search-count";
 
 function SearchPage() {
   const [params, setParams] = useSearchParams();
@@ -17,49 +18,64 @@ function SearchPage() {
   const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 300ms
   const isStale = params.toString() !== debouncedParamsString[0];
 
-  const { request, loading, error } = useApi(
-    influencerApiService.searchInfluencers
+  const {
+    request: influencerSearchRequest,
+    loading: influencerLoading,
+    error: influencerSearchError,
+  } = useApi(influencerApiService.searchInfluencers);
+
+  const { request: influencerSearchCountRequest } = useApi(
+    InfluencerSearchCountApiServices.incrementInfluencerSearchCount
   );
 
   useEffect(() => {
     const loadInfluencers = async () => {
       const queryParams = new URLSearchParams(debouncedParamsString[0]);
-      const { data } = await request(queryParams);
+      const { data } = await influencerSearchRequest(queryParams);
       if (data) setInfluencers(data.influencers);
     };
 
+    const countInfluencerSearch = async () => {
+      await influencerSearchCountRequest();
+    };
+
     loadInfluencers();
+    countInfluencerSearch();
   }, [debouncedParamsString[0]]);
 
   return (
     <SectionWrappers style="pt-2 md:pt-6 flex flex-col gap-2">
       <InfluencerFilterSection setParams={setParams} />
 
-      {(loading || isStale) && <InfluencerListSkeleton length={15} />}
+      {(influencerLoading || isStale) && <InfluencerListSkeleton length={15} />}
 
-      {!loading && error && (
+      {!influencerLoading && influencerSearchError && (
         <ErrorSection
           sectionHeight="50vh"
           errorHeading="Failed to load influencers"
-          errorMessage={error.message}
+          errorMessage={influencerSearchError.message}
         />
       )}
 
-      {!loading && !error && influencers.length == 0 && (
-        <InfluencersNotFound message="No influnecer found." />
-      )}
+      {!influencerLoading &&
+        !influencerSearchError &&
+        influencers.length == 0 && (
+          <InfluencersNotFound message="No influnecer found." />
+        )}
 
-      {!loading && !error && influencers.length > 0 && (
-        <>
-          {debouncedParamsString && (
-            <div className="font-semibold flex items-center gap-1 text-sm">
-              <span className="text-primary">{influencers.length}</span>{" "}
-              Influencers
-            </div>
-          )}
-          <InfluencerList influencers={influencers} />
-        </>
-      )}
+      {!influencerLoading &&
+        !influencerSearchError &&
+        influencers.length > 0 && (
+          <>
+            {debouncedParamsString && (
+              <div className="font-semibold flex items-center gap-1 text-sm">
+                <span className="text-primary">{influencers.length}</span>{" "}
+                Influencers
+              </div>
+            )}
+            <InfluencerList influencers={influencers} />
+          </>
+        )}
     </SectionWrappers>
   );
 }

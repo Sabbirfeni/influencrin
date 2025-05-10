@@ -26,6 +26,11 @@ const SiteVisitorApiServices = {
     );
     return res.data;
   },
+
+  getVisitorCount: async (): Promise<number> => {
+    const res = await axios.get<{ count: number }>("/track-visitor/count");
+    return res.data.count;
+  },
 };
 
 export default SiteVisitorApiServices;

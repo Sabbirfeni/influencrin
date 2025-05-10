@@ -3,7 +3,7 @@ import * as SiteVisitorController from "../controllers/site-visitor-controller";
 
 const siteVisitorRoutes = express.Router();
 
-siteVisitorRoutes.get("/", SiteVisitorController.getVisitorCount);
+siteVisitorRoutes.get("/count", SiteVisitorController.getVisitorCount);
 siteVisitorRoutes.post("/", SiteVisitorController.trackVisitor);
 
 export default siteVisitorRoutes;
