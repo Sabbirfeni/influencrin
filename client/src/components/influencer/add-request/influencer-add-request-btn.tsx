@@ -20,6 +20,7 @@ function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
     influencerAddRequestApiService.requestToAddInfluencer
   );
 
+  const [open, setOpen] = useState(false); // control Dialog open state
   const [profileLink, setProfileLink] = useState("");
   const [email, setEmail] = useState("");
 
@@ -30,7 +31,7 @@ function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
     }
 
     try {
-      new URL(profileLink); // Throws if invalid
+      new URL(profileLink);
     } catch {
       toast.error("Please enter a valid URL.");
       return;
@@ -45,6 +46,9 @@ function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
       toast.success("Request Sent", {
         description: <ToastDescription description={data.message} />,
       });
+      setProfileLink("");
+      setEmail("");
+      setOpen(false);
     } else if (error) {
       toast.error("Failed to send request", {
         description: (
@@ -57,7 +61,7 @@ function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className={className}>{title}</Button>
       </DialogTrigger>
@@ -80,18 +84,6 @@ function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
               required
             />
           </div>
-          {/* email */}
-          {/* <div className="flex flex-col gap-1">
-            <Label htmlFor="email" className="text-right text-xs">
-              Email (optional) for request updates
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div> */}
         </div>
         <DialogFooter>
           <Button onClick={sendRequest} disabled={loading}>

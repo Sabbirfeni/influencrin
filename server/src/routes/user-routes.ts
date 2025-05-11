@@ -43,4 +43,6 @@ userRoutes.get(
   userController.getReviewsByUser
 );
 
+userRoutes.get("/count", userController.getTotalUserCount);
+
 export default userRoutes;

@@ -1,6 +1,6 @@
 import express from "express";
 import * as InfluencerController from "../../controllers/influencer-controller";
-import * as InfluencerSearchCountController from "../../controllers/influencer-search/influencer-search-count-controller";
+import * as InfluencerSearchCountController from "../../controllers/influencer-search/influencer-search-controller";
 
 const influencerSearchRoutes = express.Router();
 
@@ -11,7 +11,7 @@ influencerSearchRoutes.get(
 );
 influencerSearchRoutes.post(
   "/count",
-  InfluencerSearchCountController.incrementInfluencerSearchCount
+  InfluencerSearchCountController.createInfluencerSearch
 );
 
 export default influencerSearchRoutes;

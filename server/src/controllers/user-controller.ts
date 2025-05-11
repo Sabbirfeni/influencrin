@@ -130,6 +130,25 @@ const updateMe = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getTotalUserCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const count = await User.count();
+
+    res.status(200).json({
+      message: "Total user count retrieved successfully.",
+      count,
+    });
+  } catch (error) {
+    console.error("Error retrieving user count:", error);
+    res.status(500).json({
+      message: "Failed to retrieve user count.",
+    });
+  }
+};
+
 /**
  * Deletes a file if it exists, logs errors if any.
  */
@@ -149,4 +168,4 @@ const deleteUserProfileImageFromDisk = (filename: string) => {
   }
 };
 
-export { getMe, updateMe, getReviewsByUser };
+export { getMe, updateMe, getReviewsByUser, getTotalUserCount };
