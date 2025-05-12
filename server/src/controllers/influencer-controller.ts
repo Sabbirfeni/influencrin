@@ -567,6 +567,25 @@ const getAllLocationsForInfluencers = async (req: Request, res: Response) => {
   }
 };
 
+const getInfluencerCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const count = await Influencer.count();
+
+    res.status(200).json({
+      message: "Influencer count fetched successfully.",
+      count,
+    });
+  } catch (error: any) {
+    console.error("Error fetching influencer count:", error);
+    res.status(500).json({
+      message: error.message || "Internal server error.",
+    });
+  }
+};
+
 export {
   createInfluencer,
   getAllInfluencers,
@@ -574,4 +593,5 @@ export {
   getInfluencerByHandle,
   getInfluencersByUser,
   getAllLocationsForInfluencers,
+  getInfluencerCount,
 };

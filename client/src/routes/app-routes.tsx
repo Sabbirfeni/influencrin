@@ -12,6 +12,7 @@ import AddInfluencerPage from "@/pages/add-influencer";
 import PrivateRoute from "./private-route";
 import MainLayout from "@/layouts/main-layout";
 import SuperAdminRoute from "./super-admin-route";
+import AnalyticsPage from "@/pages/analytics";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,7 @@ export const router = createBrowserRouter([
           {
             element: <SuperAdminRoute />,
             children: [
+              { path: "/analytics", element: <AnalyticsPage /> },
               {
                 path: "/add-influencer",
                 element: <AddInfluencerPage />,

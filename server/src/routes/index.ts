@@ -6,9 +6,9 @@ import influencerSocialPlatformRoutes from "./influencer-social-platform-routes"
 import influencerCategoryRoutes from "./influencer-category-routes";
 import influencerReviewRoutes from "./influencer-review-routes";
 import influencerAddRequestRoutes from "./influencer-add-request-routes";
-import { trackVisitor } from "../controllers/site-visitor-controller";
 import siteVisitorRoutes from "./site-visitor-routes";
 import influencerSearchRoutes from "./influencer-search/influencer-search-routes";
+import analyticsRoutes from "./analytics/analytics-route";
 
 const routes = express.Router();
 
@@ -22,4 +22,5 @@ routes.use("/influencers/reviews", influencerReviewRoutes);
 routes.use("/influencers/search", influencerSearchRoutes);
 routes.use("/influencers", influencerRoutes);
 routes.use("/influencer-add-request", influencerAddRequestRoutes);
+routes.use("/analytics", analyticsRoutes);
 export default routes;

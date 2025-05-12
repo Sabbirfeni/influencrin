@@ -8,4 +8,9 @@ influencerAddRequestRoutes.post(
   InfluencerAddRequestController.createInfluencerAddRequest
 );
 
+influencerAddRequestRoutes.get(
+  "/count",
+  InfluencerAddRequestController.getInfluencerAddRequestCount
+);
+
 export default influencerAddRequestRoutes;

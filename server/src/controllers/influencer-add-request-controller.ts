@@ -44,4 +44,21 @@ const createInfluencerAddRequest = async (
   }
 };
 
-export { createInfluencerAddRequest };
+const getInfluencerAddRequestCount = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const count = await InfluencerAddRequest.count();
+
+    res.status(200).json({
+      message: "Add request count fetched successfully.",
+      count,
+    });
+  } catch (error) {
+    console.error("Error fetching add request count:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export { createInfluencerAddRequest, getInfluencerAddRequestCount };

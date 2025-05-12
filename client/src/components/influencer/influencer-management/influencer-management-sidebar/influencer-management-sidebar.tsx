@@ -24,8 +24,8 @@ export default function InfluencerManagementSidebar() {
   const isSuperAdmin = user?.role == "super_admin";
   const items = [
     {
-      title: "Analatics",
-      url: "/analsytics",
+      title: "Analytics",
+      url: "/analytics",
       icon: ChartColumnIncreasing,
       show: isSuperAdmin,
     },

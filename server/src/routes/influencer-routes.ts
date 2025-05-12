@@ -16,6 +16,7 @@ const influencerRoutes = express.Router();
  * @access  Public
  */
 influencerRoutes.get("/", InfluencerController.getAllInfluencers);
+influencerRoutes.get("/count", InfluencerController.getInfluencerCount);
 
 // Get all locations for influencers
 influencerRoutes.get(
