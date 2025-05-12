@@ -15,7 +15,7 @@ import { useApi } from "@/hooks";
 import { toast } from "sonner";
 import ToastDescription from "@/components/toast/toast-description";
 
-function InfluencerAddRequestBtn({ className, title = "Add Influencer" }) {
+function InfluencerAddRequestBtn({ className, title = "Request to Add" }) {
   const { request, loading } = useApi(
     influencerAddRequestApiService.requestToAddInfluencer
   );

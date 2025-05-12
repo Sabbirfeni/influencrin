@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserIcon, Users, Plus } from "lucide-react";
+import { UserIcon, Users, Plus, ChartColumnIncreasing } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // make sure this path is correct
 import { Link } from "react-router-dom";
 
@@ -61,18 +61,12 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
             <span className="hidden md:flex"> My Account</span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link to="/my-account">
-            <DropdownMenuItem>
-              <UserIcon className="mr-2 h-4 w-4" />
-              Account
-            </DropdownMenuItem>
-          </Link>
           {isSuperAdmin && (
             <>
-              <Link to="/add-influencer">
+              <Link to="/analytics">
                 <DropdownMenuItem>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Influencer
+                  <ChartColumnIncreasing className="mr-2 h-4 w-4" />
+                  Analytics
                 </DropdownMenuItem>
               </Link>
               <Link to="/manage-influencers">
@@ -81,8 +75,20 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
                   Manage Influencers
                 </DropdownMenuItem>
               </Link>
+              <Link to="/add-influencer">
+                <DropdownMenuItem>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Influencer
+                </DropdownMenuItem>
+              </Link>
             </>
           )}
+          <Link to="/my-account">
+            <DropdownMenuItem>
+              <UserIcon className="mr-2 h-4 w-4" />
+              Account
+            </DropdownMenuItem>
+          </Link>
 
           <UserLogoutBut />
         </DropdownMenuContent>

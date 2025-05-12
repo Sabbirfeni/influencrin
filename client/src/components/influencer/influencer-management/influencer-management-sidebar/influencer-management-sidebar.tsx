@@ -30,15 +30,15 @@ export default function InfluencerManagementSidebar() {
       show: isSuperAdmin,
     },
     {
-      title: "Add Influencer",
-      url: "/add-influencer",
-      icon: Plus,
-      show: isSuperAdmin,
-    },
-    {
       title: "Manage Influencers",
       url: "/manage-influencers",
       icon: Users,
+      show: isSuperAdmin,
+    },
+    {
+      title: "Add Influencer",
+      url: "/add-influencer",
+      icon: Plus,
       show: isSuperAdmin,
     },
     {

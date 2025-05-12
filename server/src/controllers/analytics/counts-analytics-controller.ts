@@ -26,7 +26,7 @@ const getCountsAnalytics = async (
 
     res.status(200).json({
       message: "Analytics counts retrieved successfully.",
-      data: {
+      counts: {
         visitorCount,
         influencerSearchCount,
         userCount,

@@ -21,9 +21,9 @@ const trackVisitor = async (req: Request, res: Response) => {
       null;
 
     // Mock IP if on localhost (for dev testing only)
-    if (ip === "::1" || ip === "127.0.0.1") {
-      ip = "8.8.8.8"; // Google DNS IP – located in California, USA
-    }
+    // if (ip === "::1" || ip === "127.0.0.1") {
+    //   ip = "8.8.8.8"; // Google DNS IP – located in California, USA
+    // }
 
     // User-Agent parsing
     const userAgent = req.get("user-agent") || "";
