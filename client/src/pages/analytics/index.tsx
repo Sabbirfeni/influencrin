@@ -1,5 +1,5 @@
 import CountsAnalyticsCards from "@/components/analytics/counts-analytics-cards";
-import { ChartAreaInteractive } from "@/components/analytics/counts-analytics-chart";
+import { DailyVisitorSearchesAnalyticsChart } from "@/components/analytics/counts-analytics-chart";
 
 function AnalyticsPage() {
   return (
@@ -8,7 +8,7 @@ function AnalyticsPage() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <CountsAnalyticsCards />
           <div className="px-4 lg:px-6">
-            <ChartAreaInteractive />
+            <DailyVisitorSearchesAnalyticsChart />
           </div>
         </div>
       </div>
