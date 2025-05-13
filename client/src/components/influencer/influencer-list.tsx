@@ -40,7 +40,7 @@ function InfluencerList({ influencers }: InfluencerListProps) {
           key={influencer.handle}
           fullname={influencer.fullname}
           handle={influencer.handle}
-          avg_review_score={influencer.avg_review_score}
+          avg_review_score={influencer?.avg_review_score}
           profile_image={influencer.profile_image}
           socialPlatforms={influencer.socialPlatforms}
           categories={influencer.categories.slice(0, 3)}

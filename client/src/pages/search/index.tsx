@@ -14,6 +14,7 @@ import InfluencerSearchCountApiServices from "@/api/endpoints/influencer-search/
 function SearchPage() {
   const [params, setParams] = useSearchParams();
   const [influencers, setInfluencers] = useState([]);
+  const [totalInfluencers, setTotalInfluencers] = useState(0);
 
   const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 300ms
   const isStale = params.toString() !== debouncedParamsString[0];
@@ -32,7 +33,10 @@ function SearchPage() {
     const loadInfluencers = async () => {
       const queryParams = new URLSearchParams(debouncedParamsString[0]);
       const { data } = await influencerSearchRequest(queryParams);
-      if (data) setInfluencers(data.influencers);
+      if (data) {
+        setTotalInfluencers(data.total);
+        setInfluencers(data.influencers);
+      }
     };
 
     const countInfluencerSearch = async () => {
@@ -69,7 +73,7 @@ function SearchPage() {
           <>
             {debouncedParamsString && (
               <div className="font-semibold flex items-center gap-1 text-sm">
-                <span className="text-primary">{influencers.length}</span>{" "}
+                <span className="text-primary">{totalInfluencers}</span>{" "}
                 Influencers
               </div>
             )}

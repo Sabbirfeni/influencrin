@@ -43,7 +43,7 @@ function InfluencerAddRequestBtn({ className, title = "Request to Add" }) {
     });
 
     if (data) {
-      toast.success("Request Sent", {
+      toast.success("Request Received", {
         description: <ToastDescription description={data.message} />,
       });
       setProfileLink("");

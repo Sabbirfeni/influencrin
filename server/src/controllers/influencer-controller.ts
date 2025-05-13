@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ValidationError, Op, Sequelize, Model } from "sequelize";
+import { ValidationError, Op, Sequelize, Model, QueryTypes } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import Influencer from "../models/influencer-model";
 import InfluencerSocialPlatform from "../models/influencer-social-platform-model";
@@ -223,7 +223,7 @@ const getAllInfluencers = async (
   }
 };
 
-const searchInfluencers = async (
+const searchInfluencersss = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -257,11 +257,11 @@ const searchInfluencers = async (
         as: "categories",
         attributes: ["category_name"],
       },
-      {
-        model: InfluencerReview,
-        as: "reviews",
-        attributes: [],
-      },
+      // {
+      //   model: InfluencerReview,
+      //   as: "reviews",
+      //   attributes: [],
+      // },
     ];
 
     // 🔍 Search by fullname or handle
@@ -358,23 +358,24 @@ const searchInfluencers = async (
       "handle",
       "profile_image",
       "location",
-      [
-        Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
-        "avg_review_score",
-      ],
+      // [
+      //   Sequelize.literal('CAST(AVG("reviews"."rating") AS NUMERIC(10, 1))'),
+      //   "avg_review_score",
+      // ],
     ];
 
     // 🔎 Filter by avg review score
     let having: any;
 
-    if (min_rating) {
-      having = Sequelize.where(
-        Sequelize.fn("AVG", Sequelize.col("reviews.rating")),
-        {
-          [Op.gte]: +min_rating,
-        }
-      );
-    }
+    // Adding minimum rating
+    // if (min_rating) {
+    //   having = Sequelize.where(
+    //     Sequelize.fn("AVG", Sequelize.col("reviews.rating")),
+    //     {
+    //       [Op.gte]: +min_rating,
+    //     }
+    //   );
+    // }
 
     const influencers = await Influencer.findAll({
       where: whereClause,
@@ -397,6 +398,197 @@ const searchInfluencers = async (
     res.status(200).json({
       message: "Influencers fetched successfully.",
       influencers,
+    });
+  } catch (error: any) {
+    console.error("Error fetching influencers:", error);
+    res.status(500).json({
+      message: error.message || "Internal server error.",
+    });
+  }
+};
+
+const searchInfluencers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      q,
+      platform_names,
+      category_names,
+      min_followers,
+      max_followers,
+      locations,
+      limit = "15",
+      offset = "0",
+    } = req.query;
+
+    const values: any[] = [];
+    let baseFilter = `
+      FROM "Influencers" i
+      LEFT JOIN "InfluencerSocialPlatforms" isp ON isp.influencer_id = i.id
+      LEFT JOIN "SocialMediaPlatforms" sp ON sp.id = isp.platform_id
+      LEFT JOIN "InfluencerCategories" ic ON ic.influencer_id = i.id
+      WHERE 1 = 1
+    `;
+
+    // 🔍 Fullname or handle
+    if (q && typeof q === "string") {
+      baseFilter += ` AND (
+        REPLACE(LOWER(i.fullname), ' ', '') ILIKE $${values.length + 1}
+        OR i.handle ILIKE $${values.length + 2}
+      )`;
+      values.push(`%${q.toLowerCase().replace(/\s+/g, "")}%`, `%${q}%`);
+    }
+
+    // 📱 Platform filter
+    if (platform_names) {
+      const platforms =
+        typeof platform_names === "string"
+          ? platform_names.split(",").map((p) => p.trim())
+          : Array.isArray(platform_names)
+          ? platform_names.map((p) => String(p).trim())
+          : [];
+
+      if (platforms.length) {
+        const platformConditions = platforms
+          .map((_, i) => `sp.platform_name ILIKE $${values.length + i + 1}`)
+          .join(" OR ");
+        baseFilter += ` AND (${platformConditions})`;
+        values.push(...platforms);
+      }
+    }
+
+    // 🧩 Category filter
+    if (category_names) {
+      const categories =
+        typeof category_names === "string"
+          ? category_names.split(",").map((c) => c.trim())
+          : Array.isArray(category_names)
+          ? category_names.map((c) => String(c).trim())
+          : [];
+
+      if (categories.length) {
+        const categoryConditions = categories
+          .map((_, i) => `ic.category_name ILIKE $${values.length + i + 1}`)
+          .join(" OR ");
+        baseFilter += ` AND (${categoryConditions})`;
+        values.push(...categories);
+      }
+    }
+
+    // 🌍 Location filter
+    if (locations) {
+      const locs =
+        typeof locations === "string"
+          ? locations.split(",").map((l) => l.trim())
+          : Array.isArray(locations)
+          ? locations.map((l) => String(l).trim())
+          : [];
+
+      if (locs.length) {
+        const locConditions = locs
+          .map((_, i) => `i.location ILIKE $${values.length + i + 1}`)
+          .join(" OR ");
+        baseFilter += ` AND (${locConditions})`;
+        values.push(...locs);
+      }
+    }
+
+    // 👥 Follower count
+    if (min_followers) {
+      baseFilter += ` AND isp.follower_count >= $${values.length + 1}`;
+      values.push(+min_followers);
+    }
+
+    if (max_followers) {
+      baseFilter += ` AND isp.follower_count <= $${values.length + 1}`;
+      values.push(+max_followers);
+    }
+
+    // 🔢 Get total count
+    const countQuery = `
+      SELECT COUNT(DISTINCT i.id) AS total
+      ${baseFilter}
+    `;
+    const countResult = await sequelize.query(countQuery, {
+      type: QueryTypes.SELECT,
+      bind: values,
+    });
+    const total = Number((countResult[0] as any).total);
+
+    // 🎯 Get paginated influencers
+    const influencerQuery = `
+      SELECT DISTINCT i.*
+      ${baseFilter}
+      LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+    `;
+    values.push(Number(limit), Number(offset));
+    const influencers = await sequelize.query(influencerQuery, {
+      type: QueryTypes.SELECT,
+      bind: values,
+    });
+
+    if (!influencers.length) {
+      res.status(200).json({
+        message: "No influencers found.",
+        total: 0,
+        influencers: [],
+      });
+      return;
+    }
+
+    // 🔗 Fetch social platforms & categories in bulk
+    const influencerIds = influencers.map((inf: any) => inf.id);
+
+    const [socialPlatforms, categories] = await Promise.all([
+      sequelize.query(
+        `
+        SELECT isp.influencer_id, isp.follower_count, isp.platform_profile_link,
+               sp.platform_name, sp.platform_icon_url
+        FROM "InfluencerSocialPlatforms" isp
+        JOIN "SocialMediaPlatforms" sp ON sp.id = isp.platform_id
+        WHERE isp.influencer_id IN (:ids)
+        `,
+        {
+          replacements: { ids: influencerIds },
+          type: QueryTypes.SELECT,
+        }
+      ),
+      sequelize.query(
+        `
+        SELECT influencer_id, category_name
+        FROM "InfluencerCategories"
+        WHERE influencer_id IN (:ids)
+        `,
+        {
+          replacements: { ids: influencerIds },
+          type: QueryTypes.SELECT,
+        }
+      ),
+    ]);
+
+    // 🧩 Attach platforms and categories to each influencer
+    const enrichedInfluencers = influencers.map((inf: any) => {
+      const infId = inf.id;
+      const infSocials = socialPlatforms.filter(
+        (sp: any) => sp.influencer_id === infId
+      );
+      const infCategories = categories
+        .filter((c: any) => c.influencer_id === infId)
+        .map((c: any) => c.category_name);
+
+      return {
+        ...inf,
+        socialPlatforms: infSocials,
+        categories: infCategories,
+      };
+    });
+
+    res.status(200).json({
+      message: "Influencers fetched successfully.",
+      total,
+      influencers: enrichedInfluencers,
     });
   } catch (error: any) {
     console.error("Error fetching influencers:", error);

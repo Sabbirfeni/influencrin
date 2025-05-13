@@ -1,19 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import InfluencerAvgRating from "../ratings/influencer-avg-rating";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ProfileImage } from "@/components/ui/profile-image";
 import formatFollowers from "@/utils/format-follwers";
-
-type SocialMediaPlatform = {
-  platform_name: string;
-  platform_icon_url: string;
-};
 
 type influencerSocialPlatformInfo = {
   platform_profile_link: string;
   follower_count: number;
-  platform: SocialMediaPlatform;
+  platform_name: string;
+  platform_icon_url: string;
 };
 
 type Category = {
@@ -37,6 +33,14 @@ export default function InfluencerCard({
   socialPlatforms,
   categories,
 }: InfluencerCardProps) {
+  const [searchParams] = useSearchParams();
+
+  let category = categories[0];
+  const queriedCategories = searchParams.get("category_names")?.split(",");
+  if (queriedCategories) {
+    category = categories.find((cat) => queriedCategories?.includes(cat));
+  }
+
   return (
     <Link to={`/influencers/${handle}`}>
       <Card className="relative rounded-xl py-2 md:py-3 shadow-md border border-gray-200 hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-gradient-to-b to-[#fff4f4] from-white">
@@ -79,7 +83,7 @@ export default function InfluencerCard({
               >
                 <img
                   className="w-4 h-4"
-                  src={influencerSocialMedia.platform.platform_icon_url}
+                  src={influencerSocialMedia.platform_icon_url}
                   alt=""
                 />
                 {formatFollowers(influencerSocialMedia.follower_count)}+
@@ -89,15 +93,12 @@ export default function InfluencerCard({
 
           {/* Categories */}
           <div className="flex flex-wrap gap-1 justify-center mt-0 md:mt-2">
-            {categories.slice(0, 1).map((category, idx) => (
-              <Badge
-                key={idx}
-                variant="outline"
-                className="text-[11px] px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
-              >
-                {category.category_name}
-              </Badge>
-            ))}
+            <Badge
+              variant="outline"
+              className="text-[11px] px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
+            >
+              {category}
+            </Badge>
           </div>
         </CardContent>
       </Card>
