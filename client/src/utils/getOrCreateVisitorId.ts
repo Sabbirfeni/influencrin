@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const VISITOR_KEY = "visitor_id";
 const TIMESTAMP_KEY = "visitor_timestamp";
-const EXPIRY_MS = 60_000; // 1 minute
+const EXPIRY_MS = 5 * 60_000; // 5 minutes
 
 export const getOrCreateVisitorId = () => {
   const savedId = localStorage.getItem(VISITOR_KEY);

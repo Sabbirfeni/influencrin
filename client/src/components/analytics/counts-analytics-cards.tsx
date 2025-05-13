@@ -64,7 +64,7 @@ function CountsAnalyticsCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>Totals Influencer Searches</CardDescription>
+          <CardDescription>Total Searches</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
             {loading ? (
               <Skeleton className="h-8 w-20 rounded-md" />
