@@ -3,7 +3,7 @@ import ImpluencerPlaceholderBanner from "../../../../assets/images/influencer-pl
 
 function InfluencerBanner() {
   return (
-    <div className="relative w-full h-[15vh] md:h-[30vh]">
+    <div className="relative w-full h-[15vh] md:h-[27vh]">
       <img
         src={ImpluencerPlaceholderBanner}
         className="w-full h-full object-cover"

@@ -635,7 +635,11 @@ const getInfluencerByHandle = async (
         {
           model: InfluencerReview,
           as: "reviews",
-          attributes: ["id", "rating", "comment", "createdAt"],
+          where: {
+            // status: "approved",
+          },
+          required: false,
+          attributes: ["id", "rating", "comment", "status", "createdAt"],
           include: [
             {
               model: User,

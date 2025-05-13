@@ -4,10 +4,13 @@ export interface InfluencerReviewAttributes {
   influencer_id: string;
   rating: number;
   comment: string;
-  status: string;
+  status?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface InfluencerReviewCreationAttributes
-  extends Omit<InfluencerReviewAttributes, "id" | "createdAt" | "updatedAt"> {}
+  extends Omit<
+    InfluencerReviewAttributes,
+    "id" | "status" | "createdAt" | "updatedAt"
+  > {}

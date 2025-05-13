@@ -101,7 +101,7 @@ const createReviewForInfluencer = async (
     });
 
     res.status(201).json({
-      message: "Review added successfully.",
+      message: "Review received. We'll approved it after a check.",
       review,
     });
   } catch (error) {

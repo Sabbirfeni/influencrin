@@ -36,6 +36,7 @@ export default function AddReviewForm({ setReviews, influencer }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [showReviewForm, setShowReviewForm] = useState(true);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,8 +61,9 @@ export default function AddReviewForm({ setReviews, influencer }) {
       await addReviewRequest(influencer.id, review);
 
     if (reviewAddResponse) {
-      const newReview = { ...reviewAddResponse.review, author: user };
-      setReviews((prevReviews) => [newReview, ...prevReviews]);
+      // const newReview = { ...reviewAddResponse.review, author: user };
+      // setReviews((prevReviews) => [newReview, ...prevReviews]);
+      setShowReviewForm(false);
       toast.success(reviewAddResponse.message);
     } else if (reviewAddError) {
       toast.error(reviewAddError.message);
@@ -69,7 +71,9 @@ export default function AddReviewForm({ setReviews, influencer }) {
   };
 
   return (
-    <div className="w-full md:w-2/3 mt-0">
+    <div
+      className={`w-full md:w-2/3 mt-0 ${showReviewForm ? "block" : "hidden"}`}
+    >
       <h3 className="text-xl font-semibold text-center md:text-left">
         Rate the Influencer
       </h3>

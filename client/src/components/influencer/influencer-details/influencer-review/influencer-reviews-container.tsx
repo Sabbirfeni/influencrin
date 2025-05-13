@@ -25,23 +25,26 @@ function InfluencerReviewsContainer({
 }: Props) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState(initialReview);
+  const approvedReviews = reviews.filter(
+    (review) => review.status == "approved"
+  );
   const isReviewed = reviews.find((review) => review.author.id == user?.id);
   return (
     <div className={`${style} flex-col gap-2 mt-3 md:mt-4`}>
       {reviews.length > 0 && (
         <>
           <div className="flex items-center justify-center md:justify-start">
-            <TotalReviewCount count={reviews.length} />
+            <TotalReviewCount count={approvedReviews.length} />
             <div className="flex items-center gap-2 pl-4">
               <InfluencerAvgRating
                 size="5"
                 style="text-sm md:text-xl"
-                reviews={reviews}
+                reviews={approvedReviews}
                 isTitle={true}
               />
             </div>
           </div>
-          <InfluencerReviewSlider reviews={reviews} />
+          <InfluencerReviewSlider reviews={approvedReviews} />
         </>
       )}
       {!isReviewed && (

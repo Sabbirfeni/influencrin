@@ -37,7 +37,6 @@ const reviewApiService = {
     influencer_id: string,
     review: { rating: number; comment: string }
   ): Promise<SingleReviewResponse> => {
-    console.log(review);
     const res = await axios.post<SingleReviewResponse>(
       `/influencers/reviews/${influencer_id}`,
       review
