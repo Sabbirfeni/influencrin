@@ -32,11 +32,17 @@ function InfluencerPrimaryInfo({
         fullname={fullname}
       />
       <div className="w-full md:w-2/3">
-        <h1 className="text-xl md:text-2xl font-bold">{fullname}</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-bold">{fullname}</h1>
+          <div className="flex md:hidden items-center gap-1">
+            <MapPin className="w-3 h-3 text-primary" />
+            <p className="text-xs text-muted-foreground"> {location}</p>
+          </div>
+        </div>
         <div className="text-sm">
           <p className="text-muted-foreground">@{handle}</p>
           <p className="text-sm md:text-[15px] mt-3">{bio}</p>
-          <div className="flex items-center gap-1 mt-3 md:mt-5">
+          <div className="hidden md:flex items-center gap-1 mt-3 md:mt-5">
             <MapPin className="w-3 h-3 text-primary" />
             <p className="text-xs text-muted-foreground"> {location}</p>
           </div>

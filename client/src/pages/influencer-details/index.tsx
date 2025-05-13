@@ -74,26 +74,27 @@ function InfluencerDetailsPage() {
           <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
             <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
               <InfluencerSocialList influencer={influencer} />
-              <InfluencerCategoryList
-                style="flex md:hidden"
-                influencer={influencer}
-                setInfluencer={setInfluencer}
-              />
               <InfluencerReviewsContainer
+                style="hidden md:flex"
                 reviews={influencer.reviews}
                 influencer={influencer}
               />
             </div>
 
-            <div className="w-full md:w-1/3 flex flex-col gap-4">
+            <div className="w-full md:w-1/3 flex flex-col gap-3 md:gap-4">
               <InfluencerCategoryList
-                style="hidden md:flex"
+                style="flex"
                 influencer={influencer}
                 setInfluencer={setInfluencer}
               />
               <RelatedInfluencerList
                 influencerId={influencer.id}
                 categories={influencer.categories}
+              />
+              <InfluencerReviewsContainer
+                style="flex md:hidden"
+                reviews={influencer.reviews}
+                influencer={influencer}
               />
             </div>
           </div>

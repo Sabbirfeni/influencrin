@@ -54,6 +54,11 @@ const InfluencerReview = sequelize.define<
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    status: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: "pending",
+    },
   },
   {
     timestamps: true,

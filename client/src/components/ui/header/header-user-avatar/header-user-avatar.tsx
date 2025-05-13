@@ -29,7 +29,7 @@ const HeaderUserAvatar: React.FC<HeaderUserAvatarProps> = ({ user }) => {
 
   const firstLetterOfUsername = fullname?.trim().charAt(0).toUpperCase();
   return (
-    <div className="ml-3 md:ml-0">
+    <div className="ml-4 md:ml-0">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center gap-2 cursor-pointer">

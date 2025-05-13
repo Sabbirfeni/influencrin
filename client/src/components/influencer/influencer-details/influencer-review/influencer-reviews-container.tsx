@@ -21,15 +21,16 @@ interface Props {
 function InfluencerReviewsContainer({
   reviews: initialReview,
   influencer,
+  style,
 }: Props) {
   const { user } = useAuth();
   const [reviews, setReviews] = useState(initialReview);
   const isReviewed = reviews.find((review) => review.author.id == user?.id);
   return (
-    <div className="flex flex-col gap-2 mt-3 md:mt-4">
+    <div className={`${style} flex-col gap-2 mt-3 md:mt-4`}>
       {reviews.length > 0 && (
         <>
-          <div className="flex items-center">
+          <div className="flex items-center justify-center md:justify-start">
             <TotalReviewCount count={reviews.length} />
             <div className="flex items-center gap-2 pl-4">
               <InfluencerAvgRating

@@ -4,6 +4,7 @@ export interface InfluencerReviewAttributes {
   influencer_id: string;
   rating: number;
   comment: string;
+  status: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

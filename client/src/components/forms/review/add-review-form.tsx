@@ -69,7 +69,7 @@ export default function AddReviewForm({ setReviews, influencer }) {
   };
 
   return (
-    <div className="w-full md:w-2/3 mt-12 md:mt-0">
+    <div className="w-full md:w-2/3 mt-0">
       <h3 className="text-xl font-semibold text-center md:text-left">
         Rate the Influencer
       </h3>

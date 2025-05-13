@@ -11,7 +11,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/use-auth";
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, Home, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function InluencerManagementSidebarFooter() {
   const { user, logout } = useAuth();
@@ -49,6 +50,11 @@ function InluencerManagementSidebarFooter() {
               <DropdownMenuItem onClick={logout}>
                 <LogOut />
                 <span>Log out</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="/" className="w-full flex items-center gap-2">
+                  <Home /> Home
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

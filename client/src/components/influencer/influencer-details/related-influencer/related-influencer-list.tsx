@@ -72,7 +72,7 @@ function RelatedInfluencerList({
       )}
 
       {!loading && influencers?.length > 0 && (
-        <div className="p-3 md:p-4 mt-6 md:mt-0 flex flex-col gap-4 border border-gray-200 rounded-xl">
+        <div className="p-3 md:p-4 md:mt-0 flex flex-col gap-4 border border-gray-200 rounded-xl">
           <p className="text-center mt-1 md:mt-0 md:text-left text-sm font-semibold">
             Influencers in similar categories
           </p>

@@ -30,7 +30,7 @@ function InfluencerReviewSlider({ reviews }: InfluencerReviewSliderProps) {
 
       <CarouselContent className="gap-0 pb-5">
         {reviews.map((review) => (
-          <CarouselItem key={review.id} className="md:basis-1/2">
+          <CarouselItem key={review.id} className="basis-4/5 md:basis-1/2">
             <InfluencerReviewCard review={review} />
           </CarouselItem>
         ))}

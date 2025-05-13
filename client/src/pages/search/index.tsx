@@ -72,7 +72,7 @@ function SearchPage() {
         influencers.length > 0 && (
           <>
             {debouncedParamsString && (
-              <div className="font-semibold flex items-center gap-1 text-sm">
+              <div className="font-semibold flex items-center gap-1 text-md">
                 <span className="text-primary">{totalInfluencers}</span>{" "}
                 Influencers
               </div>
