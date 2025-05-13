@@ -8,8 +8,8 @@ function InfluencerFilterSection({ setParams }) {
   const searchParams = new URLSearchParams(location.search);
 
   return (
-    <div className="overflow-x-auto w-full pb-2 hide-scrollbar">
-      <div className="flex items-center gap-3 whitespace-nowrap">
+    <div className="overflow-x-auto w-full pb-2 filter-scrollbar">
+      <div className="flex items-center gap-2 md:gap-3 whitespace-nowrap">
         {/* <Button
           onClick={filterInfluencers}
           className="bg-muted text-primary border border-primary hover:bg-primary hover:text-white"

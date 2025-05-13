@@ -47,7 +47,7 @@ function RelatedInfluencerCard({ influencer }: RelatedInfluencerCardProps) {
             variant="outline"
             className="h-[fit-content] text-[10px] md:text-xs px-2 md:px-3 py-1 rounded-full text-primary border-1 border-primary"
           >
-            {influencer.categories[0].category_name}
+            {influencer.categories[0]}
           </Badge>
         </div>
       </div>

@@ -42,6 +42,7 @@ function CategoryBadge({
     >
       {category.category_name}
       {isMe &&
+        categories.length > 1 &&
         (categoryRemoveLoading ? (
           <LoaderIcon className="z-50 w-3 h-3 text-gray-300 " />
         ) : (

@@ -29,7 +29,7 @@ function FilterList({ searchParams, setParams }: FilterListProps) {
       <Button
         variant="outline"
         onClick={resetFilters}
-        className="ml-4 hover:bg-primary hover:text-white"
+        className="hover:bg-primary hover:text-white"
       >
         Reset
       </Button>

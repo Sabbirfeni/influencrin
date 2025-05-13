@@ -47,7 +47,7 @@ export default function SearchBar({ isFocused, setIsFocused }) {
       {/* Search Icon */}
       <Search
         onClick={() => setIsFocused(true)}
-        className={`absolute right-0 md:left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-all duration-300 ease-in-out ${
+        className={`absolute right-0 md:left-3 top-1/2 h-5 w-5 md:h-4 md:w-4 -translate-y-1/2 text-muted-foreground transition-all duration-300 ease-in-out ${
           isFocused ? "opacity-0 -translate-x-3" : "opacity-100"
         }`}
       />

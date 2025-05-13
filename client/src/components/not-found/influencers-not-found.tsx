@@ -3,8 +3,11 @@ import InfluencerAddRequestBtn from "../influencer/add-request/influencer-add-re
 
 function InfluencersNotFound({ message }) {
   return (
-    <div className="w-full h-[30vh] flex flex-col gap-3 items-center justify-center text-center py-4 text-gray-500">
+    <div className="w-full h-[50vh] flex flex-col gap-3 items-center justify-center text-sm text-center py-4 text-gray-500">
       {message}
+      <p className="text-gray-300">
+        Currently we're looking for influencers to add.
+      </p>
       <InfluencerAddRequestBtn />
     </div>
   );
