@@ -105,8 +105,9 @@ function InfluencerCategoryList({
 
       {categories.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          {categories.map((cat, idx) => (
             <CategoryBadge
+              key={`${cat}-${idx}`}
               isMe={isMe}
               category={cat}
               influencerId={influencer.id}

@@ -411,6 +411,7 @@ const searchInfluencers = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  console.log("searching");
   try {
     const {
       q,
@@ -521,6 +522,7 @@ const searchInfluencers = async (
     const influencerQuery = `
       SELECT DISTINCT i.*
       ${baseFilter}
+      ORDER BY i."createdAt" DESC
       LIMIT $${values.length + 1} OFFSET $${values.length + 2}
     `;
     values.push(Number(limit), Number(offset));

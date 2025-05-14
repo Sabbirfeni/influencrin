@@ -67,6 +67,7 @@ type SocialPlatformFilterProps = {
 export function SocialPlatformFilter({
   searchParams,
   setParams,
+  setOffset,
 }: SocialPlatformFilterProps) {
   const [allPlatforms, setAllPlatforms] = useState([]);
   const current = searchParams.get("platform_names");
@@ -100,11 +101,13 @@ export function SocialPlatformFilter({
 
     if (currentPlatforms.length > 0) {
       searchParams.set("platform_names", currentPlatforms.join(","));
-      setParams(searchParams);
     } else {
       searchParams.delete("platform_names");
-      setParams(searchParams);
     }
+
+    searchParams.delete("offset");
+    setOffset(0);
+    setParams(searchParams);
 
     setSelectedSocialPlatforms((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]

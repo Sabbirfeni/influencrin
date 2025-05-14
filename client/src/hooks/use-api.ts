@@ -22,6 +22,7 @@ const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
     setErrorMessage(null);
     try {
       const result = await apiFunc(...args);
+
       return { data: result };
     } catch (err) {
       const error = handlApiError(err as ApiError);

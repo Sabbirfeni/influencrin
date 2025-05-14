@@ -24,6 +24,7 @@ type CategoryFilterProps = {
 export function CategoryFilter({
   searchParams,
   setParams,
+  setOffset,
 }: CategoryFilterProps) {
   const [allCategories, setAllCategories] = useState([]);
   const current = searchParams.get("category_names");
@@ -44,11 +45,12 @@ export function CategoryFilter({
     // Update searchParams with the new list
     if (currentCategories.length > 0) {
       searchParams.set("category_names", currentCategories.join(","));
-      setParams(searchParams);
     } else {
       searchParams.delete("category_names");
-      setParams(searchParams);
     }
+    searchParams.delete("offset");
+    setOffset(0);
+    setParams(searchParams);
 
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]

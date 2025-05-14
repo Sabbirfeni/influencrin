@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce"; // <-- Add this package
 import influencerApiService from "@/api/endpoints/influencer-api-service";
@@ -10,13 +10,19 @@ import SectionWrappers from "@/components/wrappers/section-wrapper";
 import { useApi } from "@/hooks";
 import InfluencersNotFound from "@/components/not-found/influencers-not-found";
 import InfluencerSearchCountApiServices from "@/api/endpoints/influencer-search/influencer-search-count";
+import SearchPagination from "@/components/search/search-pagination";
 
 function SearchPage() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   const [params, setParams] = useSearchParams();
   const [influencers, setInfluencers] = useState([]);
-  const [totalInfluencers, setTotalInfluencers] = useState(0);
 
-  const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 300ms
+  const [totalInfluencers, setTotalInfluencers] = useState(0);
+  const currentOffset = searchParams.get("offset");
+
+  const [offset, setOffset] = useState(Number(currentOffset) || 0);
+  const debouncedParamsString = useDebounce(params.toString(), 1000); // ⏳ debounce 1000ms
   const isStale = params.toString() !== debouncedParamsString[0];
 
   const {
@@ -49,9 +55,13 @@ function SearchPage() {
 
   return (
     <SectionWrappers style="pt-2 md:pt-6 flex flex-col gap-2">
-      <InfluencerFilterSection setParams={setParams} />
+      <InfluencerFilterSection
+        searchParams={searchParams}
+        setParams={setParams}
+        setOffset={setOffset}
+      />
 
-      {(influencerLoading || isStale) && <InfluencerListSkeleton length={15} />}
+      {influencerLoading && <InfluencerListSkeleton length={15} />}
 
       {!influencerLoading && influencerSearchError && (
         <ErrorSection
@@ -78,6 +88,13 @@ function SearchPage() {
               </div>
             )}
             <InfluencerList influencers={influencers} />
+            <SearchPagination
+              totalInfluencers={totalInfluencers}
+              offset={offset}
+              setOffset={setOffset}
+              searchParams={searchParams}
+              setParams={setParams}
+            />
           </>
         )}
     </SectionWrappers>

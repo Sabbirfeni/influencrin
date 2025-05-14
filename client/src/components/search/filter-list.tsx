@@ -10,7 +10,7 @@ type FilterListProps = {
   searchParams: URLSearchParams;
 };
 
-function FilterList({ searchParams, setParams }: FilterListProps) {
+function FilterList({ searchParams, setParams, setOffset }: FilterListProps) {
   const navigate = useNavigate();
   const resetFilters = () => {
     const emptyParams = new URLSearchParams();
@@ -21,9 +21,21 @@ function FilterList({ searchParams, setParams }: FilterListProps) {
   };
   return (
     <>
-      <SocialPlatformFilter searchParams={searchParams} setParams={setParams} />
-      <CategoryFilter searchParams={searchParams} setParams={setParams} />
-      <LocationFilter searchParams={searchParams} setParams={setParams} />
+      <SocialPlatformFilter
+        searchParams={searchParams}
+        setParams={setParams}
+        setOffset={setOffset}
+      />
+      <CategoryFilter
+        searchParams={searchParams}
+        setParams={setParams}
+        setOffset={setOffset}
+      />
+      <LocationFilter
+        searchParams={searchParams}
+        setParams={setParams}
+        setOffset={setOffset}
+      />
       {/* <RatingFilter searchParams={searchParams} setParams={setParams} /> */}
       {/* <FollowersFilter searchParams={searchParams} setParams={setParams} /> */}
       <Button

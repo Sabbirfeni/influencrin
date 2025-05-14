@@ -26,6 +26,7 @@ type CategoryFilterProps = {
 export function LocationFilter({
   searchParams,
   setParams,
+  setOffset,
 }: CategoryFilterProps) {
   const [allLocations, setLocations] = useState([]);
   const current = searchParams.get("locations");
@@ -46,11 +47,13 @@ export function LocationFilter({
     // Update searchParams with the new list
     if (currentLocations.length > 0) {
       searchParams.set("locations", currentLocations.join(","));
-      setParams(searchParams);
     } else {
       searchParams.delete("locations");
-      setParams(searchParams);
     }
+
+    searchParams.delete("offset");
+    setOffset(0);
+    setParams(searchParams);
 
     setSelected((prev) =>
       prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]

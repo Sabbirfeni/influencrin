@@ -16,6 +16,7 @@ function InfluencerListHome() {
   const { request, loading, error } = useApi(
     influencerApiService.searchInfluencers
   );
+  console.log(loading);
   useEffect(() => {
     const loadInfluencers = async () => {
       const { data } = await request();
