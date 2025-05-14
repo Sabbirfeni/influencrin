@@ -37,6 +37,7 @@ function SearchPage() {
 
   useEffect(() => {
     const loadInfluencers = async () => {
+      setInfluencers([]);
       const queryParams = new URLSearchParams(debouncedParamsString[0]);
       const { data } = await influencerSearchRequest(queryParams);
       if (data) {
@@ -61,7 +62,7 @@ function SearchPage() {
         setOffset={setOffset}
       />
 
-      {influencerLoading && <InfluencerListSkeleton length={15} />}
+      {(influencerLoading || isStale) && <InfluencerListSkeleton length={15} />}
 
       {!influencerLoading && influencerSearchError && (
         <ErrorSection
