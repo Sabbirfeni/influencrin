@@ -1,7 +1,17 @@
 "use client";
 
+type Influencer = {
+  id: string;
+  fullname: string;
+  // Add other fields if needed
+};
+
+interface AddReviewFormProps {
+  influencer: Influencer;
+}
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 
@@ -9,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,7 +41,7 @@ const FormSchema = z.object({
   rating: z.number().min(1, "Select at least 1").max(5),
 });
 
-export default function AddReviewForm({ setReviews, influencer }) {
+export default function AddReviewForm({ influencer }: AddReviewFormProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,7 +75,11 @@ export default function AddReviewForm({ setReviews, influencer }) {
       setShowReviewForm(false);
       toast.success(reviewAddResponse.message);
     } else if (reviewAddError) {
-      toast.error(reviewAddError.message);
+      const errorMessage =
+        (reviewAddError as { message?: string })?.message ??
+        "Something went wrong";
+
+      toast.error(errorMessage);
     }
   };
 
