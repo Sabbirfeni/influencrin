@@ -15,7 +15,7 @@ export function ProfileImageUpload({
   defaultName: string | undefined;
   defaultImage: string | File | null | undefined;
   onImageSelect: (file: File) => void;
-  isUser: boolean | undefined;
+  isUser?: boolean | undefined;
   isInfluencer: boolean | undefined;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);

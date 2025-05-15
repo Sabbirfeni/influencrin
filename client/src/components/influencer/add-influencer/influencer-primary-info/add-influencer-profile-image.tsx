@@ -1,4 +1,3 @@
-import { ProfileImage } from "@/components/ui/profile-image";
 import { ProfileImageUpload } from "@/components/user/profile-image-upload";
 
 type InfluencerProfileImageProps = {

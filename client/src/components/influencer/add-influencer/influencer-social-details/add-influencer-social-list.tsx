@@ -1,17 +1,21 @@
 import InputFieldError from "@/components/error/input-field-error";
 import AddSocialMediaCard from "./add-social-media-card";
-import InfluencerSocialCard from "./added-influencer-social-card";
 import AddInfluencerSocialCard from "./added-influencer-social-card";
+import { ZodObject, ZodRawShape } from "zod";
 
-type SocialPlatformList = {
+type SocialPlatform = {
   platform_icon_url: string;
   follower_count: number;
   platform_profile_link: string;
   platform_id: string;
-}[];
+};
 
 interface InfluencerSocialListProps {
-  socialPlatforms: SocialPlatformList;
+  socialPlatforms: SocialPlatform[];
+  setSocialPlatforms: React.Dispatch<React.SetStateAction<SocialPlatform[]>>;
+  error?: string;
+  setErrors: React.Dispatch<React.SetStateAction<string | undefined>>;
+  influencerSchema: ZodObject<ZodRawShape>;
 }
 
 function AddInfluencerSocialList({

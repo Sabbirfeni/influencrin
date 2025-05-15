@@ -1,7 +1,5 @@
 import formatFollowers from "@/utils/format-follwers";
-import { Delete, ExternalLink, Trash2 } from "lucide-react";
-import { Edit } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ExternalLink, Trash2 } from "lucide-react";
 
 type SocialPlatformCard = {
   platform_id: string;
@@ -11,22 +9,21 @@ type SocialPlatformCard = {
 };
 
 interface InfluencerSocialCardProps {
+  socialPlatforms: SocialPlatformCard[]; // ✅ properly typed
   socialPlatformInfo: SocialPlatformCard;
+  setSocialPlatforms: React.Dispatch<
+    React.SetStateAction<SocialPlatformCard[]>
+  >;
 }
 
 function AddInfluencerSocialCard({
   socialPlatformInfo,
-  socialPlatforms,
   setSocialPlatforms,
 }: InfluencerSocialCardProps) {
-  const {
-    platform_id,
-    platform_icon_url,
-    follower_count,
-    platform_profile_link,
-  } = socialPlatformInfo;
+  const { platform_icon_url, follower_count, platform_profile_link } =
+    socialPlatformInfo;
 
-  const removePlatform = (e) => {
+  const removePlatform = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
     setSocialPlatforms((prev) =>
