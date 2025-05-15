@@ -24,18 +24,7 @@ import influencerSocialPlatformApiService from "@/api/endpoints/influencer-socia
 import { toast } from "sonner";
 import InputFieldError from "@/components/error/input-field-error";
 import ToastDescription from "@/components/toast/toast-description";
-import { ParsedApiError } from "@/utils/handle-api-error";
-
-function isParsedApiError(
-  error: string | object | ParsedApiError
-): error is ParsedApiError {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "message" in error &&
-    typeof (error as Record<string, unknown>).message === "string"
-  );
-}
+import { isParsedApiError } from "@/utils/handle-api-error";
 
 // Zod validation
 const platformSchema = z.object({

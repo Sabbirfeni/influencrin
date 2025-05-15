@@ -1,8 +1,23 @@
 import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
 import { Badge } from "@/components/ui/badge";
 import { useApi } from "@/hooks";
+import { isParsedApiError } from "@/utils/handle-api-error";
 import { LoaderIcon, X } from "lucide-react";
 import { toast } from "sonner";
+
+export type Category = {
+  id: string;
+  influencer_id: string;
+  category_name: string;
+};
+
+interface CategoryBadgeProps {
+  isMe: boolean;
+  category: Category;
+  influencerId: number | string;
+  categories: Category[];
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+}
 
 function CategoryBadge({
   isMe,
@@ -10,11 +25,11 @@ function CategoryBadge({
   influencerId,
   categories,
   setCategories,
-}) {
+}: CategoryBadgeProps) {
   const { request: categoryRemoveRequest, loading: categoryRemoveLoading } =
     useApi(influencerCategoryApiService.deleteCategory);
 
-  const handleRemove = async (categoryToRemove) => {
+  const handleRemove = async (categoryToRemove: Category) => {
     const { data: categoryRemoveResponse, error: categoryRemoveError } =
       await categoryRemoveRequest(influencerId, categoryToRemove.id);
 
@@ -25,7 +40,10 @@ function CategoryBadge({
       setCategories(filteredCategories);
       toast.success(categoryRemoveResponse.message);
     } else if (categoryRemoveError) {
-      toast.error(categoryRemoveError.message);
+      const errorMessage = isParsedApiError(categoryRemoveError)
+        ? categoryRemoveError.message
+        : "Something went wrong";
+      toast.error(errorMessage);
     }
   };
 

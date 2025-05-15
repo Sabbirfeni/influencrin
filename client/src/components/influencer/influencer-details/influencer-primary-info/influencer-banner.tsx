@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import ImpluencerPlaceholderBanner from "../../../../assets/images/influencer-placeholder-banner.jpg";
 
 function InfluencerBanner() {

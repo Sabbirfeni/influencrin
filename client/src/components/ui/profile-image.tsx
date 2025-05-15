@@ -1,12 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 interface ProfileImageProps {
-  style: string; // supports both numbers and Tailwind strings like "10"
+  style?: string; // Tailwind classes or sizes
   fullname: string | undefined;
   src: string | File | undefined | null;
-  isInfluencer: boolean | undefined;
-  isUser: boolean | undefined;
-  backgroundColor?: string; // expects Tailwind-friendly colors like "gray-200"
+  isInfluencer?: boolean | undefined;
+  isUser?: boolean | undefined;
+  backgroundColor?: string;
 }
 
 export function ProfileImage({
@@ -23,22 +23,25 @@ export function ProfileImage({
     ? "user-profiles"
     : undefined;
 
-  const profileImage = `${
-    import.meta.env.VITE_SERVER_BASE_URL
-  }/images/uploads/${imageDir}/${src}`;
+  let imgSrc: string | undefined;
+
+  if (src instanceof File) {
+    imgSrc = URL.createObjectURL(src);
+  } else if (typeof src === "string" && src.startsWith("blob:")) {
+    imgSrc = src;
+  } else if (typeof src === "string") {
+    imgSrc = `${
+      import.meta.env.VITE_SERVER_BASE_URL
+    }/images/uploads/${imageDir}/${src}`;
+  } else {
+    imgSrc = undefined;
+  }
 
   const firstLetterOfUsername = fullname?.trim().charAt(0).toUpperCase();
+
   return (
     <Avatar className={`cursor-pointer ${style}`}>
-      <AvatarImage
-        src={
-          src?.startsWith("blob:")
-            ? src // show preview image
-            : profileImage // fallback to server image
-        }
-        className="object-cover"
-        alt={fullname}
-      />
+      <AvatarImage src={imgSrc} className="object-cover" alt={fullname} />
       <AvatarFallback
         className={`${backgroundColor || "bg-gray-300"} text-muted-foreground`}
       >

@@ -1,14 +1,15 @@
 import influencerCategoryApiService from "@/api/endpoints/influencer-category-api-service";
 import InputFieldError from "@/components/error/input-field-error";
-import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useApi } from "@/hooks";
-import { LoaderIcon, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { LoaderIcon, Plus } from "lucide-react";
+import { useState, ChangeEvent } from "react";
 import { toast } from "sonner";
 import CategoryBadge from "./category-badge";
 import { useAuth } from "@/hooks/use-auth";
+import { isParsedApiError } from "@/utils/handle-api-error";
 
 type Category = {
   id: string;
@@ -16,27 +17,36 @@ type Category = {
   category_name: string;
 };
 
+type Influencer = {
+  id: string;
+  user_id: string;
+  categories: Category[];
+};
+
 type InfluencerCategoryListProps = {
   style?: string;
-  categories: Category[];
+  influencer: Influencer;
   setInfluencer: () => void;
 };
 
 function InfluencerCategoryList({
   style,
   influencer,
-  setInfluencer,
 }: InfluencerCategoryListProps) {
   const { user } = useAuth();
-  const [categories, setCategories] = useState(influencer.categories);
-  const [category, setCategory] = useState("");
-  const [categoryError, setCategoryError] = useState("");
-  const [selected, setSelected] = useState("");
-  const isMe = user?.id == influencer.user_id;
+  const [categories, setCategories] = useState<Category[]>(
+    influencer.categories
+  );
+  const [category, setCategory] = useState<string>("");
+  const [categoryError, setCategoryError] = useState<string>("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const isMe = user?.id === influencer.user_id;
 
-  const handleChange = (e) => {
+  // Handle input change for category text input
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCategory(value);
+
     const isCategoryExist = categories.some(
       (cat) => cat.category_name.toLowerCase() === value.trim().toLowerCase()
     );
@@ -48,27 +58,26 @@ function InfluencerCategoryList({
     }
 
     if (value.trim() === "") {
-      // setFilteredSuggestions([]);
-      // setShowDropdown(false);
+      // Placeholder for dropdown filtering logic if needed
     } else {
-      // const filtered = suggestionsList.filter((s) =>
-      //   s.toLowerCase().includes(value.toLowerCase())
-      // );
-      // setFilteredSuggestions(filtered);
-      // setShowDropdown(true);
+      // Placeholder for dropdown filtering logic if needed
     }
+
     setSelected(null); // Clear previous selection
   };
 
   const { request: categoryAddRequest, loading: categoryAddLoading } = useApi(
     influencerCategoryApiService.createCategory
   );
+
+  // Add a new category for the influencer
   const handleAdd = async () => {
     const categoryToAdd = selected || category;
     const isCategoryExist = categories.some(
       (cat) =>
         cat.category_name.toLowerCase() === categoryToAdd.trim().toLowerCase()
     );
+
     if (categoryToAdd.trim() !== "" && !isCategoryExist) {
       setCategoryError("");
 
@@ -80,12 +89,14 @@ function InfluencerCategoryList({
         setCategories(updatedCategories);
         toast.success(categoryAddResponse.message);
         setCategory("");
-        // setFilteredSuggestions([]);
-        // setShowDropdown(false);
       } else if (categoryAddError) {
-        toast.error(categoryAddError.message);
+        if (isParsedApiError(categoryAddError)) {
+          toast.error(categoryAddError.message);
+        } else {
+          toast.error("An unexpected error occurred");
+        }
       }
-    } else if (categoryToAdd.trim() == "") {
+    } else if (categoryToAdd.trim() === "") {
       setCategoryError("Please write a category");
     } else if (isCategoryExist) {
       setCategoryError("This category already included");
@@ -101,13 +112,13 @@ function InfluencerCategoryList({
       <div className="flex items-start justify-between">
         <h4 className="text-sm font-semibold">Categories</h4>
       </div>
-      {/* Category list */}
 
+      {/* Category list */}
       {categories.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {categories.map((cat, idx) => (
             <CategoryBadge
-              key={`${cat}-${idx}`}
+              key={`${cat.id}-${idx}`}
               isMe={isMe}
               category={cat}
               influencerId={influencer.id}
@@ -118,7 +129,7 @@ function InfluencerCategoryList({
         </div>
       )}
 
-      {/* Add category */}
+      {/* Add category input and button */}
       {isMe && (
         <div className="relative max-w-md">
           <div className="flex gap-2">
@@ -126,6 +137,7 @@ function InfluencerCategoryList({
               value={category}
               onChange={handleChange}
               className="flex-1 text-xs md:text-sm border-none shadow-none bg-gray-100"
+              aria-label="Add category"
             />
 
             <Button
@@ -133,6 +145,7 @@ function InfluencerCategoryList({
               onClick={handleAdd}
               variant="outline"
               className="group h-full border border-gray-300 bg-white hover:bg-primary hover:border-primary"
+              aria-disabled={categoryAddLoading}
             >
               {categoryAddLoading ? (
                 <LoaderIcon className="w-5 h-5 text-gray-400 group-hover:text-gray-500" />
@@ -142,26 +155,10 @@ function InfluencerCategoryList({
             </Button>
           </div>
 
-          {/* {showDropdown && filteredSuggestions.length > 0 && (
-          <ul className="absolute z-50 mt-1 w-full rounded-md border bg-white shadow-md">
-            {filteredSuggestions.map((suggestion, idx) => (
-              <li
-                key={idx}
-                onClick={() => handleSelect(suggestion)}
-                className={cn(
-                  "px-4 py-2 cursor-pointer hover:bg-gray-100 transition-colors"
-                )}
-              >
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )} */}
+          {/* Error message */}
+          {categoryError && <InputFieldError errMessage={categoryError} />}
         </div>
       )}
-
-      {/* {error && <InputFieldError errMessage={error} />} */}
-      {categoryError && <InputFieldError errMessage={categoryError} />}
     </div>
   );
 }

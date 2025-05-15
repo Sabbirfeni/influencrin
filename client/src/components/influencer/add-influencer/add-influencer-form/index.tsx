@@ -3,23 +3,26 @@ import InfluencerManagementWrapper from "@/components/wrappers/influencer-managm
 import AddInfluencerBanner from "@/components/influencer/add-influencer/influencer-primary-info/add-influencer-banner";
 import AddInfluencerPrimaryInfo from "@/components/influencer/add-influencer/influencer-primary-info/add-influencer-primary-info";
 import AddInfluencerCategoryList from "@/components/influencer/add-influencer/influencer-categories/add-influencer-category-list";
-import AddInfluencerSocialList from "@/components/influencer/add-influencer/influencer-social-details/add-influencer-social-list";
+import AddInfluencerSocialList, {
+  ErrorsType,
+  SocialPlatform,
+} from "@/components/influencer/add-influencer/influencer-social-details/add-influencer-social-list";
 import { useApi } from "@/hooks";
 import influencerApiService from "@/api/endpoints/influencer-api-service";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ToastDescription from "@/components/toast/toast-description";
-
 import { z } from "zod";
+import { isParsedApiError } from "@/utils/handle-api-error";
 
 const influencerSchema = z.object({
   fullname: z.string().min(1, "Full name is required"),
   handle: z
     .string()
-    .min(1, "Handle is required.") // Ensure handle is not empty
-    .min(3, "Handle must be at least 3 characters.") // Validate length
-    .max(30, "Handle must be no more than 30 characters.") // Validate length
+    .min(1, "Handle is required.")
+    .min(3, "Handle must be at least 3 characters.")
+    .max(30, "Handle must be no more than 30 characters.")
     .regex(/^[a-z0-9_-]+$/, {
       message:
         "Handle can only contain lowercase letters, numbers, underscores (_), and dashes (-).",
@@ -44,9 +47,18 @@ const influencerSchema = z.object({
   categories: z.array(z.any()).min(1, "At least one category is required"),
 });
 
+type FormDataState = {
+  fullname: string;
+  handle: string;
+  bio: string;
+  location: string;
+  profile_image: File | string;
+};
+
 function AddInfluencerForm() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState<FormDataState>({
     fullname: "",
     handle: "",
     bio: "",
@@ -54,9 +66,9 @@ function AddInfluencerForm() {
     profile_image: "",
   });
 
-  const [socialPlatforms, setSocialPlatforms] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [socialPlatforms, setSocialPlatforms] = useState<SocialPlatform[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [errors, setErrors] = useState<ErrorsType>({});
 
   // Handle input change
   const handleInputChange = (
@@ -64,28 +76,28 @@ function AddInfluencerForm() {
   ) => {
     const { name, value } = e.target;
 
-    // Update form state
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Live validate this single field against schema
-    try {
-      influencerSchema.pick({ [name]: true }).parse({ [name]: value });
+    const fieldSchema =
+      influencerSchema.shape[name as keyof typeof influencerSchema.shape];
 
-      // If valid, clear error for this field
+    if (fieldSchema) {
+      // try {
+      fieldSchema.parse(value);
       setErrors((prevErrors) => {
         const updated = { ...prevErrors };
         delete updated[name];
         return updated;
       });
-    } catch (error) {
-      // You could optionally re-validate and set the error here, but it's not needed for "clear-on-valid"
+      // } catch (err: any) {
+      // Don't need to set error here unless showing on blur or submit
+      // }
     }
   };
 
-  const { request, loading, errorMessage } = useApi(
-    influencerApiService.createInfluencer
-  );
-  // Handle form submission
+  const { request, loading } = useApi(influencerApiService.createInfluencer);
+
   const handleFormSubmit = async () => {
     const toValidate = {
       ...formData,
@@ -108,31 +120,28 @@ function AddInfluencerForm() {
 
     setErrors({});
 
-    // Add dynamic fields to your object
-    formData.socialPlatforms = socialPlatforms;
-    formData.categories = categories;
-
-    // Convert the JS object to a FormData instance
+    // Construct a new FormData
     const formDataToSend = new FormData();
 
-    // Loop through the object and append fields
-    Object.entries(formData).forEach(([key, value]) => {
+    Object.entries(toValidate).forEach(([key, value]) => {
       if (key === "socialPlatforms" || key === "categories") {
         formDataToSend.append(key, JSON.stringify(value));
       } else if (key === "profile_image" && value instanceof File) {
-        formDataToSend.append(key, value); // file
-      } else if (typeof value !== "undefined" && value !== null) {
+        formDataToSend.append(key, value);
+      } else {
         formDataToSend.append(key, value as string);
       }
     });
-
-    // Debug
 
     const { data: addInfluencerResponse, error: addInfluencerError } =
       await request(formDataToSend);
 
     if (addInfluencerResponse) {
-      toast.success(addInfluencerResponse.message);
+      toast.success(
+        typeof addInfluencerResponse.message === "string"
+          ? addInfluencerResponse.message
+          : "Influencer added successfully!"
+      );
       setFormData({
         fullname: "",
         handle: "",
@@ -144,18 +153,25 @@ function AddInfluencerForm() {
       setCategories([]);
       navigate(`/influencers/${formData.handle}`);
     } else if (addInfluencerError) {
-      toast.error(addInfluencerError.message, {
-        description: (
-          <ToastDescription description={addInfluencerError.description} />
-        ),
-      });
+      if (isParsedApiError(addInfluencerError)) {
+        toast.error(addInfluencerError.message, {
+          description: (
+            <ToastDescription description={addInfluencerError.description} />
+          ),
+        });
+      } else if (typeof addInfluencerError === "string") {
+        toast.error(addInfluencerError);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
+
   return (
     <InfluencerManagementWrapper>
       <div className="flex flex-col gap-3 md:gap-4">
         <div className="border border-gray-200 rounded-xl overflow-hidden">
-          <AddInfluencerBanner addInfluencer={handleFormSubmit} />
+          <AddInfluencerBanner />
 
           <div className="relative flex gap-3 md:gap-4 w-full p-14 pt-24 rounded-b-2xl">
             <AddInfluencerPrimaryInfo
@@ -170,7 +186,7 @@ function AddInfluencerForm() {
                   socialPlatforms={socialPlatforms}
                   setSocialPlatforms={setSocialPlatforms}
                   influencerSchema={influencerSchema}
-                  error={errors.socialPlatforms}
+                  error={errors}
                   setErrors={setErrors}
                 />
                 <AddInfluencerCategoryList
@@ -196,7 +212,8 @@ function AddInfluencerForm() {
           </div>
         </div>
 
-        {/* <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
+        {/* 
+        <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4">
           <div className="w-full md:w-2/3 flex flex-col gap-3 md:gap-4">
             <AddInfluencerSocialList
               socialPlatforms={socialPlatforms}
@@ -211,7 +228,8 @@ function AddInfluencerForm() {
               style="flex"
             />
           </div>
-        </div> */}
+        </div> 
+        */}
       </div>
     </InfluencerManagementWrapper>
   );

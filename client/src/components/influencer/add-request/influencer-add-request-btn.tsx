@@ -14,15 +14,24 @@ import { Label } from "@/components/ui/label";
 import { useApi } from "@/hooks";
 import { toast } from "sonner";
 import ToastDescription from "@/components/toast/toast-description";
+import { isParsedApiError } from "@/utils/handle-api-error";
 
-function InfluencerAddRequestBtn({ className, title = "Request to Add" }) {
+interface InfluencerAddRequestBtnProps {
+  className?: string;
+  title?: string;
+}
+
+function InfluencerAddRequestBtn({
+  className,
+  title = "Request to Add",
+}: InfluencerAddRequestBtnProps) {
   const { request, loading } = useApi(
     influencerAddRequestApiService.requestToAddInfluencer
   );
 
-  const [open, setOpen] = useState(false); // control Dialog open state
-  const [profileLink, setProfileLink] = useState("");
-  const [email, setEmail] = useState("");
+  const [open, setOpen] = useState<boolean>(false); // control Dialog open state
+  const [profileLink, setProfileLink] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   const sendRequest = async () => {
     if (!profileLink) {
@@ -53,7 +62,13 @@ function InfluencerAddRequestBtn({ className, title = "Request to Add" }) {
       toast.error("Failed to send request", {
         description: (
           <ToastDescription
-            description={error.message || "Something went wrong."}
+            description={
+              isParsedApiError(error)
+                ? error.message
+                : typeof error === "string"
+                ? error
+                : "Something went wrong."
+            }
           />
         ),
       });
@@ -74,7 +89,7 @@ function InfluencerAddRequestBtn({ className, title = "Request to Add" }) {
         <div className="space-y-4">
           <div className="flex flex-col gap-1">
             <Label htmlFor="profileLink" className="text-right text-xs">
-              Influencer's Profile Link
+              Influencer&apos;s Profile Link
             </Label>
             <Input
               id="profileLink"

@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import InfluencerAvgRating from "../ratings/influencer-avg-rating";
 import { Link, useSearchParams } from "react-router-dom";
 import { ProfileImage } from "@/components/ui/profile-image";
 import formatFollowers from "@/utils/format-follwers";
@@ -13,7 +12,7 @@ type influencerSocialPlatformInfo = {
 };
 
 type Category = {
-  category_name: string;
+  category_name: string | undefined;
 };
 
 type InfluencerCardProps = {
@@ -22,14 +21,13 @@ type InfluencerCardProps = {
   profile_image?: string;
   avg_review_score: number;
   socialPlatforms: influencerSocialPlatformInfo[];
-  categories: Category[];
+  categories: Category[] | undefined[];
 };
 
 export default function InfluencerCard({
   fullname,
   handle,
   profile_image = "/avatar.jpg",
-  avg_review_score,
   socialPlatforms,
   categories,
 }: InfluencerCardProps) {
@@ -38,7 +36,11 @@ export default function InfluencerCard({
   let category = categories[0];
   const queriedCategories = searchParams.get("category_names")?.split(",");
   if (queriedCategories) {
-    category = categories.find((cat) => queriedCategories?.includes(cat));
+    category = categories.find(
+      (cat) =>
+        cat?.category_name !== undefined &&
+        queriedCategories.includes(cat.category_name)
+    );
   }
 
   return (
@@ -97,7 +99,7 @@ export default function InfluencerCard({
               variant="outline"
               className="text-[11px] px-3 py-1 rounded-full text-gray-500 border-1 border-gray-300"
             >
-              {category}
+              {category?.category_name ?? "No category"}
             </Badge>
           </div>
         </CardContent>

@@ -18,6 +18,7 @@ export interface InfluencerData {
   categories: string[];
   createdAt: string;
   updatedAt: string;
+  message?: string | object | undefined;
 }
 
 export interface InfluencerFormInput {

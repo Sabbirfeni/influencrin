@@ -11,12 +11,12 @@ export function ProfileImageUpload({
   isUser,
   isInfluencer,
 }: {
-  style: string;
+  style?: string;
   defaultName: string | undefined;
   defaultImage: string | File | null | undefined;
   onImageSelect: (file: File) => void;
   isUser?: boolean | undefined;
-  isInfluencer: boolean | undefined;
+  isInfluencer?: boolean | undefined;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<

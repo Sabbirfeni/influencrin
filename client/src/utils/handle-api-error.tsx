@@ -14,6 +14,17 @@ export type ParsedApiError = {
   description?: string;
 };
 
+export function isParsedApiError(
+  error: string | object | ParsedApiError
+): error is ParsedApiError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as Record<string, unknown>).message === "string"
+  );
+}
+
 const handlApiError = (
   requestError: ApiError,
   fallbackMessage: string = "Something went wrong"

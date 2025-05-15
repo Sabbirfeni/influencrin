@@ -28,6 +28,11 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useApi } from "@/hooks";
 import dailyAnalyticsApiService from "@/api/endpoints/analytics/daily-analytics-api-service";
 import ChartSkeleton from "../skeletons/chart-skeleton/chart-skeleton";
+type ChartDataItem = {
+  date: string;
+  visitors: number;
+  searches: number;
+};
 
 const chartConfig = {
   visitors_searches: {
@@ -47,8 +52,8 @@ export function DailyVisitorSearchesAnalyticsChart() {
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState("30d");
 
-  const [chartData, setChartData] = React.useState([]);
-  const { request, loading, error } = useApi(
+  const [chartData, setChartData] = React.useState<ChartDataItem[]>([]);
+  const { request, loading, errorMessage } = useApi(
     dailyAnalyticsApiService.getDailyVisitorsAndSearches
   );
 
@@ -137,7 +142,7 @@ export function DailyVisitorSearchesAnalyticsChart() {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         {loading ? (
           <ChartSkeleton />
-        ) : error ? (
+        ) : errorMessage ? (
           <div className="flex h-[250px] w-full items-center justify-center text-sm text-red-500">
             Failed to load data. Please try again.
           </div>

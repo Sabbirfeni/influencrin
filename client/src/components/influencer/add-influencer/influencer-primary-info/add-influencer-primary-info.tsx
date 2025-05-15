@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
-import { Pencil } from "lucide-react";
 import AddInfluencerProfileImage from "./add-influencer-profile-image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,14 +9,18 @@ type Influencer = {
   handle: string;
   bio: string;
   location: string;
-  profile_image: string;
+  profile_image?: string | File;
 };
+
+// Define errors type properly to fix TS issue
+type ErrorsType = Partial<Record<keyof Influencer, string>>;
 
 interface AddInfluencerPrimaryInfoProps {
   influencerPrimaryInfo: Influencer;
   onInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  errors: ErrorsType;
 }
 
 function AddInfluencerPrimaryInfo({
@@ -30,10 +31,17 @@ function AddInfluencerPrimaryInfo({
   const { profile_image, fullname, handle, bio, location } =
     influencerPrimaryInfo;
 
-  const onImageSelect = (file) => {
-    const profileImage = { target: { name: "profile_image", value: file } };
+  // Create a fake event to call onInputChange for the file
+  const onImageSelect = (file: File) => {
+    const fakeEvent = {
+      target: {
+        name: "profile_image",
+        value: file,
+      },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
+    // Keep your console log for debugging
     console.log(file);
-    onInputChange(profileImage);
+    onInputChange(fakeEvent);
   };
 
   return (

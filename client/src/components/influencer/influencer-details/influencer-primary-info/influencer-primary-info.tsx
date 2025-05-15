@@ -5,6 +5,7 @@ import InfluencerProfileImage from "./influencer-profile-image";
 import { useAuth } from "@/hooks/use-auth";
 
 type Influencer = {
+  user_id: string;
   fullname: string;
   handle: string;
   bio: string;
@@ -14,6 +15,7 @@ type Influencer = {
 
 interface InfluencerPrimaryInfoProps {
   influencer: Influencer;
+  setIsInfluencerPrimaryInfoFormOpen: (open: boolean) => void; // fix here: accepts boolean param
 }
 
 function InfluencerPrimaryInfo({
@@ -23,7 +25,7 @@ function InfluencerPrimaryInfo({
   const { user } = useAuth();
   const { user_id, profile_image, fullname, handle, bio, location } =
     influencer;
-  const isMe = user?.id == user_id;
+  const isMe = user?.id === user_id;
 
   return (
     <div className="relative flex w-full px-5 md:px-16 pt-12 md:pt-18 pb-4 md:pb-6 rounded-b-2xl">
@@ -51,7 +53,7 @@ function InfluencerPrimaryInfo({
       {isMe && (
         <Button
           onClick={() => setIsInfluencerPrimaryInfoFormOpen(true)}
-          className="absolute right-6 md:right-16 w-10 h-8 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg"
+          className="absolute right-6 md:right-16 w-10 h-8 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary hover:text-white shadow-lg"
         >
           <Pencil className="w-4 h-4" />
         </Button>

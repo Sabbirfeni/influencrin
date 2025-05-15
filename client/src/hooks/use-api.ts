@@ -1,5 +1,5 @@
 import { handlApiError } from "@/utils";
-import { ApiError, ParsedApiError } from "@/utils/handle-api-error";
+import { ParsedApiError } from "@/utils/handle-api-error";
 import { useState } from "react";
 
 // Type for the API function
