@@ -16,6 +16,7 @@ const port = 3000;
 
 // Middleware
 const allowedOrigins = [
+  "https://influencrin-git-50-real-influencers-amdad-shabbirs-projects.vercel.app/",
   "http://localhost:5173",
   "https://influencrin.vercel.app",
 ];
