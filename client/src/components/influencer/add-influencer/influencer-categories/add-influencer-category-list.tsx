@@ -6,18 +6,11 @@ import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { ZodObject, ZodRawShape } from "zod";
 
-// Category type definition
-interface Category {
-  id: string;
-  influencer_id: string;
-  category_name: string;
-}
-
 // Props for the category list component
 interface InfluencerCategoryListProps {
   style?: string;
-  categories: Category[];
-  setCategories: (categories: Category[]) => void;
+  categories: string[];
+  setCategories: (categories: string[]) => void;
   error?: string;
   influencerSchema: ZodObject<ZodRawShape>;
   setErrors: (
@@ -43,7 +36,7 @@ function AddInfluencerCategoryList({
     const value = e.target.value;
     setCategory(value);
     const isCategoryExist = categories.some(
-      (cat) => cat.category_name.toLowerCase() === value.toLowerCase()
+      (cat) => cat.toLowerCase() === value.toLowerCase()
     );
 
     if (isCategoryExist) {
@@ -74,18 +67,12 @@ function AddInfluencerCategoryList({
   const handleAdd = () => {
     const categoryToAdd = selected?.trim() || category.trim();
     const isCategoryExist = categories.some(
-      (cat) => cat.category_name.toLowerCase() === categoryToAdd.toLowerCase()
+      (cat) => cat.toLowerCase() === categoryToAdd.toLowerCase()
     );
 
     if (categoryToAdd !== "" && !isCategoryExist) {
       setCategoryError("");
-      const newCategory: Category = {
-        id: crypto.randomUUID(),
-        influencer_id: "temp-id", // Replace with actual influencer ID as needed
-        category_name: categoryToAdd,
-      };
-
-      const updatedCategories = [...categories, newCategory];
+      const updatedCategories = [...categories, categoryToAdd];
       setCategories(updatedCategories);
       setCategory("");
       // setFilteredSuggestions([]);
@@ -113,9 +100,9 @@ function AddInfluencerCategoryList({
     }
   };
 
-  const handleRemove = (categoryToRemove: Category) => {
+  const handleRemove = (categoryToRemove: string) => {
     const filteredCategories = categories.filter(
-      (category) => category.id !== categoryToRemove.id
+      (category) => category !== categoryToRemove
     );
     setCategories(filteredCategories);
   };
@@ -133,11 +120,11 @@ function AddInfluencerCategoryList({
           {categories.map((cat) => (
             <Badge
               onClick={() => handleRemove(cat)}
-              key={cat.id}
+              key={cat}
               variant="outline"
               className="group cursor-pointer flex items-center gap-1 text-xs px-3 py-1 rounded-full transition duration-300 bg-white text-primary border border-primary"
             >
-              {cat.category_name}
+              {cat}
               <X
                 className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
                 strokeWidth={3}

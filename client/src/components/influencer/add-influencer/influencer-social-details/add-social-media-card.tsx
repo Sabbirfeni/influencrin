@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { useApi } from "@/hooks";
 import socialMediaPlatformApiServices from "@/api/endpoints/influencer-social-platforms-api-service";
-import { z } from "zod";
+import { z, ZodObject, ZodRawShape } from "zod";
 import { Label } from "@/components/ui/label";
 import InputFieldError from "@/components/error/input-field-error";
 
@@ -34,25 +34,46 @@ const platformSchema = z.object({
     .min(1, "Follower count must be added"),
 });
 
+type Platform = {
+  id: string;
+  platform_name: string;
+  platform_icon_url: string;
+  domain_name: string;
+};
+
+type SocialPlatformCard = z.infer<typeof platformSchema>;
+
+interface AddSocialMediaCardProps {
+  socialPlatforms: SocialPlatformCard[];
+  setSocialPlatforms: React.Dispatch<
+    React.SetStateAction<SocialPlatformCard[]>
+  >;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  influencerSchema: ZodObject<ZodRawShape>;
+}
+
 function AddSocialMediaCard({
-  socialPlatforms, // influencer social platforms
+  socialPlatforms,
   setSocialPlatforms,
   setErrors,
   influencerSchema,
-}) {
+}: AddSocialMediaCardProps) {
   const [open, setOpen] = useState(false);
-  const [platforms, setPlatforms] = useState([]); // the platforms that are stored in the db.
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
+  const [platformInfo, setPlatformInfo] = useState<Platform | null>(null);
+  const [profileLink, setProfileLink] = useState("");
+  const [followerCount, setFollowerCount] = useState("");
+  const [platformErrors, setPlatformErrors] = useState<Record<string, string>>(
+    {}
+  );
+
   const nonSelectedPlatforms = platforms.filter(
     (platform) => !socialPlatforms.some((sp) => sp.platform_id === platform.id)
   );
-  const [platformInfo, setPlatformInfo] = useState(null);
-  const [profileLink, setProfileLink] = useState("");
-  const [followerCount, setFollowerCount] = useState("");
-  const [platformErrors, setPlatformErrors] = useState({});
 
   const handleAdd = () => {
-    const newPlatform = {
-      platform_id: platformInfo?.id,
+    const newPlatform: SocialPlatformCard = {
+      platform_id: platformInfo?.id || "",
       platform_icon_url: platformInfo?.platform_icon_url || "",
       platform_profile_link: profileLink.trim(),
       follower_count: Number(followerCount),
@@ -71,52 +92,53 @@ function AddSocialMediaCard({
         }));
         return;
       }
+
       platformSchema.parse(newPlatform); // Validate individual platform
 
       const updatedPlatforms = [...socialPlatforms, newPlatform];
       setSocialPlatforms(updatedPlatforms);
 
-      // Reset all
+      // Reset
       setPlatformInfo(null);
       setProfileLink("");
       setFollowerCount("");
       setOpen(false);
       setPlatformErrors({});
 
-      // Validate full socialPlatforms array against main schema
       try {
         influencerSchema
           .pick({ socialPlatforms: true })
           .parse({ socialPlatforms: updatedPlatforms });
 
-        setErrors((prevErrors) => {
-          const updated = { ...prevErrors };
+        setErrors((prev) => {
+          const updated = { ...prev };
           delete updated["socialPlatforms"];
           return updated;
         });
-      } catch (error) {
-        // Optional: handle
+      } catch {
+        // Optional: handle full form validation error
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = {};
+        const fieldErrors: Record<string, string> = {};
         error.errors.forEach((err) => {
-          fieldErrors[err.path[0]] = err.message;
+          fieldErrors[err.path[0] as string] = err.message;
         });
         setPlatformErrors(fieldErrors);
       }
     }
   };
 
-  const { request, loading } = useApi(
-    socialMediaPlatformApiServices.getAllSocialMediaPlatforms
-  );
+  const {
+    request,
+    // loading
+  } = useApi(socialMediaPlatformApiServices.getAllSocialMediaPlatforms);
 
   useEffect(() => {
     const loadSocialPlatforms = async () => {
-      const { data: socialPlatformsResponse } = await request();
-      if (socialPlatformsResponse) {
-        setPlatforms(socialPlatformsResponse.socialMediaPlatforms);
+      const { data: response } = await request();
+      if (response) {
+        setPlatforms(response.socialMediaPlatforms);
       }
     };
     loadSocialPlatforms();
@@ -129,7 +151,6 @@ function AddSocialMediaCard({
         onClick={() => setOpen(true)}
       >
         <Plus className="w-8 h-8" strokeWidth={3} />
-        {/* <h1 className="text-md font-semibold">Add New</h1> */}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -140,43 +161,36 @@ function AddSocialMediaCard({
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="">Platform</Label>
-              {loading && <div>Platforms loading...</div>}
-              {platforms && (
-                <Select
-                  value={platformInfo}
-                  id="platorm"
-                  onValueChange={(value) => {
-                    setPlatformInfo(value);
-                    setPlatformErrors((prev) => ({
-                      ...prev,
-                      platform_id: undefined,
-                    }));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select platform" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>Select platform</SelectItem>
-                    {nonSelectedPlatforms.map((platform) => (
-                      <SelectItem
-                        value={platform}
-                        className="cursor-pointer hover:bg-gray-100"
-                      >
+              <Label>Platform</Label>
+              {/* {loading && <div>Loading...</div>} */}
+              <Select
+                value={platformInfo?.id || ""}
+                onValueChange={(id: string) => {
+                  const selected = platforms.find((p) => p.id === id) || null;
+                  setPlatformInfo(selected);
+                  setPlatformErrors((prev) => ({ ...prev, platform_id: "" }));
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select platform" />
+                </SelectTrigger>
+                <SelectContent>
+                  {nonSelectedPlatforms.map((platform) => (
+                    <SelectItem key={platform.id} value={platform.id}>
+                      <div className="flex items-center gap-2">
                         <img
                           src={platform.platform_icon_url}
                           className="w-4 h-4"
                           alt=""
                         />
                         {platform.platform_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {platformErrors?.platform_id && (
-                <InputFieldError errMessage={platformErrors?.platform_id} />
+                <InputFieldError errMessage={platformErrors.platform_id} />
               )}
             </div>
 
@@ -189,15 +203,14 @@ function AddSocialMediaCard({
                   setProfileLink(e.target.value);
                   setPlatformErrors((prev) => ({
                     ...prev,
-                    platform_profile_link: undefined,
+                    platform_profile_link: "",
                   }));
                 }}
                 className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
-
               {platformErrors.platform_profile_link && (
                 <InputFieldError
-                  errMessage={platformErrors?.platform_profile_link}
+                  errMessage={platformErrors.platform_profile_link}
                 />
               )}
             </div>
@@ -211,13 +224,13 @@ function AddSocialMediaCard({
                   setFollowerCount(e.target.value);
                   setPlatformErrors((prev) => ({
                     ...prev,
-                    follower_count: undefined,
+                    follower_count: "",
                   }));
                 }}
                 className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
               {platformErrors.follower_count && (
-                <InputFieldError errMessage={platformErrors?.follower_count} />
+                <InputFieldError errMessage={platformErrors.follower_count} />
               )}
             </div>
           </div>

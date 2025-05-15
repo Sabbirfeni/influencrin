@@ -1,31 +1,39 @@
 import { handlApiError } from "@/utils";
+import { ApiError, ParsedApiError } from "@/utils/handle-api-error";
 import { useState } from "react";
 
 // Type for the API function
-type ApiFunc<T> = (...args: any[]) => Promise<T>;
+type ApiFunc<T, A extends unknown[]> = (...args: A) => Promise<T>;
 
-// New return type with error passed directly
-type UseApiReturn<T> = {
-  request: (...args: any[]) => Promise<{ data?: T; error?: string }>;
+// Return type for the hook
+type UseApiReturn<T, A extends unknown[]> = {
+  request: (
+    ...args: A
+  ) => Promise<{ data?: T; error?: string | object | ParsedApiError }>;
   loading: boolean;
-  errorMessage: string | null; // Still keeping state version if needed
+  errorMessage: string | object | null;
 };
 
-const useApi = <T>(apiFunc: ApiFunc<T>): UseApiReturn<T> => {
+const useApi = <T, A extends unknown[]>(
+  apiFunc: ApiFunc<T, A>
+): UseApiReturn<T, A> => {
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | object | null>(
+    null
+  );
 
   const request = async (
-    ...args: any[]
-  ): Promise<{ data?: T; error?: string }> => {
+    ...args: A
+  ): Promise<{ data?: T; error?: string | object }> => {
     setLoading(true);
     setErrorMessage(null);
     try {
       const result = await apiFunc(...args);
-
       return { data: result };
     } catch (err) {
-      const error = handlApiError(err as ApiError);
+      const error = handlApiError(err as ParsedApiError) ?? {
+        message: "Unknown error",
+      };
       setErrorMessage(error);
       return { error };
     } finally {

@@ -1,4 +1,4 @@
-type ApiError = {
+export type ApiError = {
   response?: {
     data?: {
       message?: string;
@@ -9,7 +9,7 @@ type ApiError = {
   error?: string;
 };
 
-type ParsedApiError = {
+export type ParsedApiError = {
   message: string;
   description?: string;
 };
@@ -17,7 +17,7 @@ type ParsedApiError = {
 const handlApiError = (
   requestError: ApiError,
   fallbackMessage: string = "Something went wrong"
-): ParsedApiError => {
+): ParsedApiError | null => {
   const message =
     requestError?.response?.data?.message ||
     requestError?.message ||

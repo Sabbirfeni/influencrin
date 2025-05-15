@@ -1,10 +1,13 @@
 import { Trash } from "lucide-react";
 
 function SocialMediaDeleteBtn() {
-  const deleteSocialMedia = (e) => {
+  const deleteSocialMedia = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     e.preventDefault();
   };
+
   return (
     <Trash
       onClick={deleteSocialMedia}

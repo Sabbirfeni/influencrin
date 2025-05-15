@@ -13,8 +13,8 @@ type SocialPlatform = {
 interface InfluencerSocialListProps {
   socialPlatforms: SocialPlatform[];
   setSocialPlatforms: React.Dispatch<React.SetStateAction<SocialPlatform[]>>;
-  error?: string;
-  setErrors: React.Dispatch<React.SetStateAction<string | undefined>>;
+  error?: Record<string, string>;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   influencerSchema: ZodObject<ZodRawShape>;
 }
 
@@ -45,7 +45,9 @@ function AddInfluencerSocialList({
           influencerSchema={influencerSchema}
         />
       </div>
-      {error && <InputFieldError errMessage={error} />}
+      {error?.socialPlatforms && (
+        <InputFieldError errMessage={error.socialPlatforms} />
+      )}
     </div>
   );
 }

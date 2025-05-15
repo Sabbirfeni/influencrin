@@ -24,7 +24,20 @@ import influencerSocialPlatformApiService from "@/api/endpoints/influencer-socia
 import { toast } from "sonner";
 import InputFieldError from "@/components/error/input-field-error";
 import ToastDescription from "@/components/toast/toast-description";
+import { ParsedApiError } from "@/utils/handle-api-error";
 
+function isParsedApiError(
+  error: string | object | ParsedApiError
+): error is ParsedApiError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as Record<string, unknown>).message === "string"
+  );
+}
+
+// Zod validation
 const platformSchema = z.object({
   platform_id: z.string({ required_error: "Select a platform" }),
   platform_icon_url: z.string(),
@@ -37,21 +50,49 @@ const platformSchema = z.object({
     .min(1, "Follower count must be added"),
 });
 
+type PlatformFormType = z.infer<typeof platformSchema>;
+
+type SocialMediaPlatform = {
+  id: string;
+  platform_name: string;
+  platform_icon_url: string;
+  domain_name: string;
+};
+
+type InfluencerSocialPlatform = {
+  platform_id: string;
+  platform_profile_link: string;
+  follower_count: number;
+  platform: SocialMediaPlatform;
+};
+
+type UpdateSocialMediaListBtnProps = {
+  influencer: { id: string };
+  influencerSocialPlatforms: InfluencerSocialPlatform[];
+  setInfluencerSocialPlatforms: (value: InfluencerSocialPlatform[]) => void;
+};
+
 function UpdateSocialMediaListBtn({
   influencer,
   influencerSocialPlatforms,
   setInfluencerSocialPlatforms,
-}) {
+}: UpdateSocialMediaListBtnProps) {
   const [open, setOpen] = useState(false);
-  const [platforms, setPlatforms] = useState([]); // the platforms that are stored in the db.
+  const [platforms, setPlatforms] = useState<SocialMediaPlatform[]>([]);
+  const [selectedPlatformId, setSelectedPlatformId] = useState<string>("");
+  const [profileLink, setProfileLink] = useState<string>("");
+  const [followerCount, setFollowerCount] = useState<string>("");
+  const [platformErrors, setPlatformErrors] = useState<
+    Partial<Record<keyof PlatformFormType, string>>
+  >({});
+
+  const platformInfo =
+    platforms.find((p) => p.id === selectedPlatformId) || null;
+
   const nonSelectedPlatforms = platforms.filter(
     (platform) =>
       !influencerSocialPlatforms.some((sp) => sp.platform_id === platform.id)
   );
-  const [platformInfo, setPlatformInfo] = useState(null);
-  const [profileLink, setProfileLink] = useState("");
-  const [followerCount, setFollowerCount] = useState("");
-  const [platformErrors, setPlatformErrors] = useState({});
 
   const {
     request: socialMediaCreateRequest,
@@ -59,15 +100,14 @@ function UpdateSocialMediaListBtn({
   } = useApi(influencerSocialPlatformApiService.createPlatform);
 
   const handleAdd = async () => {
-    const newPlatform = {
-      platform_id: platformInfo?.id,
+    const newPlatform: PlatformFormType = {
+      platform_id: platformInfo?.id || "",
       platform_icon_url: platformInfo?.platform_icon_url || "",
       platform_profile_link: profileLink.trim(),
       follower_count: Number(followerCount),
     };
 
     try {
-      // Check is the platform profile link is valid with the selected social platform
       if (
         profileLink &&
         platformInfo &&
@@ -80,16 +120,16 @@ function UpdateSocialMediaListBtn({
         }));
         return;
       }
-      platformSchema.parse(newPlatform); // Validate individual platform
+
+      platformSchema.parse(newPlatform);
 
       const { data: socialMediaCreateResponse, error: socialMediaCreateError } =
         await socialMediaCreateRequest(influencer.id, newPlatform);
-      console.log(socialMediaCreateError);
 
       if (socialMediaCreateResponse) {
-        const newSocialPlatform = {
+        const newSocialPlatform: InfluencerSocialPlatform = {
           ...socialMediaCreateResponse.influencerSocialPlatform,
-          platform: platformInfo,
+          platform: platformInfo!,
         };
         const updatedPlatforms = [
           ...influencerSocialPlatforms,
@@ -98,26 +138,33 @@ function UpdateSocialMediaListBtn({
         setInfluencerSocialPlatforms(updatedPlatforms);
         toast.success(socialMediaCreateResponse.message);
 
-        // Reset all
-        setPlatformInfo(null);
+        setSelectedPlatformId("");
         setProfileLink("");
         setFollowerCount("");
         setOpen(false);
         setPlatformErrors({});
       } else if (socialMediaCreateError) {
-        toast.error(socialMediaCreateError.message, {
-          description: (
-            <ToastDescription
-              description={socialMediaCreateError.description}
-            />
-          ),
-        });
+        if (socialMediaCreateError) {
+          if (isParsedApiError(socialMediaCreateError)) {
+            toast.error(socialMediaCreateError.message, {
+              description: (
+                <ToastDescription
+                  description={socialMediaCreateError.description}
+                />
+              ),
+            });
+          } else if (typeof socialMediaCreateError === "string") {
+            toast.error(socialMediaCreateError);
+          } else {
+            toast.error("Something went wrong");
+          }
+        }
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = {};
+        const fieldErrors: Partial<Record<keyof PlatformFormType, string>> = {};
         error.errors.forEach((err) => {
-          fieldErrors[err.path[0]] = err.message;
+          fieldErrors[err.path[0] as keyof PlatformFormType] = err.message;
         });
         setPlatformErrors(fieldErrors);
       }
@@ -145,7 +192,6 @@ function UpdateSocialMediaListBtn({
         onClick={() => setOpen(true)}
       >
         <Plus className="w-8 h-8" strokeWidth={3} />
-        {/* <h1 className="text-md font-semibold">Add New</h1> */}
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -156,43 +202,40 @@ function UpdateSocialMediaListBtn({
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="">Platform</Label>
+              <Label>Platform</Label>
               {loading && <div>Platforms loading...</div>}
-              {platforms && (
-                <Select
-                  value={platformInfo}
-                  id="platorm"
-                  onValueChange={(value) => {
-                    setPlatformInfo(value);
-                    setPlatformErrors((prev) => ({
-                      ...prev,
-                      platform_id: undefined,
-                    }));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select platform" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>Select platform</SelectItem>
-                    {nonSelectedPlatforms.map((platform) => (
-                      <SelectItem
-                        value={platform}
-                        className="cursor-pointer hover:bg-gray-100"
-                      >
-                        <img
-                          src={platform.platform_icon_url}
-                          className="w-4 h-4"
-                          alt=""
-                        />
-                        {platform.platform_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              <Select
+                value={selectedPlatformId}
+                onValueChange={(value) => {
+                  setSelectedPlatformId(value);
+                  setPlatformErrors((prev) => ({
+                    ...prev,
+                    platform_id: undefined,
+                  }));
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select platform" />
+                </SelectTrigger>
+                <SelectContent>
+                  {nonSelectedPlatforms.map((platform) => (
+                    <SelectItem
+                      key={platform.id}
+                      value={platform.id}
+                      className="cursor-pointer hover:bg-gray-100"
+                    >
+                      <img
+                        src={platform.platform_icon_url}
+                        className="w-4 h-4 inline-block mr-2"
+                        alt=""
+                      />
+                      {platform.platform_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {platformErrors?.platform_id && (
-                <InputFieldError errMessage={platformErrors?.platform_id} />
+                <InputFieldError errMessage={platformErrors.platform_id} />
               )}
             </div>
 
@@ -210,7 +253,6 @@ function UpdateSocialMediaListBtn({
                 }}
                 className="text-xs md:text-sm border-none shadow-none bg-gray-100"
               />
-
               {platformErrors.platform_profile_link && (
                 <InputFieldError
                   errMessage={platformErrors.platform_profile_link}

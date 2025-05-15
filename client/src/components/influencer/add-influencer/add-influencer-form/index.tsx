@@ -144,7 +144,6 @@ function AddInfluencerForm() {
       setCategories([]);
       navigate(`/influencers/${formData.handle}`);
     } else if (addInfluencerError) {
-      console.log(addInfluencerError);
       toast.error(addInfluencerError.message, {
         description: (
           <ToastDescription description={addInfluencerError.description} />
@@ -152,7 +151,6 @@ function AddInfluencerForm() {
       });
     }
   };
-
   return (
     <InfluencerManagementWrapper>
       <div className="flex flex-col gap-3 md:gap-4">

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
 interface PlatformSelectProps {
@@ -28,19 +27,17 @@ export default function PlatformSelect({
             <select
               id="platform-select"
               value={field.value || ""}
-              onChange={field.onChange}
+              onChange={(e) => field.onChange(e.target.value)}
               className="peer w-full appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="" disabled>
                 Select a platform
               </option>
-              {platforms.map((platform) => {
-                return (
-                  <option key={platform.id} value={platform}>
-                    {platform.platform_name}
-                  </option>
-                );
-              })}
+              {platforms.map((platform) => (
+                <option key={platform.id} value={platform.id}>
+                  {platform.platform_name}
+                </option>
+              ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-muted-foreground">
               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
