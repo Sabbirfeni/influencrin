@@ -1,9 +1,6 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -22,11 +19,9 @@ type CountsData = {
 
 function CountsAnalyticsCards() {
   const [counts, setCounts] = useState<CountsData | null>(null);
-  const {
-    request: countsAnalyticsRequest,
-    loading,
-    error,
-  } = useApi(analyticsApiService.getCounts);
+  const { request: countsAnalyticsRequest, loading } = useApi(
+    analyticsApiService.getCounts
+  );
 
   useEffect(() => {
     const loadCountsAnalytics = async () => {
