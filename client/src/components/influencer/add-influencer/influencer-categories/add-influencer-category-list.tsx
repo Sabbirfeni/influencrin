@@ -2,27 +2,28 @@ import InputFieldError from "@/components/error/input-field-error";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
+import { ZodObject, ZodRawShape } from "zod";
 
-type Category = {
+// Category type definition
+interface Category {
   id: string;
   influencer_id: string;
   category_name: string;
-};
+}
 
-type InfluencerCategoryListProps = {
+// Props for the category list component
+interface InfluencerCategoryListProps {
   style?: string;
   categories: Category[];
-};
-// const suggestionsList = [
-//   "Instagram",
-//   "YouTube",
-//   "Twitter",
-//   "TikTok",
-//   "LinkedIn",
-// ];
+  setCategories: (categories: Category[]) => void;
+  error?: string;
+  influencerSchema: ZodObject<ZodRawShape>;
+  setErrors: (
+    callback: (prevErrors: Record<string, string>) => Record<string, string>
+  ) => void;
+}
 
 function AddInfluencerCategoryList({
   style,
@@ -36,13 +37,13 @@ function AddInfluencerCategoryList({
   const [categoryError, setCategoryError] = useState("");
   // const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   // const [showDropdown, setShowDropdown] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCategory(value);
     const isCategoryExist = categories.some(
-      (cat) => cat.toLowerCase() === value.toLowerCase()
+      (cat) => cat.category_name.toLowerCase() === value.toLowerCase()
     );
 
     if (isCategoryExist) {
@@ -73,31 +74,38 @@ function AddInfluencerCategoryList({
   const handleAdd = () => {
     const categoryToAdd = selected?.trim() || category.trim();
     const isCategoryExist = categories.some(
-      (cat) => cat.toLowerCase() === categoryToAdd.toLowerCase()
+      (cat) => cat.category_name.toLowerCase() === categoryToAdd.toLowerCase()
     );
+
     if (categoryToAdd !== "" && !isCategoryExist) {
       setCategoryError("");
-      const updatedCategories = [...categories, categoryToAdd];
+      const newCategory: Category = {
+        id: crypto.randomUUID(),
+        influencer_id: "temp-id", // Replace with actual influencer ID as needed
+        category_name: categoryToAdd,
+      };
 
+      const updatedCategories = [...categories, newCategory];
       setCategories(updatedCategories);
       setCategory("");
       // setFilteredSuggestions([]);
       // setShowDropdown(false);
-      try {
-        influencerSchema
-          .pick({ categories: true })
-          .parse({ categories: updatedCategories });
 
-        // If valid, clear the error
-        setErrors((prevErrors) => {
-          const updated = { ...prevErrors };
-          delete updated["categories"];
-          return updated;
-        });
-      } catch (error) {
-        // Optional: handle validation error if needed
-      }
-    } else if (categoryToAdd.trim() == "") {
+      // try {
+      influencerSchema
+        .pick({ categories: true })
+        .parse({ categories: updatedCategories });
+
+      // If valid, clear the error
+      setErrors((prevErrors) => {
+        const updated = { ...prevErrors };
+        delete updated["categories"];
+        return updated;
+      });
+      // } catch (error) {
+      // Optional: handle validation error if needed
+      // }
+    } else if (categoryToAdd.trim() === "") {
       setCategoryError("Please write a category");
     } else if (isCategoryExist) {
       setCategoryError("This category already included");
@@ -105,11 +113,10 @@ function AddInfluencerCategoryList({
     }
   };
 
-  const handleRemove = (categoryToRemove) => {
+  const handleRemove = (categoryToRemove: Category) => {
     const filteredCategories = categories.filter(
-      (category) => category !== categoryToRemove
+      (category) => category.id !== categoryToRemove.id
     );
-
     setCategories(filteredCategories);
   };
 
@@ -118,24 +125,19 @@ function AddInfluencerCategoryList({
       className={`p-4 ${style} flex-col space-y-2 border border-gray-200 rounded-xl`}
     >
       {/* Categories card header */}
-
       <h4 className="text-sm font-semibold">Categories</h4>
-      {/* <Button className="w-10 h-8 flex items-center justify-center shadow-none text-primary bg-white hover:bg-primary hover:text-white hover:shadow-lg"></Button> */}
-      {/* <Button className="w-7 h-7 flex items-center justify-center text-primary border border-primary bg-white hover:bg-primary  hover:text-white shadow-lg">
-          <Plus className="w-3 h-3" />
-        </Button> */}
 
       {/* Category list */}
       {categories.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat, idx) => (
+          {categories.map((cat) => (
             <Badge
               onClick={() => handleRemove(cat)}
-              key={`${cat}${idx}`}
+              key={cat.id}
               variant="outline"
               className="group cursor-pointer flex items-center gap-1 text-xs px-3 py-1 rounded-full transition duration-300 bg-white text-primary border border-primary"
             >
-              {cat}
+              {cat.category_name}
               <X
                 className="z-50 w-3 h-3 cursor-pointer group-hover:scale-150 transition duration-300"
                 strokeWidth={3}
