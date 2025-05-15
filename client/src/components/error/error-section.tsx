@@ -1,6 +1,3 @@
-import { Terminal } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
 type ErrorSectionProps = {
   errorHeading: string;
   errorMessage?: string | null;

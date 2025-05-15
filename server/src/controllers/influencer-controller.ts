@@ -411,7 +411,6 @@ const searchInfluencers = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  console.log("searching");
   try {
     const {
       q,

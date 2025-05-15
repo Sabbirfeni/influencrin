@@ -10,7 +10,7 @@ import LoginImage from "@/assets/images/login-influencrin-form-image.png";
 import { loginSchema, LoginSchemaType } from "../schemas/auth/log-in-schema";
 
 import { useAuth } from "@/hooks/use-auth";
-import { Link, redirect, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function LoginForm({
   className,
@@ -19,7 +19,6 @@ export default function LoginForm({
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),

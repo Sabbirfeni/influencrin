@@ -8,7 +8,6 @@ import AddInfluencerProfileImage from "@/components/influencer/add-influencer/in
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { useApi } from "@/hooks";
-import influencerApiService from "@/api/endpoints/influencer-api-service";
 import influencerManagementApiService from "@/api/endpoints/influencer-management-api-service";
 import { toast } from "sonner";
 
@@ -29,16 +28,23 @@ const primaryInfoSchema = z.object({
 
 // ✅ Types
 type Influencer = {
+  id: string;
   fullname: string;
   handle: string;
   bio: string;
   location: string;
-  profile_image: File | string | null;
+  profile_image?: File | string | null;
+};
+
+type UpdateInfluencerResponse = {
+  influencer: Influencer;
+  message: string;
 };
 
 interface AddInfluencerPrimaryInfoProps {
   initialData: Influencer;
   setIsInfluencerPrimaryInfoFormOpen: (open: boolean) => void;
+  setInfluencer: React.Dispatch<React.SetStateAction<Influencer>>;
 }
 
 function InfluencerPrimaryInfoForm({
@@ -48,15 +54,15 @@ function InfluencerPrimaryInfoForm({
 }: AddInfluencerPrimaryInfoProps) {
   const [influencerPrimaryInfo, setInfluencerPrimaryInfo] =
     useState<Influencer>(initialData);
-  const initialProfileImage = influencerPrimaryInfo.profile_image;
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { profile_image, fullname, handle, bio, location } =
     influencerPrimaryInfo;
 
-  // Live field validation
-  const validateField = (fieldName: keyof Influencer, value: any) => {
+  type PrimaryInfoField = keyof typeof primaryInfoSchema.shape;
+
+  const validateField = (fieldName: PrimaryInfoField, value: string | File) => {
     const singleFieldSchema = primaryInfoSchema.shape[fieldName];
     const result = singleFieldSchema.safeParse(value);
 
@@ -76,7 +82,7 @@ function InfluencerPrimaryInfoForm({
       ...prev,
       [name]: value,
     }));
-    validateField(name as keyof Influencer, value);
+    validateField(name as PrimaryInfoField, value);
   };
 
   const onImageSelect = (file: File) => {
@@ -129,7 +135,10 @@ function InfluencerPrimaryInfoForm({
       }
 
       const { data: influencerUpdateResponse, error: updateInfluencerError } =
-        await updateInfluencerRequest(initialData?.id, formData);
+        (await updateInfluencerRequest(initialData?.id, formData)) as {
+          data?: UpdateInfluencerResponse;
+          error?: string | { message: string };
+        };
 
       if (influencerUpdateResponse) {
         setInfluencer((prevInfluencer) => ({
@@ -140,7 +149,11 @@ function InfluencerPrimaryInfoForm({
         setIsInfluencerPrimaryInfoFormOpen(false);
         toast.success(influencerUpdateResponse.message);
       } else if (updateInfluencerError) {
-        toast.error(updateInfluencerError.message);
+        toast.error(
+          typeof updateInfluencerError === "string"
+            ? updateInfluencerError
+            : updateInfluencerError.message
+        );
       }
     }
   };

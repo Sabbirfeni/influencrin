@@ -3,7 +3,7 @@ import { ProfileImageUpload } from "@/components/user/profile-image-upload";
 
 type InfluencerProfileImageProps = {
   fullname: string;
-  profile_image: string | File;
+  profile_image: string | File | null | undefined;
   onImageSelect: (file: File) => void;
 };
 

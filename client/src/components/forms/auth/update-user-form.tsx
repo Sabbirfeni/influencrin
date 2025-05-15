@@ -23,12 +23,14 @@ const updateSchema = z.object({
 
 type UpdateFormData = z.infer<typeof updateSchema>;
 
+type UpdateUserFormProps = React.ComponentProps<"div">;
+
 export default function UpdateUserForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: UpdateUserFormProps) {
   const { user, setUser } = useAuth();
-  const { request, loading, errorMessage } = useApi(userApiServices.updateUser);
+  const { request } = useApi(userApiServices.updateUser);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const {
@@ -53,14 +55,20 @@ export default function UpdateUserForm({
     const { data: updateUserResponse, error: updateUserError } = await request(
       formData
     );
+
     if (updateUserResponse?.user) {
-      setUser((prevUser) => ({
-        ...prevUser,
+      setUser({
+        ...user!,
         ...updateUserResponse.user,
-      }));
+      });
       toast.success(updateUserResponse.message);
     } else if (updateUserError) {
-      toast.error(updateUserError.message);
+      const errorMessage =
+        typeof updateUserError === "string"
+          ? updateUserError
+          : (updateUserError as { message: string }).message;
+
+      toast.error(errorMessage);
     }
   };
 
@@ -118,7 +126,7 @@ export default function UpdateUserForm({
                 <Input
                   id="email"
                   type="email"
-                  value={user?.email}
+                  value={user?.email || ""}
                   disabled
                   className="text-xs md:text-sm"
                 />

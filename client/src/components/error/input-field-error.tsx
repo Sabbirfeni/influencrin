@@ -1,7 +1,10 @@
-import React from "react";
+type InputFieldErrorProps = {
+  errMessage?: string;
+};
 
-function InputFieldError({ errMessage }) {
+export const InputFieldError = ({ errMessage }: InputFieldErrorProps) => {
+  if (!errMessage) return null;
   return <p className="text-xs text-red-500">{errMessage}</p>;
-}
+};
 
 export default InputFieldError;
